@@ -15,13 +15,25 @@ import { CodeEditorLevel2 } from './components/CodeEditorLevel2';
 import { DevBotAvatar } from './components/DevBotAvatar';
 import { VictoryModal } from './components/VictoryModal';
 import { LeaderboardModal } from './components/LeaderboardModal';
-import { getStoredStats, saveRun, clearStats, type GameStats } from './utils/storage';
+import { NameRegistrationModal } from './components/NameRegistrationModal';
+import {
+  getStoredStats,
+  saveRun,
+  clearStats,
+  getStoredPlayerName,
+  saveStoredPlayerName,
+  type GameStats,
+} from './utils/storage';
 import { sound } from './utils/audio';
 import { getStoredLanguage, saveLanguage, translations, type Language } from './utils/i18n';
 
 export function App() {
   // Navigation: 'menu' | 'level1' | 'level2' | 'level3'
   const [currentScreen, setCurrentScreen] = useState<'menu' | 'level1' | 'level2' | 'level3'>('menu');
+
+  // Player Name State
+  const [playerName, setPlayerName] = useState<string>(() => getStoredPlayerName());
+  const [showNameModal, setShowNameModal] = useState<boolean>(false);
 
   // Language state (defaults to cz for FrontKon Prague)
   const [language, setLanguage] = useState<Language>(() => getStoredLanguage());
@@ -102,7 +114,7 @@ export function App() {
     };
   }, [isRunning]);
 
-  // Level 1 alignment check
+  // Level 1 alignment check (auto-saves on victory!)
   const handleL1DistanceChange = useCallback(
     (dist: number, centered: boolean, status: AlignmentStatus) => {
       setL1Distance(dist);
@@ -123,15 +135,20 @@ export function App() {
         const currentBest = stats.levelBestTimes['level1'] || null;
         setIsNewBest(currentBest === null || elapsedMs < currentBest);
 
+        // Auto-save to leaderboard immediately!
+        const charCount = l1Css.trim().length;
+        const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level1');
+        setStats(updated);
+
         setTimeout(() => {
           setShowVictory(true);
         }, 350);
       }
     },
-    [l1Solved, stats.levelBestTimes, elapsedMs]
+    [l1Solved, stats.levelBestTimes, elapsedMs, l1Css, playerName]
   );
 
-  // Level 2 (Sticky CTA) check
+  // Level 2 (Sticky CTA) check (auto-saves on victory!)
   const handleL2StickyChange = useCallback(
     (status: StickyStatus, solved: boolean) => {
       setL2StickyStatus(status);
@@ -151,15 +168,20 @@ export function App() {
         const currentBest = stats.levelBestTimes['level2'] || null;
         setIsNewBest(currentBest === null || elapsedMs < currentBest);
 
+        // Auto-save to leaderboard immediately!
+        const charCount = l2Css.trim().length;
+        const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level2');
+        setStats(updated);
+
         setTimeout(() => {
           setShowVictory(true);
         }, 350);
       }
     },
-    [l2Solved, stats.levelBestTimes, elapsedMs]
+    [l2Solved, stats.levelBestTimes, elapsedMs, l2Css, playerName]
   );
 
-  // Level 3 (Meeting Title Overflow) check
+  // Level 3 (Meeting Title Overflow) check (auto-saves on victory!)
   const handleL3StatusChange = useCallback(
     (status: OverflowStatus, solved: boolean) => {
       setL3Status(status);
@@ -179,12 +201,17 @@ export function App() {
         const currentBest = stats.levelBestTimes['level3'] || null;
         setIsNewBest(currentBest === null || elapsedMs < currentBest);
 
+        // Auto-save to leaderboard immediately!
+        const charCount = l3Css.trim().length;
+        const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level3');
+        setStats(updated);
+
         setTimeout(() => {
           setShowVictory(true);
         }, 350);
       }
     },
-    [l3Solved, stats.levelBestTimes, elapsedMs]
+    [l3Solved, stats.levelBestTimes, elapsedMs, l3Css, playerName]
   );
 
   // Start timer on first keystroke
@@ -192,7 +219,11 @@ export function App() {
     const isLevelSolved =
       activeLevel === 'level1' ? l1Solved : activeLevel === 'level2' ? l2Solved : l3Solved;
 
-    if (!isRunning && !isLevelSolved) {
+    if (!isLevelStarted) {
+      setIsLevelStarted(true);
+      startTimeRef.current = performance.now();
+      setIsRunning(true);
+    } else if (!isRunning && !isLevelSolved) {
       setIsRunning(true);
     }
     sound.playBlip();
@@ -259,6 +290,24 @@ export function App() {
     setCurrentScreen('menu');
   };
 
+  // Start Campaign: Prompt for name if not set yet!
+  const handleStartCampaign = () => {
+    sound.playBlip();
+    if (!playerName || playerName.trim() === '') {
+      setShowNameModal(true);
+    } else {
+      handleSelectLevel('level1');
+    }
+  };
+
+  // When player registers their name
+  const handleNameRegistered = (name: string) => {
+    setPlayerName(name);
+    saveStoredPlayerName(name);
+    setShowNameModal(false);
+    handleSelectLevel('level1');
+  };
+
   // User clicked "Verify & Merge PR"
   const handleSolveAttempt = () => {
     if (isCurrentLevelSolved) {
@@ -268,19 +317,6 @@ export function App() {
       sound.playFail();
       setFailedVerify(true);
       setTimeout(() => setFailedVerify(false), 3500);
-    }
-  };
-
-  // Save victory to booth leaderboard
-  const handleSaveVictory = (playerName: string) => {
-    const charCount = activeUserCss.trim().length;
-    const updated = saveRun(elapsedMs, charCount, playerName, activeLevel);
-    setStats(updated);
-    setShowVictory(false);
-
-    // If final level (Level 3), return to Main Menu to show the leaderboard!
-    if (activeLevel === 'level3') {
-      setCurrentScreen('menu');
     }
   };
 
@@ -302,6 +338,10 @@ export function App() {
     sound.playBlip();
   };
 
+  // Helper to replace {name} with player's actual name
+  const activeName = playerName || (language === 'cz' ? 'člověče' : 'human');
+  const formatName = (text: string) => text.replace(/{name}/g, activeName);
+
   // DevBot Dialogue for Level 1
   const getL1Dialogue = (): {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
@@ -309,30 +349,30 @@ export function App() {
     badgeLabel: string;
   } => {
     if (l1Solved) {
-      return { mood: 'defeated', message: t.devbotDefeated, badgeLabel: t.badgeDefeated };
+      return { mood: 'defeated', message: formatName(t.devbotDefeated), badgeLabel: t.badgeDefeated };
     }
     if (failedVerify) {
-      return { mood: 'confident', message: t.verifyFailedDevbot, badgeLabel: t.verifyFailedBadge };
+      return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (l1AlignmentStatus === 'horizontal_only') {
-      return { mood: 'confident', message: t.devbotHorizontalOnly, badgeLabel: t.badgeHalfway };
+      return { mood: 'confident', message: formatName(t.devbotHorizontalOnly), badgeLabel: t.badgeHalfway };
     }
     if (l1AlignmentStatus === 'vertical_only') {
-      return { mood: 'confident', message: t.devbotVerticalOnly, badgeLabel: t.badgeHalfway };
+      return { mood: 'confident', message: formatName(t.devbotVerticalOnly), badgeLabel: t.badgeHalfway };
     }
     if (l1Distance <= 40) {
-      return { mood: 'panicked', message: t.devbotPanickedClose, badgeLabel: t.badgeSweating };
+      return { mood: 'panicked', message: formatName(t.devbotPanickedClose), badgeLabel: t.badgeSweating };
     }
     if (l1Css.includes('grid') || l1Css.includes('flex')) {
-      return { mood: 'confused', message: t.devbotModern, badgeLabel: t.badgeOffended };
+      return { mood: 'confused', message: formatName(t.devbotModern), badgeLabel: t.badgeOffended };
     }
     if (l1Css.includes('margin') || l1Css.includes('top:') || l1Css.includes('left:')) {
-      return { mood: 'confident', message: t.devbotMargins, badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotMargins), badgeLabel: t.badge10x };
     }
     if (l1Css.trim().length > 0 && l1Distance > 250) {
-      return { mood: 'confused', message: t.devbotConfused, badgeLabel: t.badgeSyntax };
+      return { mood: 'confused', message: formatName(t.devbotConfused), badgeLabel: t.badgeSyntax };
     }
-    return { mood: 'confident', message: t.devbotInitial, badgeLabel: t.badge10x };
+    return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
   };
 
   // DevBot Dialogue for Level 2 (Sticky CTA)
@@ -342,24 +382,24 @@ export function App() {
     badgeLabel: string;
   } => {
     if (l2Solved) {
-      return { mood: 'defeated', message: t.devbotL2StickyDefeated, badgeLabel: t.badgeDefeated };
+      return { mood: 'defeated', message: formatName(t.devbotL2StickyDefeated), badgeLabel: t.badgeDefeated };
     }
     if (failedVerify) {
-      return { mood: 'confident', message: t.verifyFailedDevbot, badgeLabel: t.verifyFailedBadge };
+      return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (l2StickyStatus === 'fixed_escaped') {
-      return { mood: 'confident', message: t.devbotL2StickyFixed, badgeLabel: t.badgeHalfway };
+      return { mood: 'confident', message: formatName(t.devbotL2StickyFixed), badgeLabel: t.badgeHalfway };
     }
     if (l2StickyStatus === 'sticky_no_bottom') {
-      return { mood: 'confident', message: t.devbotL2StickyNoBottom, badgeLabel: t.badgeHalfway };
+      return { mood: 'confident', message: formatName(t.devbotL2StickyNoBottom), badgeLabel: t.badgeHalfway };
     }
     if (l2Css.includes('sticky')) {
-      return { mood: 'panicked', message: t.devbotPanickedClose, badgeLabel: t.badgeSweating };
+      return { mood: 'panicked', message: formatName(t.devbotPanickedClose), badgeLabel: t.badgeSweating };
     }
     if (l2Css.includes('z-index')) {
-      return { mood: 'confident', message: t.devbotL2StickyInitial, badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotL2StickyInitial), badgeLabel: t.badge10x };
     }
-    return { mood: 'confident', message: t.devbotL2StickyInitial, badgeLabel: t.badge10x };
+    return { mood: 'confident', message: formatName(t.devbotL2StickyInitial), badgeLabel: t.badge10x };
   };
 
   // DevBot Dialogue for Level 3 (Meeting Title)
@@ -369,24 +409,24 @@ export function App() {
     badgeLabel: string;
   } => {
     if (l3Solved) {
-      return { mood: 'defeated', message: t.devbotL3Defeated, badgeLabel: t.badgeDefeated };
+      return { mood: 'defeated', message: formatName(t.devbotL3Defeated), badgeLabel: t.badgeDefeated };
     }
     if (failedVerify) {
-      return { mood: 'confident', message: t.verifyFailedDevbot, badgeLabel: t.verifyFailedBadge };
+      return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (l3Status === 'clipped_no_ellipsis') {
-      return { mood: 'confident', message: t.devbotL3ClippedNoEllipsis, badgeLabel: t.badgeHalfway };
+      return { mood: 'confident', message: formatName(t.devbotL3ClippedNoEllipsis), badgeLabel: t.badgeHalfway };
     }
     if (l3Status === 'wrapped') {
-      return { mood: 'confident', message: t.devbotL3Wrapped, badgeLabel: t.badgeHalfway };
+      return { mood: 'confident', message: formatName(t.devbotL3Wrapped), badgeLabel: t.badgeHalfway };
     }
     if (l3Css.includes('ellipsis')) {
-      return { mood: 'panicked', message: t.devbotPanickedClose, badgeLabel: t.badgeSweating };
+      return { mood: 'panicked', message: formatName(t.devbotPanickedClose), badgeLabel: t.badgeSweating };
     }
     if (l3Css.includes('font-size')) {
-      return { mood: 'confident', message: t.devbotMargins, badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotMargins), badgeLabel: t.badge10x };
     }
-    return { mood: 'confident', message: t.devbotL3Initial, badgeLabel: t.badge10x };
+    return { mood: 'confident', message: formatName(t.devbotL3Initial), badgeLabel: t.badge10x };
   };
 
   const getDevBotState = () => {
@@ -397,10 +437,15 @@ export function App() {
 
   const devBotState = getDevBotState();
 
-  const getNextLevelTarget = (): 'level2' | 'level3' | undefined => {
-    if (activeLevel === 'level1') return 'level2';
-    if (activeLevel === 'level2') return 'level3';
-    return undefined;
+  const handleNextLevelProgression = () => {
+    setShowVictory(false);
+    if (activeLevel === 'level1') {
+      handleSelectLevel('level2');
+    } else if (activeLevel === 'level2') {
+      handleSelectLevel('level3');
+    } else {
+      handleBackToMenu();
+    }
   };
 
   return (
@@ -410,7 +455,7 @@ export function App() {
       {currentScreen === 'menu' ? (
         <MainMenu
           stats={stats}
-          onStartCampaign={() => handleSelectLevel('level1')}
+          onStartCampaign={handleStartCampaign}
           onOpenLeaderboard={() => setShowLeaderboard(true)}
           language={language}
           onToggleLanguage={handleToggleLanguage}
@@ -427,7 +472,7 @@ export function App() {
             backgroundColor: '#090B14',
           }}
         >
-          {/* Game Header (No Leaderboard button here - only in Main Menu!) */}
+          {/* Game Header */}
           <Header
             elapsedMs={elapsedMs}
             bestTimeMs={activeBestTime}
@@ -537,6 +582,7 @@ export function App() {
                   </Box>
                 </Box>
               )}
+
               {activeLevel === 'level1' && (
                 <>
                   <PreviewViewport
@@ -593,28 +639,31 @@ export function App() {
             </Box>
           </Container>
 
-          {/* Victory Celebration Modal */}
+          {/* Victory Celebration Modal - Auto-saves to leaderboard, single next/finish button */}
           <VictoryModal
             open={showVictory}
             levelId={activeLevel}
+            playerName={playerName || 'Senior Dev'}
             timeMs={elapsedMs}
             charCount={activeUserCss.trim().length}
             isNewBest={isNewBest}
-            onSaveAndClose={handleSaveVictory}
-            onOpenLeaderboard={handleBackToMenu}
-            onNextLevel={
-              getNextLevelTarget()
-                ? () => handleSelectLevel(getNextLevelTarget()!)
-                : undefined
-            }
-            onBackToMenu={handleBackToMenu}
+            onNextLevel={handleNextLevelProgression}
             language={language}
             t={t}
           />
         </Box>
       )}
 
-      {/* Global Leaderboard Modal (Accessible from Main Menu) */}
+      {/* Player Name Registration Modal before starting campaign */}
+      <NameRegistrationModal
+        open={showNameModal}
+        onClose={() => setShowNameModal(false)}
+        onSubmit={handleNameRegistered}
+        initialName={playerName}
+        t={t}
+      />
+
+      {/* Global Leaderboard Modal (Opened from Main Menu) */}
       <LeaderboardModal
         open={showLeaderboard}
         onClose={() => setShowLeaderboard(false)}

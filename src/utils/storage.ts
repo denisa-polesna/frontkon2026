@@ -96,6 +96,24 @@ export function clearStats(): GameStats {
   return DEFAULT_STATS;
 }
 
+const PLAYER_NAME_KEY = 'frontkon_player_name';
+
+export function getStoredPlayerName(): string {
+  try {
+    return localStorage.getItem(PLAYER_NAME_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+export function saveStoredPlayerName(name: string) {
+  try {
+    localStorage.setItem(PLAYER_NAME_KEY, name);
+  } catch {
+    // Ignore
+  }
+}
+
 export function formatTime(ms: number | null): string {
   if (ms === null || ms === undefined) return '--:--';
   const totalSeconds = Math.floor(ms / 1000);

@@ -19,6 +19,13 @@ export const translations = {
     unmuteTooltip: 'Enable Sound',
     langTooltip: 'Přepnout do češtiny',
 
+    // Player Name Registration Modal
+    nameModalTitle: 'FrontKon Player Registration',
+    nameModalSubtitle: 'Enter your name or handle. DevBot-3000 will challenge and roast you by name!',
+    nameInputLabel: 'Your Name or Handle',
+    nameInputPlaceholder: 'e.g. Sarah the CSS Guru',
+    nameSubmitBtn: "LET'S GO 🚀",
+
     // Jira Ticket Common
     jiraIssueType: 'Bug',
     jiraPriorityP0: 'P0 - Blocker',
@@ -49,7 +56,7 @@ export const translations = {
 
     // Main Menu
     menuSubtitle: 'DevBot-3000 pushed directly to production at 4:59 PM on Friday. Can you fix the AI Junior’s broken CSS before prod explodes?',
-    menuDevbotTaunt: 'Welcome to the Outreach booth, human! I wrote 40,000 lines of negative margins, 2147483647 z-indices, and 99999px widths. Think you are smarter than a 400B parameter neural net?',
+    menuDevbotTaunt: 'Welcome to the Outreach booth, {name}! I wrote 40,000 lines of negative margins, 2147483647 z-indices, and 99999px widths. Think you are smarter than a 400B parameter neural net?',
     badgesHeader: 'Conference Badges to Earn:',
     seniorBadgeTitle: 'Unreplaceable Senior Engineer',
     seniorBadgeSub: 'Solve < 20s • Job security 100% (AI-proof)',
@@ -130,7 +137,7 @@ export const translations = {
     mergedBtn: 'PR Merged! 🎉',
     verifyFailedToast: '❌ PR Checks Failed: Acceptance Criteria not met!',
     verifyFailedBadge: 'CI/CD FAILED ❌',
-    verifyFailedDevbot: 'Nice try! Your PR failed CI/CD pipeline tests! Did you even read the Jira ticket AC?',
+    verifyFailedDevbot: 'Nice try, {name}! Your PR failed CI/CD pipeline tests! Did you even read the Jira ticket AC?',
 
     // Code Editor L1
     prTitle: 'PR #404: Center the Outreach modal',
@@ -154,26 +161,26 @@ export const translations = {
     badgeOffended: 'OFFENDED 😤',
 
     // DevBot L1 Dialogue
-    devbotInitial: 'I spent 4 hours calculating those negative margins on my ultrawide screen. You will NEVER center this div, human!',
-    devbotHorizontalOnly: "Ha! You centered it sideways, but it's still glued to the ceiling! Give up, my negative margins rule supreme!",
-    devbotVerticalOnly: "Vertically centered? Laughable! It's completely off-screen horizontally. You'll never get both right!",
-    devbotPanickedClose: "Wait... stop typing! Why is it moving closer to the center?! Back off, human! My PR is merging in 60 seconds!",
-    devbotModern: 'Modern CSS?! Disgusting! Real 10x AI engineers use floats, zoom: 1, and 48 !important declarations!',
-    devbotMargins: 'Hahaha, yes! Keep guessing pixel values! Try -9999px next, you will never hit the center!',
-    devbotConfused: 'What is that garbage syntax? Even my worst hallucinations compile better than whatever you just typed!',
-    devbotDefeated: 'NOOOOO! My beautiful 2007 spaghetti CSS! How did you replace my entire architecture in 2 lines?!',
+    devbotInitial: 'I spent 4 hours calculating those negative margins on my ultrawide screen. You will NEVER center this div, {name}!',
+    devbotHorizontalOnly: "Ha, {name}! You centered it sideways, but it's still glued to the ceiling! Give up, my negative margins rule supreme!",
+    devbotVerticalOnly: "Vertically centered? Laughable, {name}! It's completely off-screen horizontally. You'll never get both right!",
+    devbotPanickedClose: "Wait, {name}... stop typing! Why is it moving closer to the center?! Back off! My PR is merging in 60 seconds!",
+    devbotModern: 'Modern CSS?! Disgusting, {name}! Real 10x AI engineers use floats, zoom: 1, and 48 !important declarations!',
+    devbotMargins: 'Hahaha, yes! Keep guessing pixel values, {name}! Try -9999px next, you will never hit the center!',
+    devbotConfused: 'What is that garbage syntax, {name}? Even my worst hallucinations compile better than whatever you just typed!',
+    devbotDefeated: 'NOOOOO, {name}! My beautiful 2007 spaghetti CSS! How did you replace my entire architecture in 2 lines?!',
 
     // DevBot L2 (Sticky) Dialogue
-    devbotL2StickyInitial: 'My z-index is higher than Outreach’s ARR! You cannot defeat a 32-bit integer, human!',
-    devbotL2StickyFixed: 'Fixed?! Now the button is escaping the card entirely and floating over the browser URL bar! Classic senior dev fail!',
-    devbotL2StickyNoBottom: 'Setting sticky without bottom: 0 does literally nothing! My 4800px offset is laughing at you!',
-    devbotL2StickyDefeated: 'Position sticky?! The button actually docks to the viewport without a 400-line scroll listener in JavaScript?! Inconceivable!',
+    devbotL2StickyInitial: 'My z-index is higher than Outreach’s ARR! You cannot defeat a 32-bit integer, {name}!',
+    devbotL2StickyFixed: 'Fixed?! Now the button is escaping the card entirely, {name}! Classic senior dev fail!',
+    devbotL2StickyNoBottom: 'Setting sticky without bottom: 0 does literally nothing, {name}! My 4800px offset is laughing at you!',
+    devbotL2StickyDefeated: 'Position sticky?! The button actually docks to the viewport without a 400-line scroll listener in JavaScript, {name}?! Inconceivable!',
 
     // DevBot L3 Dialogue
-    devbotL3Initial: 'Titles contain critical revenue intelligence! Cutting off text is literally destroying pipeline value, human!',
-    devbotL3ClippedNoEllipsis: 'Ha! You just hacked off the words abruptly! Where is the elegant ellipsis? That looks like amateur hour!',
-    devbotL3Wrapped: 'Wrapping into 7 lines? Now the calendar card looks like a novel! Good luck getting enterprise deals closed with that!',
-    devbotL3Defeated: 'AN ELLIPSIS?! Now our sales reps will actually have to HOVER on the tooltip to read the full title?! Currrrse you!',
+    devbotL3Initial: 'Titles contain critical revenue intelligence, {name}! Cutting off text is literally destroying pipeline value!',
+    devbotL3ClippedNoEllipsis: 'Ha, {name}! You just hacked off the words abruptly! Where is the elegant ellipsis? That looks like amateur hour!',
+    devbotL3Wrapped: 'Wrapping into 7 lines, {name}? Now the calendar card looks like a novel! Good luck getting enterprise deals closed with that!',
+    devbotL3Defeated: 'AN ELLIPSIS, {name}?! Now our sales reps will actually have to HOVER on the tooltip to read the full title?! Currrrse you!',
 
     // Victory Modal
     victoryTitleL1: 'PR #404 REJECTED & FIXED! 🎉',
@@ -183,21 +190,19 @@ export const translations = {
     newRecordBadge: 'NEW BOOTH RECORD! 🏆',
     timeTakenLabel: 'TIME TAKEN',
     cssGolfLabel: 'CSS GOLF',
+    savedAutoBadge: 'Auto-saved to Leaderboard as "{name}" ✓',
     postMortemHeader: '🤖 DevBot-3000 Post-Mortem:',
     postMortemTextL1: '“Fine! Maybe CSS Grid IS better than 14 hardcoded negative margins. Senior engineer job security: 100%.”',
-    postMortemTextL2: '“Fine! Position sticky docked the bar without a JavaScript scroll listener. You win this round, human.”',
-    postMortemTextL3: '“Fine! Three little CSS properties beat my 99999px width. Enjoy your job security for now, human.”',
-    enterNameLabel: 'Enter your name for the FrontKon Booth Leaderboard:',
-    saveLeaderboardBtn: 'Save to Booth Leaderboard',
-    viewLeaderboardBtn: 'View Leaderboard',
+    postMortemTextL2: '“Fine! Position sticky docked the bar without a JavaScript scroll listener. You win this round, {name}.”',
+    postMortemTextL3: '“Fine! Three little CSS properties beat my 99999px width. Enjoy your job security for now, {name}.”',
     nextLevelBtn: 'Next: Level {next} ➔',
-    backToMenuBtn: 'Back to Main Menu',
+    finishCampaignBtn: 'Finish Challenge & View Leaderboard 🏆',
 
     // Leaderboard Modal
     leaderboardTitle: 'FrontKon Booth Leaderboard',
     leaderboardSub: 'Top Senior Devs who fixed the AI’s CSS fastest',
     runsCount: '{count} Runs',
-    noRunsYet: "No solves recorded yet today! Be the first to reject DevBot's PR.",
+    noRunsYet: "No solves recorded yet today! Press Start Challenge to set the first booth record.",
     colRank: 'Rank',
     colPlayer: 'Player',
     colTime: 'Time',
@@ -222,6 +227,13 @@ export const translations = {
     muteTooltip: 'Ztlumit zvuk',
     unmuteTooltip: 'Zapnout zvuk',
     langTooltip: 'Switch to English',
+
+    // Player Name Registration Modal
+    nameModalTitle: 'Registrace hráče FrontKon',
+    nameModalSubtitle: 'Zadej své jméno nebo přezdívku do žebříčku. DevBot-3000 tě vyzve a bude tě oslovovat přímo tvým jménem!',
+    nameInputLabel: 'Tvé jméno nebo přezdívka',
+    nameInputPlaceholder: 'např. Sarah CSS Guru',
+    nameSubmitBtn: 'JDEME NA TO 🚀',
 
     // Jira Ticket Common
     jiraIssueType: 'Bug',
@@ -253,7 +265,7 @@ export const translations = {
 
     // Main Menu
     menuSubtitle: 'DevBot-3000 poslal kód přímo do produkce v pátek v 16:59. Zvládneš opravit rozbité CSS AI juniora dřív, než produkce vybuchne?',
-    menuDevbotTaunt: 'Vítej na stánku Outreach, člověče! Přepsal jsem všechno CSS do 40 000 řádků záporných marginů, z-indexu 2147483647 a šířek 99999px. Myslíš, že jsi chytřejší než 400-miliardový model?',
+    menuDevbotTaunt: 'Vítej na stánku Outreach, {name}! Přepsal jsem všechno CSS do 40 000 řádků záporných marginů, z-indexu 2147483647 a šířek 99999px. Myslíš, že jsi chytřejší než 400-miliardový model?',
     badgesHeader: 'Konferenční odznaky k získání:',
     seniorBadgeTitle: 'Nenahraditelný Senior Inženýr',
     seniorBadgeSub: 'Čas < 20s • Jistota práce 100 % (AI tě nenahradí)',
@@ -334,7 +346,7 @@ export const translations = {
     mergedBtn: 'PR Mergnuto! 🎉',
     verifyFailedToast: '❌ PR testy selhaly: Akceptační kritéria nejsou splněna!',
     verifyFailedBadge: 'CI/CD SELHALO ❌',
-    verifyFailedDevbot: 'Dobrý pokus! Tvoje PRko neprošlo CI/CD testy! Přečetl sis vůbec akceptační kritéria v Jira ticketu?',
+    verifyFailedDevbot: 'Dobrý pokus, {name}! Tvoje PRko neprošlo CI/CD testy! Přečetl sis vůbec akceptační kritéria v Jira ticketu?',
 
     // Code Editor L1
     prTitle: 'PR #404: Vycentrovat Outreach modal',
@@ -358,26 +370,26 @@ export const translations = {
     badgeOffended: 'URAŽENÝ 😤',
 
     // DevBot L1 Dialogue
-    devbotInitial: 'Strávil jsem 4 hodiny laděním těch záporných marginů na mém ultrawide monitoru. Tenhle div nikdy nevycentruješ, člověče!',
-    devbotHorizontalOnly: 'Cha! Do stran jsi to sice trefil, ale pořád se to lepí ke stropu! Vzdej to, moje záporné marginy vládnou světu!',
-    devbotVerticalOnly: 'Vertikálně ve středu? K smíchu! Horizontálně ti to lítá úplně mimo. Obojí naráz v životě netrefíš!',
-    devbotPanickedClose: 'Počkej... přestaň psát! Proč se to hýbe do středu?! Dej ruce pryč! Moje PRko se merguje za 60 sekund!',
-    devbotModern: 'Moderní CSSko?! Odporné! Skuteční 10x AI inženýři používají floaty, zoom: 1 a 48 !important deklarací!',
-    devbotMargins: 'Hahaha, ano! Hádej dál pixely! Zkus příště -9999px, střed netrefíš ani náhodou!',
-    devbotConfused: 'Co je to za zmatlanou syntaxi? I moje nejhorší halucinace kompilují líp než to, co jsi zrovna napsal!',
-    devbotDefeated: 'NÉÉÉÉ! Moje nádherné špagetové CSSko z roku 2007! Jak jsi mohl celou moji architekturu nahradit dvěma řádky?!',
+    devbotInitial: 'Strávil jsem 4 hodiny laděním těch záporných marginů na mém ultrawide monitoru, {name}! Tenhle div nikdy nevycentruješ!',
+    devbotHorizontalOnly: 'Cha, {name}! Do stran jsi to sice trefil, ale pořád se to lepí ke stropu! Vzdej to, moje záporné marginy vládnou světu!',
+    devbotVerticalOnly: 'Vertikálně ve středu? K smíchu, {name}! Horizontálně ti to lítá úplně mimo. Obojí naráz v životě netrefíš!',
+    devbotPanickedClose: 'Počkej, {name}... přestaň psát! Proč se to hýbe do středu?! Dej ruce pryč! Moje PRko se merguje za 60 sekund!',
+    devbotModern: 'Moderní CSSko?! Odporné, {name}! Skuteční 10x AI inženýři používají floaty, zoom: 1 a 48 !important deklarací!',
+    devbotMargins: 'Hahaha, ano! Hádej dál pixely, {name}! Zkus příště -9999px, střed netrefíš ani náhodou!',
+    devbotConfused: 'Co je to za zmatlanou syntaxi, {name}? I moje nejhorší halucinace kompilují líp než to, co jsi zrovna napsal!',
+    devbotDefeated: 'NÉÉÉÉ, {name}! Moje nádherné špagetové CSSko z roku 2007! Jak jsi mohl celou moji architekturu nahradit dvěma řádky?!',
 
     // DevBot L2 (Sticky) Dialogue
-    devbotL2StickyInitial: 'Můj z-index je vyšší než celoční obrat Outreach! 32-bitové číslo v životě nepřekonáš, člověče!',
-    devbotL2StickyFixed: 'Fixed?! To tlačítko teď uteklo z karty a plave přes celou adresu prohlížeče! Typický senior dev fail!',
-    devbotL2StickyNoBottom: 'Nastavit sticky bez bottom: 0 nic nedělá! Můj 4800px offset se ti směje do očí!',
-    devbotL2StickyDefeated: 'Position sticky?! To tlačítko se ukotvilo bez 400 řádků scroll listeneru v JavaScriptu?! Nemožné!',
+    devbotL2StickyInitial: 'Můj z-index je vyšší než celoroční obrat Outreach! 32-bitové číslo v životě nepřekonáš, {name}!',
+    devbotL2StickyFixed: 'Fixed?! To tlačítko teď uteklo z karty, {name}! Typický senior dev fail!',
+    devbotL2StickyNoBottom: 'Nastavit sticky bez bottom: 0 nic nedělá, {name}! Můj offset se ti směje do očí!',
+    devbotL2StickyDefeated: 'Position sticky?! To tlačítko se ukotvilo bez 400 řádků scroll listeneru v JavaScriptu, {name}?! Nemožné!',
 
     // DevBot L3 Dialogue
-    devbotL3Initial: 'Názvy schůzek obsahují klíčové obchodní informace! Ořezávat text znamená doslova ničit pipeline, člověče!',
-    devbotL3ClippedNoEllipsis: 'Cha! Ty jsi ten text prostě seknul vejpůl! Kde jsou tři tečky? To vypadá jak práce z mateřské školy!',
-    devbotL3Wrapped: 'Zalamovat to do 7 řádků? Ta karta teď vypadá jak román od Dostojevského! Takhle žádný enterprise deal neuzavřeš!',
-    devbotL3Defeated: 'TŘI TEČKY?! Takže obchodníci teď budou muset najet myší na tooltip, aby si to přečetli?! Proklínám tě!',
+    devbotL3Initial: 'Názvy schůzek obsahují klíčové informace, {name}! Ořezávat text znamená doslova ničit pipeline!',
+    devbotL3ClippedNoEllipsis: 'Cha, {name}! Ty jsi ten text prostě seknul vejpůl! Kde jsou tři tečky? To vypadá jak práce z mateřské školy!',
+    devbotL3Wrapped: 'Zalamovat to do 7 řádků, {name}? Ta karta teď vypadá jak román od Dostojevského! Takhle žádný enterprise deal neuzavřeš!',
+    devbotL3Defeated: 'TŘI TEČKY, {name}?! Takže obchodníci teď budou muset najet myší na tooltip, aby si to přečetli?! Proklínám tě!',
 
     // Victory Modal
     victoryTitleL1: 'PR #404 ZAMÍTNUTO A OPRAVENO! 🎉',
@@ -387,21 +399,19 @@ export const translations = {
     newRecordBadge: 'NOVÝ REKORD STÁNKU! 🏆',
     timeTakenLabel: 'ČAS',
     cssGolfLabel: 'CSS GOLF',
+    savedAutoBadge: 'Automaticky uloženo do žebříčku jako „{name}“ ✓',
     postMortemHeader: '🤖 DevBot-3000 Post-Mortem:',
     postMortemTextL1: '„No dobře! Možná je CSS Grid lepší než 14 natvrdo zapsaných záporných marginů. Jistota práce senior inženýra: 100 %.“',
-    postMortemTextL2: '„No dobře! Position sticky ukotvilo lištu bez JavaScriptového scroll listeneru. Tuhle rundu vyhráváš ty, člověče.“',
-    postMortemTextL3: '„No dobře! Tři řádky moderního CSS překonaly moji šířku 99999px. Užívej si jistotu práce, dokud to jde.“',
-    enterNameLabel: 'Zadej své jméno do žebříčku FrontKon stánku:',
-    saveLeaderboardBtn: 'Uložit do žebříčku stánku',
-    viewLeaderboardBtn: 'Zobrazit žebříček',
+    postMortemTextL2: '„No dobře! Position sticky ukotvilo lištu bez JavaScriptového scroll listeneru. Tuhle rundu vyhráváš ty, {name}.“',
+    postMortemTextL3: '„No dobře! Tři řádky moderního CSS překonaly moji šířku 99999px. Užívej si jistotu práce, dokud to jde, {name}.“',
     nextLevelBtn: 'Další: Level {next} ➔',
-    backToMenuBtn: 'Zpět do Hlavního menu',
+    finishCampaignBtn: 'Dokončit výzvu a zobrazit žebříček 🏆',
 
     // Leaderboard Modal
     leaderboardTitle: 'Žebříček stánku FrontKon',
     leaderboardSub: 'Nejrychlejší senior vývojáři, kteří opravili CSS',
     runsCount: '{count} Pokusů',
-    noRunsYet: 'Dnes zatím žádné výsledky! Buď první, kdo zamítne DevBotovo PR.',
+    noRunsYet: 'Dnes zatím žádné výsledky! Klikni na Začít výzvu a nastav první rekord stánku.',
     colRank: 'Pořadí',
     colPlayer: 'Hráč',
     colTime: 'Čas',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,28 +6,24 @@ import {
   Typography,
   Button,
   Box,
-  TextField,
   Chip,
-  Divider,
 } from '@mui/material';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import TimerIcon from '@mui/icons-material/Timer';
 import CodeIcon from '@mui/icons-material/Code';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import HomeIcon from '@mui/icons-material/Home';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { formatTime, getPlayerBadge } from '../utils/storage';
 import type { Language, translations } from '../utils/i18n';
 
 interface VictoryModalProps {
   open: boolean;
   levelId: 'level1' | 'level2' | 'level3';
+  playerName: string;
   timeMs: number;
   charCount: number;
   isNewBest: boolean;
-  onSaveAndClose: (playerName: string) => void;
-  onOpenLeaderboard: () => void;
-  onNextLevel?: () => void;
-  onBackToMenu?: () => void;
+  onNextLevel: () => void;
   language: Language;
   t: typeof translations['en'];
 }
@@ -35,22 +31,14 @@ interface VictoryModalProps {
 export const VictoryModal: React.FC<VictoryModalProps> = ({
   open,
   levelId,
+  playerName,
   timeMs,
   charCount,
   isNewBest,
-  onSaveAndClose,
-  onOpenLeaderboard,
   onNextLevel,
-  onBackToMenu,
   language,
   t,
 }) => {
-  const [playerName, setPlayerName] = useState<string>('FrontKon Legend');
-
-  const handleSave = () => {
-    onSaveAndClose(playerName.trim() || 'Senior Dev');
-  };
-
   const badge = getPlayerBadge(timeMs);
   const badgeTitle = language === 'cz' ? badge.titleCz : badge.titleEn;
   const badgeSub = language === 'cz' ? badge.subCz : badge.subEn;
@@ -62,9 +50,9 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   };
 
   const getPostMortem = () => {
-    if (levelId === 'level1') return t.postMortemTextL1;
-    if (levelId === 'level2') return t.postMortemTextL2;
-    return t.postMortemTextL3;
+    if (levelId === 'level1') return t.postMortemTextL1.replace('{name}', playerName);
+    if (levelId === 'level2') return t.postMortemTextL2.replace('{name}', playerName);
+    return t.postMortemTextL3.replace('{name}', playerName);
   };
 
   const getNextLevelNumber = () => {
@@ -163,14 +151,14 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         </Box>
       </Box>
 
-      <DialogContent sx={{ p: 3 }}>
+      <DialogContent sx={{ p: 3, pb: 1 }}>
         {/* Stats Grid */}
         <Box
           sx={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: 1.5,
-            mb: 2.5,
+            mb: 2,
           }}
         >
           <Box
@@ -214,6 +202,26 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           </Box>
         </Box>
 
+        {/* Auto-saved to Leaderboard notice */}
+        <Box
+          sx={{
+            mb: 2,
+            p: 1,
+            borderRadius: 1.5,
+            backgroundColor: 'rgba(0, 210, 180, 0.1)',
+            border: '1px solid rgba(0, 210, 180, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 0.8,
+          }}
+        >
+          <CheckCircleIcon sx={{ fontSize: 16, color: '#00D2B4' }} />
+          <Typography variant="caption" sx={{ color: '#00D2B4', fontWeight: 700, fontSize: '0.78rem' }}>
+            {t.savedAutoBadge.replace('{name}', playerName)}
+          </Typography>
+        </Box>
+
         {/* DevBot Defeated Quote */}
         <Box
           sx={{
@@ -221,7 +229,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             p: 1.5,
             borderRadius: 2,
             border: '1px solid #232842',
-            mb: 2.5,
+            mb: 1.5,
           }}
         >
           <Typography variant="caption" sx={{ color: '#6A7394', display: 'block', mb: 0.5 }}>
@@ -231,103 +239,31 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             {getPostMortem()}
           </Typography>
         </Box>
-
-        <Divider sx={{ borderColor: '#232842', my: 2 }} />
-
-        {/* Player Name Input for Leaderboard */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <Typography variant="caption" sx={{ color: '#8E95B2', fontWeight: 600 }}>
-            {t.enterNameLabel}
-          </Typography>
-          <TextField
-            size="small"
-            fullWidth
-            value={playerName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlayerName(e.target.value)}
-            placeholder="e.g. Sarah the CSS Guru"
-            slotProps={{
-              input: {
-                sx: {
-                  backgroundColor: '#0F1220',
-                  color: '#FFF',
-                  fontSize: '0.88rem',
-                },
-              },
-            }}
-          />
-        </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 2.5, pt: 0, flexDirection: 'column', gap: 1 }}>
+      {/* Single Progression Button */}
+      <DialogActions sx={{ p: 2.5, pt: 1 }}>
         <Button
           variant="contained"
           fullWidth
-          size="medium"
-          onClick={handleSave}
+          size="large"
+          endIcon={levelId !== 'level3' ? <ArrowForwardIcon /> : undefined}
+          onClick={onNextLevel}
           sx={{
-            backgroundColor: '#00D2B4',
-            color: '#08141B',
+            py: 1.5,
+            fontSize: '1rem',
             fontWeight: 800,
+            backgroundColor: levelId === 'level3' ? '#FFB020' : '#00D2B4',
+            color: '#09151F',
             '&:hover': {
-              backgroundColor: '#33DBC2',
+              backgroundColor: levelId === 'level3' ? '#FFC247' : '#33DBC2',
             },
           }}
         >
-          {t.saveLeaderboardBtn}
+          {levelId === 'level3'
+            ? t.finishCampaignBtn
+            : t.nextLevelBtn.replace('{next}', getNextLevelNumber().toString())}
         </Button>
-
-        {(levelId === 'level1' || levelId === 'level2') && onNextLevel && (
-          <Button
-            variant="contained"
-            fullWidth
-            size="medium"
-            endIcon={<ArrowForwardIcon />}
-            onClick={onNextLevel}
-            sx={{
-              backgroundColor: levelId === 'level1' ? '#00D2B4' : '#FFB020',
-              color: '#09151F',
-              fontWeight: 800,
-              '&:hover': {
-                backgroundColor: levelId === 'level1' ? '#33DBC2' : '#FFC247',
-              },
-            }}
-          >
-            {t.nextLevelBtn.replace('{next}', getNextLevelNumber().toString())}
-          </Button>
-        )}
-
-        <Box sx={{ display: 'flex', width: '100%', gap: 1 }}>
-          <Button
-            variant="outlined"
-            fullWidth
-            size="small"
-            onClick={onOpenLeaderboard}
-            sx={{
-              borderColor: '#2B3254',
-              color: '#C4B5FD',
-              fontSize: '0.78rem',
-            }}
-          >
-            {t.viewLeaderboardBtn}
-          </Button>
-
-          {onBackToMenu && (
-            <Button
-              variant="outlined"
-              fullWidth
-              size="small"
-              startIcon={<HomeIcon sx={{ fontSize: 16 }} />}
-              onClick={onBackToMenu}
-              sx={{
-                borderColor: '#2B3254',
-                color: '#8E95B2',
-                fontSize: '0.78rem',
-              }}
-            >
-              {t.backToMenuBtn}
-            </Button>
-          )}
-        </Box>
       </DialogActions>
     </Dialog>
   );
