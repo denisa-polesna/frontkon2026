@@ -97,12 +97,11 @@ export function clearStats(): GameStats {
 }
 
 export function formatTime(ms: number | null): string {
-  if (ms === null || ms === undefined) return '--:--.-';
-  const totalSeconds = ms / 1000;
+  if (ms === null || ms === undefined) return '--:--';
+  const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
-  const seconds = Math.floor(totalSeconds % 60);
-  const tenths = Math.floor((ms % 1000) / 100);
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${tenths}`;
+  const seconds = totalSeconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
 export type PlayerTier = 'senior' | 'mid' | 'prompt_engineer';

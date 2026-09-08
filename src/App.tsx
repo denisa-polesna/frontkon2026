@@ -206,10 +206,10 @@ export function App() {
 
   // Reset challenge for active level
   const handleResetLevel = () => {
-    setIsRunning(false);
     setElapsedMs(0);
     elapsedMsRef.current = 0;
-    startTimeRef.current = null;
+    startTimeRef.current = performance.now();
+    setIsRunning(true);
     setShowVictory(false);
     setFailedVerify(false);
 
@@ -228,14 +228,14 @@ export function App() {
     }
   };
 
-  // Navigate to Level (automatically advances!)
+  // Navigate to Level (starts timer as soon as task is opened!)
   const handleSelectLevel = (levelId: 'level1' | 'level2' | 'level3') => {
     sound.playBlip();
     setCurrentScreen(levelId);
     setElapsedMs(0);
     elapsedMsRef.current = 0;
-    startTimeRef.current = null;
-    setIsRunning(false);
+    startTimeRef.current = performance.now();
+    setIsRunning(true);
     setShowVictory(false);
     setFailedVerify(false);
   };

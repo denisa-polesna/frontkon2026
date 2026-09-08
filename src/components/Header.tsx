@@ -86,9 +86,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <OutreachLogo height={20} />
 
-        <Box sx={{ width: 1, height: 22, backgroundColor: '#282E4E', mx: 0.5 }} />
-
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography
               variant="h6"
