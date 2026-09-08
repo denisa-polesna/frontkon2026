@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ThemeProvider, CssBaseline, Box, Container } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box, Container, Button, Typography } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import confetti from 'canvas-confetti';
 import { outreachTheme } from './theme';
 import { Header } from './components/Header';
@@ -33,6 +34,7 @@ export function App() {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isNewBest, setIsNewBest] = useState<boolean>(false);
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
+  const [isLevelStarted, setIsLevelStarted] = useState<boolean>(false);
 
   // Speedrun Timer State (scoped to active level)
   const [elapsedMs, setElapsedMs] = useState<number>(0);
@@ -208,8 +210,9 @@ export function App() {
   const handleResetLevel = () => {
     setElapsedMs(0);
     elapsedMsRef.current = 0;
-    startTimeRef.current = performance.now();
-    setIsRunning(true);
+    startTimeRef.current = null;
+    setIsRunning(false);
+    setIsLevelStarted(false);
     setShowVictory(false);
     setFailedVerify(false);
 
@@ -228,16 +231,25 @@ export function App() {
     }
   };
 
-  // Navigate to Level (starts timer as soon as task is opened!)
+  // Navigate to Level (shows blurred task until player hits start)
   const handleSelectLevel = (levelId: 'level1' | 'level2' | 'level3') => {
     sound.playBlip();
     setCurrentScreen(levelId);
     setElapsedMs(0);
     elapsedMsRef.current = 0;
-    startTimeRef.current = performance.now();
-    setIsRunning(true);
+    startTimeRef.current = null;
+    setIsRunning(false);
+    setIsLevelStarted(false);
     setShowVictory(false);
     setFailedVerify(false);
+  };
+
+  // Start timer and unblur the workspace
+  const handleStartLevelTimer = () => {
+    sound.playBlip();
+    setIsLevelStarted(true);
+    startTimeRef.current = performance.now();
+    setIsRunning(true);
   };
 
   // Back to Menu
@@ -459,12 +471,72 @@ export function App() {
             {/* Split Screen: Live Preview (Left) & Code Editor (Right) */}
             <Box
               sx={{
+                position: 'relative',
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', lg: '1.25fr 1fr' },
                 gap: 2.5,
                 flex: 1,
               }}
             >
+              {/* Frosted Glass Blur Overlay before player hits Start */}
+              {!isLevelStarted && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    inset: -4,
+                    backdropFilter: 'blur(10px)',
+                    backgroundColor: 'rgba(9, 11, 20, 0.75)',
+                    zIndex: 20,
+                    borderRadius: 2.5,
+                    border: '1px solid #232845',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    p: 3,
+                    textAlign: 'center',
+                    animation: 'notificationBounce 0.3s ease-out',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      maxWidth: 440,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 2,
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      size="large"
+                      startIcon={<PlayArrowIcon sx={{ fontSize: '30px !important' }} />}
+                      onClick={handleStartLevelTimer}
+                      sx={{
+                        py: 2,
+                        px: { xs: 4, sm: 6 },
+                        fontSize: '1.2rem',
+                        fontWeight: 900,
+                        borderRadius: 3.5,
+                        background: 'linear-gradient(135deg, #6E3FF3 0%, #00D2B4 100%)',
+                        color: '#FFFFFF',
+                        boxShadow: '0 0 40px rgba(110, 63, 243, 0.6), 0 10px 30px rgba(0, 0, 0, 0.7)',
+                        transition: 'all 0.25s ease',
+                        '&:hover': {
+                          transform: 'scale(1.04)',
+                          boxShadow: '0 0 60px rgba(0, 210, 180, 0.8), 0 14px 40px rgba(0, 0, 0, 0.8)',
+                        },
+                      }}
+                    >
+                      {t.startLevelTimerBtn}
+                    </Button>
+
+                    <Typography variant="body2" sx={{ color: '#C4B5FD', fontWeight: 600, fontSize: '0.88rem' }}>
+                      {t.readyPrompt}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
               {activeLevel === 'level1' && (
                 <>
                   <PreviewViewport

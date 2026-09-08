@@ -8,6 +8,7 @@ import {
   Button,
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -34,6 +35,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   elapsedMs,
   bestTimeMs,
+  isRunning,
   onReset,
   onBackToMenu,
   currentLevel,
@@ -146,20 +148,22 @@ export const Header: React.FC<HeaderProps> = ({
         </Box>
       </Box>
 
-      {/* Middle: Live Speedrun Timer & Level High Score */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          backgroundColor: '#0c0e1a',
-          padding: '6px 16px',
-          borderRadius: '24px',
-          border: '1px solid #232742',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <PlayArrowIcon sx={{ fontSize: 16, color: '#00D2B4' }} />
+      {/* Middle: Live Speedrun Timer & Separate Level Record Chip */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        {/* Chip 1: Timer */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            backgroundColor: '#0c0e1a',
+            padding: '6px 16px',
+            borderRadius: '24px',
+            border: `1px solid ${isRunning ? '#00D2B4' : '#232742'}`,
+            transition: 'border-color 0.3s ease',
+          }}
+        >
+          <PlayArrowIcon sx={{ fontSize: 16, color: isRunning ? '#00D2B4' : '#6A708E' }} />
           <Typography
             sx={{
               fontFamily: 'monospace',
@@ -167,24 +171,35 @@ export const Header: React.FC<HeaderProps> = ({
               fontWeight: 700,
               color: '#FFFFFF',
               letterSpacing: '0.05em',
-              minWidth: 70,
+              minWidth: 50,
             }}
           >
             {formatTime(elapsedMs)}
           </Typography>
         </Box>
 
-        <Box sx={{ width: 1, height: 20, backgroundColor: '#232742' }} />
-
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-          <Typography variant="caption" sx={{ color: '#8E95B2', fontWeight: 600 }}>
+        {/* Chip 2: Record (Separate Chip) */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.8,
+            backgroundColor: '#0c0e1a',
+            padding: '6px 14px',
+            borderRadius: '24px',
+            border: '1px solid #232742',
+          }}
+        >
+          <EmojiEventsIcon sx={{ fontSize: 16, color: bestTimeMs ? '#FFB020' : '#6A708E' }} />
+          <Typography variant="caption" sx={{ color: '#8E95B2', fontWeight: 700, fontSize: '0.74rem' }}>
             {t.bestLabel}
           </Typography>
           <Typography
             variant="caption"
             sx={{
               fontFamily: 'monospace',
-              fontWeight: 700,
+              fontWeight: 800,
+              fontSize: '0.9rem',
               color: bestTimeMs ? '#00D2B4' : '#6A708E',
             }}
           >
