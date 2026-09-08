@@ -94,7 +94,7 @@ export const translations = {
     signDealBtn: 'Sign Deal',
     stickySolvedRadar: 'Sticky Docked! 🎯',
     stickyFixedRadar: 'Fixed (Escaped container!) ⚠️',
-    stickyNoBottomRadar: 'Sticky but missing bottom: 0!',
+    stickyNoBottomRadar: 'Not docked to bottom! ⚠️',
     stickyOffRadar: 'Scrolled out of view! 💥',
 
     // Viewport L3 (Meeting Card)
@@ -102,7 +102,7 @@ export const translations = {
     meetingNotesBtn: 'Brief',
     joinZoomBtn: 'Join Call',
     l3SolvedRadar: 'Cleanly Truncated! 🎯',
-    l3ClippedRadar: 'Clipped but missing ellipsis!',
+    l3ClippedRadar: 'Abruptly chopped off! ⚠️',
     l3WrappedRadar: 'Wrapping across multiple rows!',
     l3OverflowRadar: 'Overflowing card boundary! 💥',
 
@@ -173,12 +173,12 @@ export const translations = {
     // DevBot L2 (Sticky) Dialogue
     devbotL2StickyInitial: 'My z-index is higher than Outreach’s ARR! You cannot defeat a 32-bit integer, {name}!',
     devbotL2StickyFixed: 'Fixed?! Now the button is escaping the card entirely, {name}! Classic senior dev fail!',
-    devbotL2StickyNoBottom: 'Setting sticky without bottom: 0 does literally nothing, {name}! My 4800px offset is laughing at you!',
+    devbotL2StickyNoBottom: 'You typed one property and expected a miracle, {name}?! The button is still lost in the abyss! My 4800px offset reigns supreme!',
     devbotL2StickyDefeated: 'Position sticky?! The button actually docks to the viewport without a 400-line scroll listener in JavaScript, {name}?! Inconceivable!',
 
     // DevBot L3 Dialogue
     devbotL3Initial: 'Titles contain critical revenue intelligence, {name}! Cutting off text is literally destroying pipeline value!',
-    devbotL3ClippedNoEllipsis: 'Ha, {name}! You just hacked off the words abruptly! Where is the elegant ellipsis? That looks like amateur hour!',
+    devbotL3ClippedNoEllipsis: 'Ha, {name}! You just chopped the words in half like an axe! That looks hideous and broken! Total amateur hour!',
     devbotL3Wrapped: 'Wrapping into 7 lines, {name}? Now the calendar card looks like a novel! Good luck getting enterprise deals closed with that!',
     devbotL3Defeated: 'AN ELLIPSIS, {name}?! Now our sales reps will actually have to HOVER on the tooltip to read the full title?! Currrrse you!',
 
@@ -305,7 +305,7 @@ export const translations = {
     signDealBtn: 'Podepsat obchod',
     stickySolvedRadar: 'Sticky Ukotveno! 🎯',
     stickyFixedRadar: 'Fixed (Uteklo z kontejneru!) ⚠️',
-    stickyNoBottomRadar: 'Sticky, ale chybí bottom: 0!',
+    stickyNoBottomRadar: 'Není ukotveno dole! ⚠️',
     stickyOffRadar: 'Odscrollovalo pryč! 💥',
 
     // Viewport L3 (Meeting Card)
@@ -313,7 +313,7 @@ export const translations = {
     meetingNotesBtn: 'Poznámky',
     joinZoomBtn: 'Připojit se',
     l3SolvedRadar: 'Čistě zkráceno! 🎯',
-    l3ClippedRadar: 'Oříznuto, ale chybí tři tečky!',
+    l3ClippedRadar: 'Hrubě useknuto! ⚠️',
     l3WrappedRadar: 'Zalamuje se do více řádků!',
     l3OverflowRadar: 'Přetéká přes okraj karty! 💥',
 
@@ -384,12 +384,12 @@ export const translations = {
     // DevBot L2 (Sticky) Dialogue
     devbotL2StickyInitial: 'Můj z-index je vyšší než celoroční obrat Outreach! 32-bitové číslo v životě nepřekonáš, {name}!',
     devbotL2StickyFixed: 'Fixed?! To tlačítko teď uteklo z karty, {name}! Typický senior dev fail!',
-    devbotL2StickyNoBottom: 'Nastavit sticky bez bottom: 0 nic nedělá, {name}! Můj offset se ti směje do očí!',
+    devbotL2StickyNoBottom: 'Napsal jsi jednu vlastnost a čekáš zázrak, {name}?! To tlačítko je pořád ztracené v propadlišti! Můj offset se ti směje do očí!',
     devbotL2StickyDefeated: 'Position sticky?! To tlačítko se ukotvilo bez 400 řádků scroll listeneru v JavaScriptu, {name}?! Nemožné!',
 
     // DevBot L3 Dialogue
     devbotL3Initial: 'Názvy schůzek obsahují klíčové informace, {name}! Ořezávat text znamená doslova ničit pipeline!',
-    devbotL3ClippedNoEllipsis: 'Cha, {name}! Ty jsi ten text prostě seknul vejpůl! Kde jsou tři tečky? To vypadá jak práce z mateřské školy!',
+    devbotL3ClippedNoEllipsis: 'Cha, {name}! Ty jsi ten text usekl napůl jak sekerou! To vypadá naprosto příšerně! Úplná amatérština!',
     devbotL3Wrapped: 'Zalamovat to do 7 řádků, {name}? Ta karta teď vypadá jak román od Dostojevského! Takhle žádný enterprise deal neuzavřeš!',
     devbotL3Defeated: 'TŘI TEČKY, {name}?! Takže obchodníci teď budou muset najet myší na tooltip, aby si to přečetli?! Proklínám tě!',
 
