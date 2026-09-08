@@ -449,6 +449,13 @@ export function App() {
               t={t}
             />
 
+            {/* DevBot Realtime Commentary Bubble placed directly under Jira Ticket */}
+            <DevBotAvatar
+              mood={devBotState.mood}
+              message={devBotState.message}
+              badgeLabel={devBotState.badgeLabel}
+            />
+
             {/* Split Screen: Live Preview (Left) & Code Editor (Right) */}
             <Box
               sx={{
@@ -512,13 +519,6 @@ export function App() {
                 </>
               )}
             </Box>
-
-            {/* DevBot Realtime Commentary Bubble at the bottom */}
-            <DevBotAvatar
-              mood={devBotState.mood}
-              message={devBotState.message}
-              badgeLabel={devBotState.badgeLabel}
-            />
           </Container>
 
           {/* Victory Celebration Modal */}
