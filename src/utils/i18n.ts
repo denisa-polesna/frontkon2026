@@ -56,7 +56,7 @@ export const translations = {
 
     // Main Menu
     menuSubtitle: 'DevBot-3000 pushed directly to production at 4:59 PM on Friday. Can you fix the AI Junior’s broken CSS before prod explodes?',
-    menuDevbotTaunt: 'Welcome to the Outreach booth, {name}! I wrote 40,000 lines of negative margins, 2147483647 z-indices, and 99999px widths. Think you are smarter than a 400B parameter neural net?',
+    menuDevbotTaunt: 'Welcome to the Outreach booth! I wrote 40,000 lines of negative margins, 2147483647 z-indices, and 99999px widths. Think you are smarter than a 400B parameter neural net?',
     badgesHeader: 'Conference Badges to Earn:',
     seniorBadgeTitle: 'Unreplaceable Senior Engineer',
     seniorBadgeSub: 'Solve < 20s • Job security 100% (AI-proof)',
@@ -267,7 +267,7 @@ export const translations = {
 
     // Main Menu
     menuSubtitle: 'DevBot-3000 poslal kód přímo do produkce v pátek v 16:59. Zvládneš opravit rozbité CSS AI juniora dřív, než produkce vybuchne?',
-    menuDevbotTaunt: 'Vítej na stánku Outreach, {name}! Přepsal jsem všechno CSS do 40 000 řádků záporných marginů, z-indexu 2147483647 a šířek 99999px. Myslíš, že jsi chytřejší než 400-miliardový model?',
+    menuDevbotTaunt: 'Vítej na stánku Outreach! Přepsal jsem všechno CSS do 40 000 řádků záporných marginů, z-indexu 2147483647 a šířek 99999px. Myslíš, že jsi chytřejší než 400-miliardový model?',
     badgesHeader: 'Konferenční odznaky k získání:',
     seniorBadgeTitle: 'Nenahraditelný Senior Inženýr',
     seniorBadgeSub: 'Čas < 20s • Jistota práce 100 % (AI tě nenahradí)',

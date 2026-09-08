@@ -98,7 +98,7 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
           >
             <SmartToyIcon sx={{ color: '#FF4C61', fontSize: 24, flexShrink: 0 }} />
             <Typography variant="caption" sx={{ color: '#C8D0E5', fontStyle: 'italic', fontSize: '0.76rem' }}>
-              &ldquo;{t.menuDevbotTaunt.replace('{name}', name.trim() || 'human')}&rdquo;
+              &ldquo;{t.menuDevbotTaunt}&rdquo;
             </Typography>
           </Box>
 
