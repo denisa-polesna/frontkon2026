@@ -22,6 +22,7 @@ interface VictoryModalProps {
   playerName: string;
   timeMs: number;
   charCount: number;
+  userCss?: string;
   isNewBest: boolean;
   onNextLevel: () => void;
   language: Language;
@@ -34,6 +35,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   playerName,
   timeMs,
   charCount,
+  userCss = '',
   isNewBest,
   onNextLevel,
   language,
@@ -50,9 +52,19 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   };
 
   const getPostMortem = () => {
-    if (levelId === 'level1') return t.postMortemTextL1.replace('{name}', playerName);
-    if (levelId === 'level2') return t.postMortemTextL2.replace('{name}', playerName);
-    return t.postMortemTextL3.replace('{name}', playerName);
+    if (levelId === 'level1') {
+      const isFlex = userCss.toLowerCase().includes('flex');
+      const isGrid = userCss.toLowerCase().includes('grid');
+      let quote = t.postMortemTextL1;
+      if (isFlex) {
+        quote = t.postMortemTextL1Flex;
+      } else if (isGrid) {
+        quote = t.postMortemTextL1Grid;
+      }
+      return quote.replace(/{name}/g, playerName);
+    }
+    if (levelId === 'level2') return t.postMortemTextL2.replace(/{name}/g, playerName);
+    return t.postMortemTextL3.replace(/{name}/g, playerName);
   };
 
   const getNextLevelNumber = () => {

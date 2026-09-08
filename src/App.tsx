@@ -646,6 +646,7 @@ export function App() {
             playerName={playerName || 'Senior Dev'}
             timeMs={elapsedMs}
             charCount={activeUserCss.trim().length}
+            userCss={activeUserCss}
             isNewBest={isNewBest}
             onNextLevel={handleNextLevelProgression}
             language={language}
