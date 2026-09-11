@@ -39,6 +39,9 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
       const targetRect = targetRef.current.getBoundingClientRect();
       const modalRect = modalRef.current.getBoundingClientRect();
 
+      // Ensure elements are actually rendered and visible before measuring
+      if (targetRect.width === 0 || modalRect.width === 0) return;
+
       // Dynamically sync target ghost dimensions to match modal
       if (modalRect.height > 100 && Math.abs(modalDimensions.height - modalRect.height) > 4) {
         setModalDimensions({ width: modalRect.width, height: modalRect.height });
@@ -110,7 +113,7 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
-        minHeight: 520,
+        minHeight: { xs: 340, sm: 420, md: 500 },
       }}
     >
       {/* Dynamic Scoped Styles for the User's CSS */}
@@ -120,7 +123,7 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
             box-sizing: border-box;
             width: 100%;
             height: 100%;
-            ${userCss || '/* DevBot defaults */ display: block; padding: 24px;'}
+            ${userCss || '/* DevBot defaults */ display: block; padding: 16px;'}
           }
 
           #challenge-stage .modal-viewport > #prospect-modal {
@@ -139,22 +142,23 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '10px 16px',
+          padding: { xs: '6px 12px', sm: '10px 16px' },
           backgroundColor: '#161A2D',
           borderBottom: '1px solid #232842',
+          gap: 1,
         }}
       >
         {/* macOS window dots */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#FF5F56' }} />
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#27C93F' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexShrink: 0 }}>
+          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#27C93F' }} />
         </Box>
 
-        {/* Browser URL Bar */}
+        {/* Browser URL Bar (hidden on mobile to give room to Radar Chip) */}
         <Box
           sx={{
-            display: 'flex',
+            display: { xs: 'none', sm: 'flex' },
             alignItems: 'center',
             backgroundColor: '#0D101D',
             px: 2,
@@ -181,7 +185,7 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
         </Box>
 
         {/* Alignment Radar Status */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
           <Chip
             icon={isSolved ? <CheckCircleOutlinedIcon sx={{ fontSize: '14px !important' }} /> : <MyLocationIcon sx={{ fontSize: '14px !important' }} />}
             label={getChipLabel()}

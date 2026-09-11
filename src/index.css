@@ -1,12 +1,14 @@
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --bg-dark: #090B14;
-  --bg-panel: #121628;
-  --border-color: #232842;
-  --outreach-purple: #6E3FF3;
+  --bg-dark: #120042;
+  --bg-darkest: #120042;
+  --bg-panel: #160844;
+  --border-color: rgba(179, 176, 255, 0.18);
+  --outreach-brand: #5951ff;
+  --outreach-brand-light: #b3b0ff;
   --outreach-mint: #00D2B4;
-  --text-main: #F3F4F8;
+  --text-main: #FFFFFF;
   --text-muted: #8E95B2;
 }
 

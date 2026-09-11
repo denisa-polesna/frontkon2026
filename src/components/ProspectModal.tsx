@@ -28,8 +28,8 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
         ref={ref}
         id={id}
         sx={{
-          width: 380,
-          maxWidth: '92%',
+          width: { xs: 330, sm: 380 },
+          maxWidth: '95%',
           margin: 0,
           boxSizing: 'border-box',
           backgroundColor: '#181C2E',

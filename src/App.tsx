@@ -1,18 +1,29 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ThemeProvider, CssBaseline, Box, Container, Button, Typography } from '@mui/material';
+import {
+  ThemeProvider,
+  CssBaseline,
+  Box,
+  Container,
+  Button,
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CodeIcon from '@mui/icons-material/Code';
+import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
 import confetti from 'canvas-confetti';
 import { outreachTheme } from './theme';
 import { Header } from './components/Header';
 import { MainMenu } from './components/MainMenu';
-import { JiraTicketBanner } from './components/JiraTicketBanner';
+import { MissionBanner } from './components/MissionBanner';
 import { PreviewViewport, type AlignmentStatus } from './components/PreviewViewport';
 import { CodeEditor } from './components/CodeEditor';
 import { PreviewViewportSticky, type StickyStatus } from './components/PreviewViewportSticky';
 import { CodeEditorSticky } from './components/CodeEditorSticky';
 import { PreviewViewportLevel2, type OverflowStatus } from './components/PreviewViewportLevel2';
 import { CodeEditorLevel2 } from './components/CodeEditorLevel2';
-import { DevBotAvatar } from './components/DevBotAvatar';
 import { VictoryModal } from './components/VictoryModal';
 import { LeaderboardModal } from './components/LeaderboardModal';
 import { NameRegistrationModal } from './components/NameRegistrationModal';
@@ -24,6 +35,7 @@ import {
   saveStoredPlayerName,
   type GameStats,
 } from './utils/storage';
+import { submitRemoteRun } from './utils/leaderboardApi';
 import { sound } from './utils/audio';
 import { getStoredLanguage, saveLanguage, translations, type Language } from './utils/i18n';
 
@@ -54,6 +66,9 @@ export function App() {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const startTimeRef = useRef<number | null>(null);
   const timerFrameRef = useRef<number | null>(null);
+
+  // Mobile View Switcher: 'both' (split) | 'code' | 'preview'
+  const [mobileView, setMobileView] = useState<'both' | 'code' | 'preview'>('both');
 
   // Level 1 State (Center Modal)
   const [l1Css, setL1Css] = useState<string>('');
@@ -139,6 +154,7 @@ export function App() {
         const charCount = l1Css.trim().length;
         const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level1');
         setStats(updated);
+        submitRemoteRun({ timeMs: elapsedMs, charCount, playerTag: playerName || 'Senior Dev', levelId: 'level1' });
 
         setTimeout(() => {
           setShowVictory(true);
@@ -172,6 +188,7 @@ export function App() {
         const charCount = l2Css.trim().length;
         const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level2');
         setStats(updated);
+        submitRemoteRun({ timeMs: elapsedMs, charCount, playerTag: playerName || 'Senior Dev', levelId: 'level2' });
 
         setTimeout(() => {
           setShowVictory(true);
@@ -205,6 +222,7 @@ export function App() {
         const charCount = l3Css.trim().length;
         const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level3');
         setStats(updated);
+        submitRemoteRun({ timeMs: elapsedMs, charCount, playerTag: playerName || 'Senior Dev', levelId: 'level3' });
 
         setTimeout(() => {
           setShowVictory(true);
@@ -469,7 +487,11 @@ export function App() {
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#090B14',
+            backgroundColor: '#120042',
+            backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/69e7e28ad18979a7c4351f30_Hero%20Frame.svg")`,
+            backgroundPosition: '50% 0',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: { xs: 'cover', md: '100% auto' },
           }}
         >
           {/* Game Header */}
@@ -492,26 +514,69 @@ export function App() {
             maxWidth="xl"
             sx={{
               flex: 1,
-              py: 2,
-              px: { xs: 2, sm: 3 },
+              py: { xs: 1.2, sm: 2 },
+              px: { xs: 1.5, sm: 3 },
               display: 'flex',
               flexDirection: 'column',
-              gap: 1.8,
+              gap: { xs: 1.2, sm: 1.8 },
             }}
           >
-            {/* Jira Ticket Bug Report Banner */}
-            <JiraTicketBanner
+            {/* Integrated Mission Banner: Jira Bug + DevBot Live Roast */}
+            <MissionBanner
               levelId={activeLevel}
               isSolved={isCurrentLevelSolved}
+              devBot={devBotState}
               t={t}
             />
 
-            {/* DevBot Realtime Commentary Bubble placed directly under Jira Ticket */}
-            <DevBotAvatar
-              mood={devBotState.mood}
-              message={devBotState.message}
-              badgeLabel={devBotState.badgeLabel}
-            />
+            {/* Mobile View Switcher (Only visible on screens < md) */}
+            <Box
+              sx={{
+                display: { xs: 'flex', md: 'none' },
+                justifyContent: 'center',
+              }}
+            >
+              <ToggleButtonGroup
+                value={mobileView}
+                exclusive
+                onChange={(_, val) => val && setMobileView(val)}
+                size="small"
+                sx={{
+                  backgroundColor: '#160844',
+                  border: '1px solid rgba(179, 176, 255, 0.2)',
+                  borderRadius: 2,
+                  '& .MuiToggleButton-root': {
+                    py: '3px',
+                    px: 1.5,
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    color: '#b3b0ff',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    '&.Mui-selected': {
+                      backgroundColor: '#5951ff',
+                      color: '#FFF',
+                      '&:hover': { backgroundColor: '#433adb' },
+                    },
+                  },
+                }}
+              >
+                <ToggleButton value="both">
+                  <ViewSidebarIcon sx={{ fontSize: 13 }} />
+                  <span>Split</span>
+                </ToggleButton>
+                <ToggleButton value="code">
+                  <CodeIcon sx={{ fontSize: 13 }} />
+                  <span>Editor</span>
+                </ToggleButton>
+                <ToggleButton value="preview">
+                  <VisibilityIcon sx={{ fontSize: 13 }} />
+                  <span>Preview</span>
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
 
             {/* Split Screen: Live Preview (Left) & Code Editor (Right) */}
             <Box
@@ -519,7 +584,7 @@ export function App() {
                 position: 'relative',
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', lg: '1.25fr 1fr' },
-                gap: 2.5,
+                gap: { xs: 1.5, sm: 2.5 },
                 flex: 1,
               }}
             >
@@ -530,10 +595,10 @@ export function App() {
                     position: 'absolute',
                     inset: -4,
                     backdropFilter: 'blur(10px)',
-                    backgroundColor: 'rgba(9, 11, 20, 0.75)',
+                    backgroundColor: 'rgba(18, 0, 68, 0.85)',
                     zIndex: 20,
                     borderRadius: 2.5,
-                    border: '1px solid #232845',
+                    border: '1px solid rgba(179, 176, 255, 0.25)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -555,42 +620,84 @@ export function App() {
                     <Button
                       variant="contained"
                       size="large"
-                      startIcon={<PlayArrowIcon sx={{ fontSize: '30px !important' }} />}
+                      startIcon={<PlayArrowIcon sx={{ fontSize: '24px !important' }} />}
                       onClick={handleStartLevelTimer}
                       sx={{
-                        py: 2,
-                        px: { xs: 4, sm: 6 },
-                        fontSize: '1.2rem',
-                        fontWeight: 900,
-                        borderRadius: 3.5,
-                        background: 'linear-gradient(135deg, #6E3FF3 0%, #00D2B4 100%)',
+                        py: { xs: 1.4, sm: 1.8 },
+                        px: { xs: 3.5, sm: 5 },
+                        fontSize: { xs: '1rem', sm: '1.15rem' },
+                        fontWeight: 600,
+                        borderRadius: '6px',
+                        backgroundColor: '#5951ff',
                         color: '#FFFFFF',
-                        boxShadow: '0 0 40px rgba(110, 63, 243, 0.6), 0 10px 30px rgba(0, 0, 0, 0.7)',
-                        transition: 'all 0.25s ease',
+                        boxShadow: 'none',
+                        transition: 'background-color 0.25s ease',
                         '&:hover': {
-                          transform: 'scale(1.04)',
-                          boxShadow: '0 0 60px rgba(0, 210, 180, 0.8), 0 14px 40px rgba(0, 0, 0, 0.8)',
+                          backgroundColor: '#3028a1',
+                          boxShadow: 'none',
+                        },
+                        '&:active': {
+                          backgroundColor: '#030268',
                         },
                       }}
                     >
                       {t.startLevelTimerBtn}
                     </Button>
 
-                    <Typography variant="body2" sx={{ color: '#C4B5FD', fontWeight: 600, fontSize: '0.88rem' }}>
+                    <Typography variant="body2" sx={{ color: '#C4B5FD', fontWeight: 600, fontSize: '0.85rem' }}>
                       {t.readyPrompt}
                     </Typography>
                   </Box>
                 </Box>
               )}
 
-              {activeLevel === 'level1' && (
-                <>
+              {/* Viewport Column */}
+              <Box
+                sx={{
+                  display: {
+                    xs: mobileView === 'code' ? 'none' : 'flex',
+                    md: 'flex',
+                  },
+                  flexDirection: 'column',
+                }}
+              >
+                {activeLevel === 'level1' && (
                   <PreviewViewport
                     userCss={l1Css}
                     onDistanceChange={handleL1DistanceChange}
                     isSolved={l1Solved}
                     t={t}
                   />
+                )}
+                {activeLevel === 'level2' && (
+                  <PreviewViewportSticky
+                    userCss={l2Css}
+                    onStatusChange={handleL2StickyChange}
+                    isSolved={l2Solved}
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level3' && (
+                  <PreviewViewportLevel2
+                    userCss={l3Css}
+                    onStatusChange={handleL3StatusChange}
+                    isSolved={l3Solved}
+                    t={t}
+                  />
+                )}
+              </Box>
+
+              {/* Code Editor Column */}
+              <Box
+                sx={{
+                  display: {
+                    xs: mobileView === 'preview' ? 'none' : 'flex',
+                    md: 'flex',
+                  },
+                  flexDirection: 'column',
+                }}
+              >
+                {activeLevel === 'level1' && (
                   <CodeEditor
                     value={l1Css}
                     onChange={handleCssChange}
@@ -598,17 +705,8 @@ export function App() {
                     onSolveAttempt={handleSolveAttempt}
                     t={t}
                   />
-                </>
-              )}
-
-              {activeLevel === 'level2' && (
-                <>
-                  <PreviewViewportSticky
-                    userCss={l2Css}
-                    onStatusChange={handleL2StickyChange}
-                    isSolved={l2Solved}
-                    t={t}
-                  />
+                )}
+                {activeLevel === 'level2' && (
                   <CodeEditorSticky
                     value={l2Css}
                     onChange={handleCssChange}
@@ -616,17 +714,8 @@ export function App() {
                     onSolveAttempt={handleSolveAttempt}
                     t={t}
                   />
-                </>
-              )}
-
-              {activeLevel === 'level3' && (
-                <>
-                  <PreviewViewportLevel2
-                    userCss={l3Css}
-                    onStatusChange={handleL3StatusChange}
-                    isSolved={l3Solved}
-                    t={t}
-                  />
+                )}
+                {activeLevel === 'level3' && (
                   <CodeEditorLevel2
                     value={l3Css}
                     onChange={handleCssChange}
@@ -634,8 +723,8 @@ export function App() {
                     onSolveAttempt={handleSolveAttempt}
                     t={t}
                   />
-                </>
-              )}
+                )}
+              </Box>
             </Box>
           </Container>
 

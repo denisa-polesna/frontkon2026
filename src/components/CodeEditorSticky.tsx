@@ -4,15 +4,9 @@ import {
   Typography,
   Button,
   Chip,
-  Collapse,
-  IconButton,
-  Tooltip,
 } from '@mui/material';
-import CodeIcon from '@mui/icons-material/Code';
-import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
 import CodeMirror, { oneDark } from '@uiw/react-codemirror';
 import { css } from '@codemirror/lang-css';
 import { cssEditorExtensions } from '../utils/cssAutocomplete';
@@ -33,7 +27,6 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
   onSolveAttempt,
   t,
 }) => {
-  const [showHint, setShowHint] = useState<boolean>(false);
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
 
   const applyPreset = (presetCss: string) => {
@@ -57,282 +50,190 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
+        backgroundColor: '#101324',
+        borderRadius: 2.5,
+        border: isSolved ? '1.5px solid #00D2B4' : '1px solid #202642',
+        boxShadow: isSolved
+          ? '0 0 24px rgba(0, 210, 180, 0.2)'
+          : '0 8px 24px rgba(0, 0, 0, 0.35)',
+        overflow: 'hidden',
         height: '100%',
+        minHeight: { xs: 240, md: 360 },
       }}
     >
-      {/* PR Card / Context Header */}
+      {/* Sleek Minimal Toolbar Header */}
       <Box
         sx={{
-          backgroundColor: '#131627',
-          borderRadius: 2,
-          padding: '12px 16px',
-          border: '1px solid #232842',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <GitHubIcon sx={{ fontSize: 18, color: '#C4B5FD' }} />
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#FFFFFF', fontSize: '0.88rem' }}>
-              {t.l2StickyPrTitle || 'PR #407: Make CTA button always visible'}
-            </Typography>
-          </Box>
-          <Chip
-            label={t.needsReview}
-            size="small"
-            sx={{
-              height: 20,
-              fontSize: '0.65rem',
-              fontWeight: 700,
-              backgroundColor: 'rgba(255, 176, 32, 0.15)',
-              color: '#FFB020',
-              border: '1px solid rgba(255, 176, 32, 0.3)',
-            }}
-          />
-        </Box>
-        <Typography variant="caption" sx={{ color: '#8892B0', fontSize: '0.74rem' }}>
-          {t.branchLabel} <code style={{ color: '#C4B5FD' }}>devbot/max-z-index</code> &bull; Target: <code>main</code>
-        </Typography>
-      </Box>
-
-      {/* DevBot's Bad Code (Crossed out) */}
-      <Box
-        sx={{
-          backgroundColor: '#1a1217',
-          borderRadius: 2,
-          padding: '12px 16px',
-          border: '1px solid rgba(255, 76, 97, 0.3)',
-          position: 'relative',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Typography
-            sx={{
-              fontSize: '0.74rem',
-              fontWeight: 700,
-              color: '#FF6B7D',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.8,
-            }}
-          >
-            {t.devbotHallucination}
-          </Typography>
-          <Typography variant="caption" sx={{ color: '#B35D67', fontSize: '0.68rem', fontStyle: 'italic' }}>
-            {t.l2DevbotStickyExcuse || '“CSS needs 64-bit z-index support”'}
-          </Typography>
-        </Box>
-
-        <Box
-          component="pre"
-          sx={{
-            m: 0,
-            fontFamily: 'monospace',
-            fontSize: '0.78rem',
-            color: '#B35D67',
-            textDecoration: 'line-through',
-            opacity: 0.85,
-            lineHeight: 1.5,
-          }}
-        >
-          {`.deal-action-bar {
-  position: absolute;
-  top: 4800px;
-  z-index: 2147483647 !important;
-}`}
-        </Box>
-      </Box>
-
-      {/* Senior Dev Editor */}
-      <Box
-        sx={{
-          flex: 1,
           display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#0F1220',
-          borderRadius: 2,
-          border: isSolved ? '1px solid #00D2B4' : '1px solid #232842',
-          overflow: 'hidden',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: { xs: 1.5, sm: 2 },
+          py: 1,
+          backgroundColor: '#14182C',
+          borderBottom: '1px solid #202642',
+          flexWrap: 'wrap',
+          gap: 1,
         }}
       >
-        {/* Editor Title Bar */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '8px 14px',
-            backgroundColor: '#16192B',
-            borderBottom: '1px solid #232842',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CodeIcon sx={{ fontSize: 16, color: '#00D2B4' }} />
-            <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: '#FFFFFF' }}>
-              {t.seniorEditorTitle}
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="caption" sx={{ color: '#8892B0', fontFamily: 'monospace', fontSize: '0.72rem' }}>
-              {t.golfCount.replace('{chars}', charCount.toString())}
-            </Typography>
-            <Tooltip title={t.hintsToggle}>
-              <IconButton
-                size="small"
-                onClick={() => setShowHint(!showHint)}
-                sx={{
-                  color: showHint ? '#FFB020' : '#8892B0',
-                  padding: '2px',
-                }}
-              >
-                <LightbulbOutlinedIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-
-        {/* Collapsible Hints Box */}
-        <Collapse in={showHint}>
-          <Box
-            sx={{
-              padding: '10px 14px',
-              backgroundColor: '#1F1B12',
-              borderBottom: '1px solid #382D16',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1,
-            }}
-          >
-            <Typography variant="caption" sx={{ color: '#FFD166', fontWeight: 600 }}>
-              {t.hintsHeader}
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              <Button
-                size="small"
-                variant="outlined"
-                startIcon={<ContentCopyIcon sx={{ fontSize: '12px !important' }} />}
-                onClick={() => applyPreset('position: sticky;\nbottom: 0;')}
-                sx={{
-                  borderColor: '#4A3B18',
-                  color: '#FFD166',
-                  fontSize: '0.72rem',
-                  py: 0.2,
-                }}
-              >
-                {t.l2HintSticky || 'Use position: sticky'}
-              </Button>
-            </Box>
-          </Box>
-        </Collapse>
-
-        {/* Code Input Canvas with CodeMirror + CSS Autocompletion & Tab support */}
-        <Box
-          sx={{
-            flex: 1,
-            position: 'relative',
-            padding: '10px 14px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        {/* Left: Selector Tag & Shortcut */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
           <Typography
             sx={{
-              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-              fontSize: '0.86rem',
-              color: '#8E95B2',
-              userSelect: 'none',
-              mb: 0.5,
+              color: '#00D2B4',
+              fontFamily: 'ui-monospace, monospace',
+              fontWeight: 800,
+              fontSize: '0.82rem',
             }}
           >
-            <span style={{ color: '#00D2B4', fontWeight: 700 }}>.deal-action-bar</span> &#123;
+            .deal-action-bar
           </Typography>
-
-          <Box sx={{ flex: 1, minHeight: 125 }}>
-            <CodeMirror
-              value={value}
-              height="135px"
-              theme={oneDark}
-              extensions={[css(), ...cssEditorExtensions]}
-              onChange={(val) => onChange(val)}
-              basicSetup={{
-                lineNumbers: true,
-                foldGutter: false,
-                dropCursor: false,
-                allowMultipleSelections: false,
-                indentOnInput: true,
-                autocompletion: false,
-              }}
-              placeholder={t.editorPlaceholder}
-            />
-          </Box>
-
-          <Typography
-            sx={{
-              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-              fontSize: '0.86rem',
-              color: '#8E95B2',
-              userSelect: 'none',
-              mt: 0.5,
-            }}
-          >
-            &#125;
-          </Typography>
-        </Box>
-
-        {/* Bottom Action Footer */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '10px 14px',
-            backgroundColor: '#141829',
-            borderTop: '1px solid #232842',
-            gap: 1,
-            flexWrap: 'wrap',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="caption" sx={{ color: '#6A7394', fontSize: '0.72rem' }}>
-              {t.autoCheckLabel}
-            </Typography>
-            {failedVerify && (
-              <Chip
-                label={t.verifyFailedToast}
-                size="small"
-                sx={{
-                  bgcolor: 'rgba(255, 76, 97, 0.2)',
-                  color: '#FF6B7D',
-                  border: '1px solid rgba(255, 76, 97, 0.4)',
-                  fontSize: '0.68rem',
-                  fontWeight: 700,
-                  animation: 'shake 0.35s ease-in-out',
-                }}
-              />
-            )}
-          </Box>
 
           <Button
-            variant="contained"
             size="small"
-            color={isSolved ? 'success' : 'primary'}
-            startIcon={isSolved ? <CheckCircleIcon /> : undefined}
-            onClick={handleVerifyClick}
+            startIcon={<FlashOnIcon sx={{ fontSize: '12px !important' }} />}
+            onClick={() => applyPreset('position: sticky;\nbottom: 0;')}
             sx={{
-              fontSize: '0.78rem',
+              py: '2px',
+              px: 1,
+              minWidth: 'auto',
+              fontSize: '0.68rem',
               fontWeight: 700,
-              backgroundColor: isSolved ? '#00D2B4' : failedVerify ? '#D9253B' : '#6E3FF3',
-              color: isSolved ? '#08141B' : '#FFF',
-              animation: failedVerify ? 'shake 0.35s ease-in-out' : 'none',
+              color: '#00D2B4',
+              backgroundColor: 'rgba(0, 210, 180, 0.1)',
+              border: '1px solid rgba(0, 210, 180, 0.25)',
               '&:hover': {
-                backgroundColor: isSolved ? '#33DBC2' : failedVerify ? '#FF4C61' : '#572BD4',
+                backgroundColor: 'rgba(0, 210, 180, 0.2)',
               },
             }}
           >
-            {isSolved ? t.mergedBtn : t.verifyBtn}
+            Sticky Dock
           </Button>
         </Box>
+
+        {/* Right: Golf count */}
+        <Typography
+          sx={{
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '0.74rem',
+            color: '#8E95B2',
+            fontWeight: 700,
+          }}
+        >
+          {t.golfCount.replace('{chars}', charCount.toString())}
+        </Typography>
+      </Box>
+
+      {/* Code Editor Body */}
+      <Box
+        sx={{
+          flex: 1,
+          p: { xs: 1.2, sm: 1.8 },
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+        }}
+      >
+        <Typography
+          sx={{
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '0.84rem',
+            color: '#8E95B2',
+            userSelect: 'none',
+            mb: 0.5,
+          }}
+        >
+          <span style={{ color: '#00D2B4', fontWeight: 700 }}>.deal-action-bar</span> &#123;
+        </Typography>
+
+        <Box sx={{ flex: 1, minHeight: { xs: 100, md: 150 } }}>
+          <CodeMirror
+            value={value}
+            height="100%"
+            minHeight="110px"
+            theme={oneDark}
+            extensions={[css(), ...cssEditorExtensions]}
+            onChange={(val) => onChange(val)}
+            basicSetup={{
+              lineNumbers: true,
+              foldGutter: false,
+              dropCursor: false,
+              allowMultipleSelections: false,
+              indentOnInput: true,
+              autocompletion: false,
+            }}
+            placeholder={t.editorPlaceholder}
+          />
+        </Box>
+
+        <Typography
+          sx={{
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '0.84rem',
+            color: '#8E95B2',
+            userSelect: 'none',
+            mt: 0.5,
+          }}
+        >
+          &#125;
+        </Typography>
+      </Box>
+
+      {/* Clean Bottom Action Bar */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: { xs: 1.5, sm: 2 },
+          py: 1.2,
+          backgroundColor: '#12162A',
+          borderTop: '1px solid #202642',
+          gap: 1,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+          {failedVerify ? (
+            <Chip
+              label={t.verifyFailedToast}
+              size="small"
+              sx={{
+                bgcolor: 'rgba(255, 76, 97, 0.2)',
+                color: '#FF6B7D',
+                border: '1px solid rgba(255, 76, 97, 0.4)',
+                fontSize: '0.66rem',
+                fontWeight: 700,
+                animation: 'shake 0.35s ease-in-out',
+              }}
+            />
+          ) : (
+            <Typography variant="caption" sx={{ color: '#6A7394', fontSize: '0.7rem' }}>
+              {t.autoCheckLabel}
+            </Typography>
+          )}
+        </Box>
+
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={isSolved ? <CheckCircleIcon /> : undefined}
+          onClick={handleVerifyClick}
+          sx={{
+            py: 0.8,
+            px: { xs: 2, sm: 2.5 },
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            letterSpacing: '0.02em',
+            backgroundColor: isSolved ? '#00D2B4' : failedVerify ? '#D9253B' : '#6E3FF3',
+            color: isSolved ? '#08141B' : '#FFF',
+            animation: failedVerify ? 'shake 0.35s ease-in-out' : 'none',
+            flexShrink: 0,
+            '&:hover': {
+              backgroundColor: isSolved ? '#33DBC2' : failedVerify ? '#FF4C61' : '#572BD4',
+            },
+          }}
+        >
+          {isSolved ? t.mergedBtn : t.verifyBtn}
+        </Button>
       </Box>
     </Box>
   );

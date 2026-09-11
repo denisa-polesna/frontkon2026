@@ -110,7 +110,7 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
-        minHeight: 520,
+        minHeight: { xs: 340, sm: 420, md: 500 },
       }}
     >
       {/* Dynamic Scoped Styles for the Sticky Action Bar */}
@@ -133,20 +133,21 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '10px 16px',
+          padding: { xs: '6px 12px', sm: '10px 16px' },
           backgroundColor: '#161A2D',
           borderBottom: '1px solid #232842',
+          gap: 1,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#FF5F56' }} />
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#27C93F' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexShrink: 0 }}>
+          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#27C93F' }} />
         </Box>
 
         <Box
           sx={{
-            display: 'flex',
+            display: { xs: 'none', sm: 'flex' },
             alignItems: 'center',
             backgroundColor: '#0D101D',
             px: 2,
@@ -180,6 +181,7 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
             fontSize: '0.72rem',
             fontWeight: 700,
             height: 24,
+            flexShrink: 0,
             backgroundColor: chip.bg,
             color: chip.color,
             border: `1px solid ${chip.border}`,
@@ -198,7 +200,7 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          p: 2.5,
+          p: { xs: 1.5, sm: 2.5 },
           backgroundImage: `
             radial-gradient(circle at 50% 50%, rgba(110, 63, 243, 0.08) 0%, transparent 70%),
             linear-gradient(to right, #141829 1px, transparent 1px),

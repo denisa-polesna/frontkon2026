@@ -29,15 +29,15 @@ export const DealTimelineCard: React.FC<DealTimelineCardProps> = ({
     <Card
       id={id}
       sx={{
-        width: 420,
-        maxWidth: '94%',
+        width: { xs: '100%', sm: 420 },
+        maxWidth: '96%',
         backgroundColor: '#161A2D',
         borderRadius: 2.5,
         border: '1px solid #282F4E',
         boxShadow: '0 20px 45px rgba(0, 0, 0, 0.65), 0 0 20px rgba(110, 63, 243, 0.15)',
         display: 'flex',
         flexDirection: 'column',
-        height: 440,
+        height: { xs: 290, sm: 380, md: 440 },
         overflow: 'hidden',
         position: 'relative',
         userSelect: 'none',

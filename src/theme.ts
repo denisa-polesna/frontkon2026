@@ -4,9 +4,9 @@ export const outreachTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#6E3FF3', // Outreach Signature Purple
-      light: '#8B64F6',
-      dark: '#4D24BD',
+      main: '#5951ff', // Outreach Signature Brand Color from outreach.ai
+      light: '#7a7fff',
+      dark: '#3028a1',
       contrastText: '#FFFFFF',
     },
     secondary: {
@@ -16,8 +16,8 @@ export const outreachTheme = createTheme({
       contrastText: '#0A0E1A',
     },
     background: {
-      default: '#0A0D18',
-      paper: '#141828',
+      default: '#0c0226', // Outreach Deep Midnight
+      paper: '#160844',
     },
     text: {
       primary: '#F0F3FA',
@@ -37,6 +37,7 @@ export const outreachTheme = createTheme({
   },
   typography: {
     fontFamily: [
+      'Lexend',
       '-apple-system',
       'BlinkMacSystemFont',
       '"Segoe UI"',
@@ -51,16 +52,41 @@ export const outreachTheme = createTheme({
     },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 6,
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 6, // matching outreach.ai (.25rem / 6px)
+          fontFamily: 'Lexend, sans-serif',
+          fontWeight: 600,
+          textTransform: 'none',
+          boxShadow: 'none',
+          transition: 'background-color 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.25s cubic-bezier(0.165, 0.84, 0.44, 1)',
+          '&:hover': {
+            boxShadow: 'none',
+          },
+        },
+        contained: {
+          backgroundColor: '#5951ff',
+          color: '#ffffff',
           boxShadow: 'none',
           '&:hover': {
-            boxShadow: '0 4px 12px rgba(110, 63, 243, 0.3)',
+            backgroundColor: '#3028a1',
+            boxShadow: 'none',
+          },
+          '&:active': {
+            backgroundColor: '#030268',
+          },
+        },
+        outlined: {
+          borderColor: 'rgba(179, 176, 255, 0.35)',
+          color: '#ffffff',
+          '&:hover': {
+            backgroundColor: '#5951ff',
+            borderColor: '#5951ff',
+            color: '#ffffff',
           },
         },
       },

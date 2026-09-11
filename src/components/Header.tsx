@@ -9,8 +9,6 @@ import {
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { OutreachLogo } from './OutreachLogo';
@@ -25,8 +23,8 @@ interface HeaderProps {
   onReset: () => void;
   onBackToMenu?: () => void;
   currentLevel: 'level1' | 'level2' | 'level3';
-  soundEnabled: boolean;
-  onToggleSound: () => void;
+  soundEnabled?: boolean;
+  onToggleSound?: () => void;
   language: Language;
   onToggleLanguage: () => void;
   t: typeof translations['en'];
@@ -39,12 +37,18 @@ export const Header: React.FC<HeaderProps> = ({
   onReset,
   onBackToMenu,
   currentLevel,
-  soundEnabled,
-  onToggleSound,
   language,
   onToggleLanguage,
   t,
 }) => {
+  const levelNumber = currentLevel === 'level1' ? '1' : currentLevel === 'level2' ? '2' : '3';
+  const levelBadgeLabel =
+    currentLevel === 'level1'
+      ? t.l1Badge
+      : currentLevel === 'level2'
+      ? t.l2Badge
+      : t.l3Badge;
+
   return (
     <Box
       component="header"
@@ -52,164 +56,159 @@ export const Header: React.FC<HeaderProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 2,
-        padding: '12px 24px',
-        backgroundColor: '#121526',
-        borderBottom: '1px solid #232742',
+        flexWrap: 'nowrap',
+        gap: { xs: 1, sm: 2 },
+        padding: { xs: '8px 12px', sm: '10px 20px' },
+        backgroundColor: '#1f1f1f',
+        borderBottom: '1px solid #2e2e2e',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
       }}
     >
-      {/* Brand, Back Button & Title */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      {/* Left: Back + Brand + Level */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 1.5 }, minWidth: 0 }}>
         {onBackToMenu && (
-          <Button
-            size="small"
-            variant="outlined"
-            startIcon={<ArrowBackIcon sx={{ fontSize: 16 }} />}
-            onClick={() => {
-              sound.playBlip();
-              onBackToMenu();
-            }}
-            sx={{
-              borderColor: '#2D3252',
-              color: '#C4B5FD',
-              fontSize: '0.78rem',
-              fontWeight: 700,
-              minWidth: 78,
-              '&:hover': {
-                borderColor: '#6E3FF3',
-                backgroundColor: 'rgba(110, 63, 243, 0.1)',
-              },
-            }}
-          >
-            {t.menuBtn}
-          </Button>
-        )}
-
-        <OutreachLogo height={20} />
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography
-              variant="h6"
+          <Tooltip title={t.menuBtn}>
+            <Button
+              size="small"
+              variant="outlined"
+              startIcon={<ArrowBackIcon sx={{ fontSize: 16 }} />}
+              onClick={() => {
+                sound.playBlip();
+                onBackToMenu();
+              }}
               sx={{
-                fontWeight: 800,
-                fontSize: '1.25rem',
-                letterSpacing: '-0.02em',
-                background: 'linear-gradient(90deg, #FFFFFF 0%, #C4B5FD 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                borderColor: '#3a3a3a',
+                color: '#FFFFFF',
+                backgroundColor: '#282828',
+                fontSize: '0.76rem',
+                fontWeight: 600,
+                minWidth: { xs: 36, sm: 72 },
+                px: { xs: 1, sm: 1.5 },
+                py: '4px',
+                borderRadius: '6px',
+                '& .MuiButton-startIcon': {
+                  mr: { xs: 0, sm: 0.8 },
+                },
+                '&:hover': {
+                  borderColor: '#5951ff',
+                  backgroundColor: '#5951ff',
+                  color: '#FFFFFF',
+                },
               }}
             >
-              {t.appTitle}
-            </Typography>
-            <Chip
-              label={
-                currentLevel === 'level1'
-                  ? t.l1Badge
-                  : currentLevel === 'level2'
-                  ? t.l2Badge
-                  : t.l3Badge
-              }
-              size="small"
-              sx={{
-                height: 20,
-                fontSize: '0.68rem',
-                backgroundColor:
-                  currentLevel === 'level1'
-                    ? 'rgba(110, 63, 243, 0.25)'
-                    : currentLevel === 'level2'
-                    ? 'rgba(0, 210, 180, 0.2)'
-                    : 'rgba(255, 176, 32, 0.2)',
-                color:
-                  currentLevel === 'level1'
-                    ? '#C4B5FD'
-                    : currentLevel === 'level2'
-                    ? '#00D2B4'
-                    : '#FFD166',
-                border: `1px solid ${
-                  currentLevel === 'level1'
-                    ? 'rgba(110, 63, 243, 0.4)'
-                    : currentLevel === 'level2'
-                    ? 'rgba(0, 210, 180, 0.4)'
-                    : 'rgba(255, 176, 32, 0.4)'
-                }`,
-                fontWeight: 700,
-              }}
-            />
-          </Box>
-          <Typography variant="caption" sx={{ color: '#8E95B2', display: 'block', fontSize: '0.78rem' }}>
-            {currentLevel === 'level1'
-              ? t.subtitleL1
-              : currentLevel === 'level2'
-              ? t.subtitleL2
-              : t.subtitleL3}
-          </Typography>
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                {t.menuBtn}
+              </Box>
+            </Button>
+          </Tooltip>
+        )}
+
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <OutreachLogo height={18} />
         </Box>
+
+        <Chip
+          label={
+            <Box component="span">
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                {levelBadgeLabel}
+              </Box>
+              <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
+                L{levelNumber}
+              </Box>
+            </Box>
+          }
+          size="small"
+          sx={{
+            height: 24,
+            fontSize: '0.72rem',
+            fontWeight: 800,
+            borderRadius: '6px',
+            backgroundColor:
+              currentLevel === 'level1'
+                ? 'rgba(89, 81, 255, 0.25)'
+                : currentLevel === 'level2'
+                ? 'rgba(0, 210, 180, 0.15)'
+                : 'rgba(255, 176, 32, 0.15)',
+            color:
+              currentLevel === 'level1'
+                ? '#b3b0ff'
+                : currentLevel === 'level2'
+                ? '#00D2B4'
+                : '#FFD166',
+            border: `1px solid ${
+              currentLevel === 'level1'
+                ? 'rgba(179, 176, 255, 0.35)'
+                : currentLevel === 'level2'
+                ? 'rgba(0, 210, 180, 0.35)'
+                : 'rgba(255, 176, 32, 0.35)'
+            }`,
+          }}
+        />
       </Box>
 
-      {/* Middle: Live Speedrun Timer & Separate Level Record Chip */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-        {/* Chip 1: Timer */}
+      {/* Middle: Clean Live Timer & Record */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 1.2 } }}>
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
-            backgroundColor: '#0c0e1a',
-            padding: '6px 16px',
-            borderRadius: '24px',
-            border: `1px solid ${isRunning ? '#00D2B4' : '#232742'}`,
-            transition: 'border-color 0.3s ease',
+            gap: 0.8,
+            backgroundColor: '#141414',
+            px: { xs: 1.2, sm: 1.8 },
+            py: '4px',
+            borderRadius: '6px',
+            border: `1px solid ${isRunning ? '#00D2B4' : '#333333'}`,
+            boxShadow: isRunning ? '0 0 12px rgba(0, 210, 180, 0.25)' : 'none',
+            transition: 'all 0.25s ease',
           }}
         >
-          <PlayArrowIcon sx={{ fontSize: 16, color: isRunning ? '#00D2B4' : '#6A708E' }} />
+          <PlayArrowIcon sx={{ fontSize: 14, color: isRunning ? '#00D2B4' : '#8E95B2' }} />
           <Typography
             sx={{
-              fontFamily: 'monospace',
-              fontSize: '1.15rem',
-              fontWeight: 700,
+              fontFamily: 'ui-monospace, monospace',
+              fontSize: { xs: '0.95rem', sm: '1.1rem' },
+              fontWeight: 800,
               color: '#FFFFFF',
-              letterSpacing: '0.05em',
-              minWidth: 50,
+              letterSpacing: '0.04em',
             }}
           >
             {formatTime(elapsedMs)}
           </Typography>
         </Box>
 
-        {/* Chip 2: Record (Separate Chip) */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.8,
-            backgroundColor: '#0c0e1a',
-            padding: '6px 14px',
-            borderRadius: '24px',
-            border: '1px solid #232742',
-          }}
-        >
-          <EmojiEventsIcon sx={{ fontSize: 16, color: bestTimeMs ? '#FFB020' : '#6A708E' }} />
-          <Typography variant="caption" sx={{ color: '#8E95B2', fontWeight: 700, fontSize: '0.74rem' }}>
-            {t.bestLabel}
-          </Typography>
-          <Typography
-            variant="caption"
+        {bestTimeMs !== null && (
+          <Box
             sx={{
-              fontFamily: 'monospace',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              color: bestTimeMs ? '#00D2B4' : '#6A708E',
+              display: { xs: 'none', sm: 'flex' },
+              alignItems: 'center',
+              gap: 0.5,
+              backgroundColor: '#141414',
+              px: 1.2,
+              py: '4px',
+              borderRadius: '6px',
+              border: '1px solid #333333',
             }}
           >
-            {formatTime(bestTimeMs)}
-          </Typography>
-        </Box>
+            <EmojiEventsIcon sx={{ fontSize: 14, color: '#FFB020' }} />
+            <Typography
+              sx={{
+                fontFamily: 'ui-monospace, monospace',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                color: '#00D2B4',
+              }}
+            >
+              {formatTime(bestTimeMs)}
+            </Typography>
+          </Box>
+        )}
       </Box>
 
       {/* Right Controls */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 0.8 } }}>
         <Tooltip title={t.resetTooltip}>
           <IconButton
             size="small"
@@ -218,61 +217,46 @@ export const Header: React.FC<HeaderProps> = ({
               onReset();
             }}
             sx={{
-              color: '#9BA3BE',
-              backgroundColor: '#191D33',
-              border: '1px solid #282E4E',
+              color: '#FFFFFF',
+              backgroundColor: '#282828',
+              border: '1px solid #3a3a3a',
+              borderRadius: '6px',
+              width: 30,
+              height: 30,
               '&:hover': {
                 color: '#FFF',
-                backgroundColor: '#232948',
+                backgroundColor: '#383838',
               },
             }}
           >
-            <RestartAltIcon fontSize="small" />
+            <RestartAltIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </Tooltip>
 
-        <Tooltip title={soundEnabled ? t.muteTooltip : t.unmuteTooltip}>
-          <IconButton
-            size="small"
-            onClick={onToggleSound}
-            sx={{
-              color: soundEnabled ? '#00D2B4' : '#6A708E',
-              backgroundColor: '#191D33',
-              border: '1px solid #282E4E',
-              '&:hover': {
-                backgroundColor: '#232948',
-              },
-            }}
-          >
-            {soundEnabled ? <VolumeUpIcon fontSize="small" /> : <VolumeOffIcon fontSize="small" />}
-          </IconButton>
-        </Tooltip>
-
-        {/* Language Switcher (EN / CZ) placed right next to Reset and Sound */}
         <Tooltip title={t.langTooltip}>
           <Button
             size="small"
             variant="outlined"
             onClick={onToggleLanguage}
             sx={{
-              minWidth: 64,
-              px: 1,
-              py: '4px',
-              fontSize: '0.75rem',
-              fontWeight: 800,
-              borderColor: '#282E4E',
-              backgroundColor: '#191D33',
-              color: '#C4B5FD',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.6,
+              minWidth: 44,
+              px: 0.8,
+              py: '3px',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              borderColor: '#3a3a3a',
+              backgroundColor: '#282828',
+              color: '#FFFFFF',
+              borderRadius: '6px',
+              height: 30,
               '&:hover': {
-                borderColor: '#6E3FF3',
-                backgroundColor: '#232948',
+                borderColor: '#5951ff',
+                backgroundColor: '#5951ff',
+                color: '#FFFFFF',
               },
             }}
           >
-            {language === 'cz' ? '🇨🇿 CZ' : '🇬🇧 EN'}
+            {language === 'cz' ? 'CZ' : 'EN'}
           </Button>
         </Tooltip>
       </Box>
