@@ -224,7 +224,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
             backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/698651938e6808536770fe17_dot-repeat-svg.svg")`,
             backgroundRepeat: 'repeat',
             borderRadius: '12px',
-            border: '1px solid rgba(89, 81, 255, 0.35)',
+            border: '1px solid #2e2e2e',
             boxShadow: '0 12px 40px rgba(0, 0, 0, 0.35)',
             overflow: 'hidden',
             mb: 3,
@@ -238,7 +238,16 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
             </Box>
           ) : (
             <TableContainer sx={{ maxHeight: { xs: '65vh', sm: '70vh', md: 680, xl: 800 }, backgroundColor: 'transparent' }}>
-              <Table stickyHeader size="medium">
+              <Table
+                stickyHeader
+                size="medium"
+                sx={{
+                  '& .MuiTableCell-stickyHeader': {
+                    backgroundColor: '#1f1f1f',
+                    borderBottom: '1px solid #2e2e2e !important',
+                  },
+                }}
+              >
                 <TableHead
                   sx={{
                     '& .MuiTableCell-head': {
@@ -254,10 +263,10 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                     },
                   }}
                 >
-                  <TableRow>
-                    <TableCell width="44%">{t.colPlayer}</TableCell>
-                    <TableCell width="36%">{t.colRating}</TableCell>
-                    <TableCell width="20%" align="right">{t.colTime}</TableCell>
+                  <TableRow sx={{ '& th': { borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' } }}>
+                    <TableCell width="44%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colPlayer}</TableCell>
+                    <TableCell width="36%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRating}</TableCell>
+                    <TableCell width="20%" align="right" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

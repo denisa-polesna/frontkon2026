@@ -7,7 +7,6 @@ import {
   Tooltip,
   Button,
 } from '@mui/material';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
@@ -18,7 +17,7 @@ import type { Language, translations } from '../utils/i18n';
 
 interface HeaderProps {
   elapsedMs: number;
-  bestTimeMs: number | null;
+  bestTimeMs?: number | null;
   isRunning: boolean;
   onReset?: () => void;
   onBackToMenu?: () => void;
@@ -32,7 +31,6 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   elapsedMs,
-  bestTimeMs,
   isRunning,
   onBackToMenu,
   currentLevel,
@@ -170,8 +168,8 @@ export const Header: React.FC<HeaderProps> = ({
             px: { xs: 1.4, sm: 2 },
             py: '4px',
             borderRadius: '6px',
-            border: `1px solid ${isRunning ? '#00D2B4' : '#333333'}`,
-            boxShadow: isRunning ? '0 0 12px rgba(0, 210, 180, 0.25)' : 'none',
+            border: `1px solid ${isRunning ? '#5951ff' : '#333333'}`,
+            boxShadow: isRunning ? '0 0 14px rgba(89, 81, 255, 0.35)' : 'none',
             transition: 'all 0.25s ease',
           }}
         >
@@ -187,33 +185,6 @@ export const Header: React.FC<HeaderProps> = ({
             {formatTime(elapsedMs)}
           </Typography>
         </Box>
-
-        {bestTimeMs !== null && (
-          <Box
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              alignItems: 'center',
-              gap: 0.5,
-              backgroundColor: '#141414',
-              px: 1.2,
-              py: '4px',
-              borderRadius: '6px',
-              border: '1px solid #333333',
-            }}
-          >
-            <EmojiEventsIcon sx={{ fontSize: 14, color: '#FFB020' }} />
-            <Typography
-              sx={{
-                fontFamily: 'ui-monospace, monospace',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: '#00D2B4',
-              }}
-            >
-              {formatTime(bestTimeMs)}
-            </Typography>
-          </Box>
-        )}
       </Box>
 
       {/* Right Controls */}

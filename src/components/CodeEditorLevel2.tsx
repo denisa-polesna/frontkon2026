@@ -194,7 +194,7 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
-          {failedVerify ? (
+          {failedVerify && (
             <Chip
               label={t.verifyFailedToast}
               size="small"
@@ -207,10 +207,6 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
                 animation: 'shake 0.35s ease-in-out',
               }}
             />
-          ) : (
-            <Typography variant="caption" sx={{ color: '#6A7394', fontSize: '0.7rem' }}>
-              {t.autoCheckLabel}
-            </Typography>
           )}
         </Box>
 
