@@ -117,23 +117,23 @@ export const MissionBanner: React.FC<MissionBannerProps> = ({
           gap: { xs: 1, sm: 1.5 },
         }}
       >
-        {/* DevBot Avatar with mood outline and pulsing dot */}
+        {/* DevBot Avatar with exact outreach.ai icon square styling */}
         <Box sx={{ position: 'relative', flexShrink: 0 }}>
           <Box
             sx={{
               width: { xs: 34, sm: 38 },
               height: { xs: 34, sm: 38 },
-              borderRadius: '10px',
-              backgroundColor: `${moodColor}22`,
-              border: `1.5px solid ${moodColor}`,
+              borderRadius: '6px',
+              backgroundColor: '#5951ff',
+              color: '#FFFFFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: `0 0 10px ${moodColor}33`,
+              boxShadow: '0 2px 8px rgba(89, 81, 255, 0.35)',
               transition: 'all 0.3s ease',
             }}
           >
-            <SmartToyIcon sx={{ color: moodColor, fontSize: { xs: 20, sm: 22 } }} />
+            <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: { xs: 20, sm: 22 } }} />
           </Box>
           <Box
             sx={{

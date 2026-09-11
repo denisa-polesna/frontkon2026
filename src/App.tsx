@@ -25,7 +25,7 @@ import { CodeEditorSticky } from './components/CodeEditorSticky';
 import { PreviewViewportLevel2, type OverflowStatus } from './components/PreviewViewportLevel2';
 import { CodeEditorLevel2 } from './components/CodeEditorLevel2';
 import { VictoryModal } from './components/VictoryModal';
-import { LeaderboardModal } from './components/LeaderboardModal';
+import { LeaderboardScreen } from './components/LeaderboardScreen';
 import { NameRegistrationModal } from './components/NameRegistrationModal';
 import {
   getStoredStats,
@@ -40,8 +40,8 @@ import { sound } from './utils/audio';
 import { getStoredLanguage, saveLanguage, translations, type Language } from './utils/i18n';
 
 export function App() {
-  // Navigation: 'menu' | 'level1' | 'level2' | 'level3'
-  const [currentScreen, setCurrentScreen] = useState<'menu' | 'level1' | 'level2' | 'level3'>('menu');
+  // Navigation: 'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3'
+  const [currentScreen, setCurrentScreen] = useState<'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3'>('menu');
 
   // Player Name State
   const [playerName, setPlayerName] = useState<string>(() => getStoredPlayerName());
@@ -54,7 +54,6 @@ export function App() {
   // Global Stats & Modals
   const [stats, setStats] = useState<GameStats>(() => getStoredStats());
   const [showVictory, setShowVictory] = useState<boolean>(false);
-  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isNewBest, setIsNewBest] = useState<boolean>(false);
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
@@ -462,7 +461,7 @@ export function App() {
     } else if (activeLevel === 'level2') {
       handleSelectLevel('level3');
     } else {
-      handleBackToMenu();
+      setCurrentScreen('leaderboard');
     }
   };
 
@@ -474,7 +473,19 @@ export function App() {
         <MainMenu
           stats={stats}
           onStartCampaign={handleStartCampaign}
-          onOpenLeaderboard={() => setShowLeaderboard(true)}
+          onOpenLeaderboard={() => setCurrentScreen('leaderboard')}
+          language={language}
+          onToggleLanguage={handleToggleLanguage}
+          soundEnabled={soundEnabled}
+          onToggleSound={handleToggleSound}
+          t={t}
+        />
+      ) : currentScreen === 'leaderboard' ? (
+        <LeaderboardScreen
+          runs={stats.history}
+          onBack={() => setCurrentScreen('menu')}
+          onStartCampaign={handleStartCampaign}
+          onClearLeaderboard={handleClearLeaderboard}
           language={language}
           onToggleLanguage={handleToggleLanguage}
           soundEnabled={soundEnabled}
@@ -750,15 +761,6 @@ export function App() {
         onClose={() => setShowNameModal(false)}
         onSubmit={handleNameRegistered}
         initialName={playerName}
-        t={t}
-      />
-
-      {/* Global Leaderboard Modal (Opened from Main Menu) */}
-      <LeaderboardModal
-        open={showLeaderboard}
-        onClose={() => setShowLeaderboard(false)}
-        runs={stats.history}
-        onClearLeaderboard={handleClearLeaderboard}
         t={t}
       />
     </ThemeProvider>

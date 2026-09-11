@@ -96,7 +96,20 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
               gap: 1.2,
             }}
           >
-            <SmartToyIcon sx={{ color: '#FF4C61', fontSize: 24, flexShrink: 0 }} />
+            <Box
+              sx={{
+                width: 32,
+                height: 32,
+                borderRadius: '6px',
+                backgroundColor: '#5951ff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: 20 }} />
+            </Box>
             <Typography variant="caption" sx={{ color: '#C8D0E5', fontStyle: 'italic', fontSize: '0.76rem' }}>
               &ldquo;{t.menuDevbotTaunt}&rdquo;
             </Typography>
