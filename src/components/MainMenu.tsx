@@ -57,8 +57,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          px: { xs: 2, sm: 4 },
-          py: { xs: 1.2, sm: 1.8 },
+          px: '30px',
+          py: { xs: 1.4, sm: 1.8 },
           backgroundColor: '#1f1f1f',
           borderBottom: '1px solid #2e2e2e',
           flexShrink: 0,
@@ -129,9 +129,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: { xs: 2.5, sm: 3, md: '40px' },
-          py: { xs: 2, sm: 3 },
-          px: { xs: 2.5, sm: 4 },
+          gap: { xs: '32px', sm: '36px', md: '32px', lg: '36px' },
+          py: { xs: 2, sm: 2.5, md: 3 },
+          px: '30px',
           textAlign: 'center',
           minHeight: 0,
         }}
@@ -142,7 +142,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: { xs: 1, sm: 1.2 },
+            gap: { xs: '20px', sm: '24px', md: '22px' },
           }}
         >
           {/* FrontKon 2026 Eyebrow Badge */}
@@ -150,9 +150,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             sx={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: 1.2,
-              px: { xs: 2, sm: 2.6 },
-              py: { xs: 0.5, sm: 0.7 },
+              gap: 1,
+              px: { xs: 2, sm: 2.4 },
+              py: { xs: 0.5, sm: 0.6 },
               borderRadius: '999px',
               backgroundColor: 'rgba(89, 81, 255, 0.18)',
               border: '1px solid rgba(179, 176, 255, 0.45)',
@@ -161,19 +161,19 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           >
             <Box
               sx={{
-                width: 9,
-                height: 9,
+                width: 8,
+                height: 8,
                 borderRadius: '50%',
                 backgroundColor: '#00D2B4',
-                boxShadow: '0 0 10px #00D2B4',
+                boxShadow: '0 0 8px #00D2B4',
                 flexShrink: 0,
               }}
             />
             <Typography
               sx={{
                 color: '#FFFFFF',
-                fontSize: { xs: '0.84rem', sm: '0.96rem', md: '1.02rem' },
-                fontWeight: 800,
+                fontSize: { xs: '0.8rem', sm: '0.88rem', md: '0.92rem' },
+                fontWeight: 700,
                 letterSpacing: '0.04em',
                 textTransform: 'uppercase',
               }}
@@ -182,39 +182,48 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             </Typography>
           </Box>
 
-          <Typography
-            variant="h2"
+          <Box
             sx={{
-              fontWeight: 900,
-              fontSize: { xs: '2rem', sm: '3rem', md: '3.8rem' },
-              letterSpacing: '-0.03em',
-              color: '#FFFFFF',
-              lineHeight: 1.1,
-              m: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: { xs: 1, sm: 1.2 },
             }}
           >
-            GIT BLAME: AI
-          </Typography>
+            <Typography
+              variant="h2"
+              sx={{
+                fontWeight: 900,
+                fontSize: { xs: '2.4rem', sm: '3rem', md: '3.4rem', lg: '3.8rem' },
+                letterSpacing: '-0.03em',
+                color: '#FFFFFF',
+                lineHeight: 1.1,
+                m: 0,
+              }}
+            >
+              GIT BLAME: AI
+            </Typography>
 
-          <Typography
-            variant="subtitle1"
-            sx={{
-              color: '#FFFFFF',
-              opacity: 0.9,
-              maxWidth: 580,
-              lineHeight: { xs: 1.45, sm: 1.6 },
-              fontSize: { xs: '0.84rem', sm: '0.98rem', md: '1.05rem' },
-              m: 0,
-            }}
-          >
-            {t.menuSubtitle}
-          </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: '#FFFFFF',
+                opacity: 0.9,
+                maxWidth: { xs: '100%', sm: 520, md: 560 },
+                lineHeight: { xs: 1.45, sm: 1.55 },
+                fontSize: { xs: '0.9rem', sm: '0.98rem', md: '1.04rem' },
+                m: 0,
+              }}
+            >
+              {t.menuSubtitle}
+            </Typography>
+          </Box>
         </Box>
 
         {/* Rival DevBot speech card - aligned to same width as action buttons */}
         <Box
           sx={{
-            maxWidth: { xs: '100%', sm: 440 },
+            maxWidth: { xs: '100%', sm: 440, md: 460 },
             width: '100%',
             m: 0,
             backgroundColor: '#FFFFFF',
@@ -222,7 +231,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             backgroundRepeat: 'repeat',
             border: '1px solid rgba(89, 81, 255, 0.35)',
             borderRadius: '12px',
-            p: { xs: 1.4, sm: 1.8, md: 2.2 },
+            p: { xs: 1.6, sm: 1.8, md: 2 },
             display: 'flex',
             alignItems: 'center',
             gap: { xs: 1.4, sm: 1.8 },
@@ -231,24 +240,52 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           }}
         >
           {/* Exact outreach.ai icon square: background #5951ff, color #fff, radius 6px */}
-          <Box
-            sx={{
-              width: { xs: 40, sm: 46 },
-              height: { xs: 40, sm: 46 },
-              borderRadius: '6px',
-              backgroundColor: '#5951ff',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              boxShadow: '0 4px 14px rgba(89, 81, 255, 0.35)',
-            }}
-          >
-            <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: { xs: 24, sm: 28 } }} />
+          <Box sx={{ position: 'relative', flexShrink: 0 }}>
+            <Box
+              sx={{
+                width: { xs: 42, sm: 46 },
+                height: { xs: 42, sm: 46 },
+                borderRadius: '8px',
+                backgroundColor: '#5951ff',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 14px rgba(89, 81, 255, 0.35)',
+              }}
+            >
+              <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: { xs: 24, sm: 28 } }} />
+            </Box>
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: -2,
+                right: -2,
+                width: 11,
+                height: 11,
+                borderRadius: '50%',
+                backgroundColor: '#00D2B4',
+                border: '2px solid #FFFFFF',
+                boxShadow: '0 0 10px #00D2B4, 0 0 14px rgba(0, 210, 180, 0.7)',
+                animation: 'botGreenPulse 2s infinite ease-in-out',
+                '@keyframes botGreenPulse': {
+                  '0%': { transform: 'scale(1)', boxShadow: '0 0 6px #00D2B4' },
+                  '50%': { transform: 'scale(1.2)', boxShadow: '0 0 14px #00D2B4, 0 0 18px rgba(0, 210, 180, 0.8)' },
+                  '100%': { transform: 'scale(1)', boxShadow: '0 0 6px #00D2B4' },
+                },
+              }}
+            />
           </Box>
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#000000', fontSize: '0.85rem', mb: 0.2 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: 800,
+                color: '#000000',
+                fontSize: { xs: '0.92rem', sm: '0.98rem', md: '1.02rem' },
+                mb: 0.2,
+              }}
+            >
               DevBot-3000
             </Typography>
             <Typography
@@ -256,7 +293,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
               sx={{
                 color: '#000000',
                 fontStyle: 'italic',
-                fontSize: { xs: '0.78rem', sm: '0.84rem', md: '0.88rem' },
+                fontSize: { xs: '0.84rem', sm: '0.9rem', md: '0.94rem' },
                 lineHeight: 1.4,
               }}
             >
@@ -273,7 +310,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             alignItems: 'center',
             gap: 1.2,
             width: '100%',
-            maxWidth: { xs: '100%', sm: 440 },
+            maxWidth: { xs: '100%', sm: 440, md: 460 },
             m: 0,
           }}
         >
@@ -336,15 +373,15 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       <Box
         component="footer"
         sx={{
-          py: { xs: 1.6, sm: 2 },
-          px: { xs: 2, sm: 4, md: 5 },
+          py: { xs: 1.5, md: 1.8 },
+          px: '30px',
           backgroundColor: '#1f1f1f',
           borderTop: '1px solid #2e2e2e',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: { xs: 'column', md: 'row' },
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: 0.8,
+          justifyContent: { xs: 'center', md: 'space-between' },
+          gap: { xs: 0.8, md: 2 },
           flexShrink: 0,
           zIndex: 10,
         }}
@@ -354,7 +391,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: { xs: 1, sm: 1.2 },
+            gap: { xs: 1, sm: 1.4 },
             flexWrap: 'nowrap',
             whiteSpace: 'nowrap',
           }}

@@ -8,23 +8,27 @@ import type { translations } from '../utils/i18n';
 export type OverflowStatus = 'overflowing' | 'clipped_no_ellipsis' | 'wrapped' | 'solved';
 
 interface PreviewViewportLevel2Props {
-  userCss: string;
-  onStatusChange: (status: OverflowStatus, isSolved: boolean) => void;
-  isSolved: boolean;
+  userCss?: string;
+  onStatusChange?: (status: OverflowStatus, solved: boolean) => void;
+  isSolved?: boolean;
   t: typeof translations['en'];
+  isTarget?: boolean;
 }
 
 export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
-  userCss,
+  userCss = '',
   onStatusChange,
-  isSolved,
+  isSolved = false,
   t,
+  isTarget = false,
 }) => {
   const stageRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement | null>(null);
   const [status, setStatus] = useState<OverflowStatus>('overflowing');
 
   useEffect(() => {
+    if (isTarget) return;
+
     const checkOverflow = () => {
       if (!titleRef.current) return;
 
@@ -50,14 +54,16 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
       }
 
       setStatus(currentStatus);
-      onStatusChange(currentStatus, solved);
+      if (onStatusChange) {
+        onStatusChange(currentStatus, solved);
+      }
     };
 
     checkOverflow();
     const timer = setTimeout(checkOverflow, 50);
 
     return () => clearTimeout(timer);
-  }, [userCss, onStatusChange]);
+  }, [userCss, onStatusChange, isTarget]);
 
   const getStatusChip = () => {
     if (isSolved) {
@@ -98,6 +104,8 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
 
   const chip = getStatusChip();
 
+  const stageId = isTarget ? 'target-stage-l3' : 'level2-stage';
+
   return (
     <Box
       sx={{
@@ -105,30 +113,44 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
         flexDirection: 'column',
         borderRadius: 2.5,
         overflow: 'hidden',
-        border: isSolved ? '2px solid #00D2B4' : '1px solid #232842',
-        boxShadow: isSolved
+        border: isSolved && !isTarget ? '2px solid #00D2B4' : '1px solid #232842',
+        boxShadow: isSolved && !isTarget
           ? '0 0 30px rgba(0, 210, 180, 0.25), 0 10px 30px rgba(0,0,0,0.5)'
           : '0 10px 30px rgba(0, 0, 0, 0.4)',
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
-        minHeight: { xs: 340, sm: 420, md: 500 },
+        minHeight: { xs: 320, sm: 380, md: 440 },
       }}
     >
-      {/* Dynamic Scoped Styles for the Meeting Title */}
+      {/* Scoped Styles */}
       <style>
-        {`
-          #level2-stage .meeting-title {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: #FFFFFF;
-            line-height: 1.4;
-            display: block;
-            box-sizing: border-box;
-            transition: all 0.25s ease;
-            ${userCss || '/* DevBot default hallucination */ width: 99999px; white-space: nowrap; font-size: 8px; color: #FF7081;'}
-          }
-        `}
+        {isTarget
+          ? `
+            #${stageId} .meeting-title {
+              font-size: 0.88rem;
+              font-weight: 700;
+              color: #FFFFFF;
+              line-height: 1.4;
+              display: block;
+              box-sizing: border-box;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          `
+          : `
+            #${stageId} .meeting-title {
+              font-size: 0.88rem;
+              font-weight: 700;
+              color: #FFFFFF;
+              line-height: 1.4;
+              display: block;
+              box-sizing: border-box;
+              transition: all 0.25s ease;
+              ${userCss || '/* DevBot default hallucination */ width: 99999px; white-space: nowrap; font-size: 8px; color: #FF7081;'}
+            }
+          `}
       </style>
 
       {/* Browser Chrome Header */}
@@ -137,65 +159,51 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: { xs: '6px 12px', sm: '10px 16px' },
+          padding: { xs: '6px 10px', sm: '8px 14px' },
           backgroundColor: '#161A2D',
           borderBottom: '1px solid #232842',
           gap: 1,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexShrink: 0 }}>
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FF5F56' }} />
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#27C93F' }} />
-        </Box>
-
-        <Box
-          sx={{
-            display: { xs: 'none', sm: 'flex' },
-            alignItems: 'center',
-            backgroundColor: '#0D101D',
-            px: 2,
-            py: 0.5,
-            borderRadius: 1.5,
-            border: '1px solid #232842',
-            maxWidth: 320,
-            width: '100%',
-            justifyContent: 'center',
-          }}
-        >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, flexShrink: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#27C93F' }} />
+          </Box>
           <Typography
             sx={{
-              fontFamily: 'monospace',
-              fontSize: '0.74rem',
-              color: '#8B94B2',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#FFFFFF',
+              letterSpacing: '0.02em',
             }}
           >
-            https://app.outreach.io/calendar/upcoming
+            {isTarget ? t.targetGoalHeader : t.codeOutputHeader}
           </Typography>
         </Box>
 
-        <Chip
-          icon={chip.icon}
-          label={chip.label}
-          size="small"
-          sx={{
-            fontSize: '0.72rem',
-            fontWeight: 700,
-            height: 24,
-            flexShrink: 0,
-            backgroundColor: chip.bg,
-            color: chip.color,
-            border: `1px solid ${chip.border}`,
-          }}
-        />
+        {!isTarget && isSolved && (
+          <Chip
+            icon={chip.icon}
+            label={chip.label}
+            size="small"
+            sx={{
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              height: 24,
+              flexShrink: 0,
+              backgroundColor: chip.bg,
+              color: chip.color,
+              border: `1px solid ${chip.border}`,
+            }}
+          />
+        )}
       </Box>
 
       {/* Viewport Canvas Stage */}
       <Box
-        id="level2-stage"
+        id={stageId}
         ref={stageRef}
         sx={{
           position: 'relative',
@@ -215,7 +223,7 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
           backgroundColor: '#0A0C16',
         }}
       >
-        <MeetingCard titleRef={titleRef} t={t} />
+        <MeetingCard titleRef={isTarget ? undefined : titleRef} t={t} />
       </Box>
     </Box>
   );

@@ -32,191 +32,230 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
           maxWidth: '95%',
           margin: 0,
           boxSizing: 'border-box',
-          backgroundColor: '#181C2E',
-          borderRadius: 2.5,
-          border: '1px solid #2B3254',
-          boxShadow: '0 20px 45px rgba(0, 0, 0, 0.65), 0 0 20px rgba(110, 63, 243, 0.2)',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '16px',
+          border: '1px solid rgba(89, 81, 255, 0.25)',
+          boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 16px rgba(0, 0, 0, 0.08)',
           pointerEvents: 'none', // purely for display in the puzzle
           userSelect: 'none',
+          overflow: 'hidden',
         }}
       >
-      {/* Outreach Modal Header */}
-      <CardHeader
-        avatar={
-          <Avatar
-            sx={{
-              bgcolor: '#6E3FF3',
-              width: 32,
-              height: 32,
-            }}
-          >
-            <PersonAddAlt1Icon sx={{ fontSize: 18 }} />
-          </Avatar>
-        }
-        action={
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              p: 0.5,
-              color: '#656D8A',
-            }}
-          >
-            <CloseIcon sx={{ fontSize: 18 }} />
-          </Box>
-        }
-        title={
-          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#FFFFFF', fontSize: '0.92rem' }}>
-            {t.modalTitle}
-          </Typography>
-        }
-        subheader={
-          <Typography variant="caption" sx={{ color: '#828BAA', fontSize: '0.72rem' }}>
-            {t.modalSubheader}
-          </Typography>
-        }
-        sx={{ p: '12px 16px', pb: 1 }}
-      />
-
-      <Divider sx={{ borderColor: '#232842' }} />
-
-      {/* Form Fields from Outreach CreateProspect */}
-      <CardContent sx={{ p: '14px 16px', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <TextField
-            label={t.firstName}
-            size="small"
-            defaultValue="Ada"
-            fullWidth
-            slotProps={{ inputLabel: { shrink: true } }}
-            sx={{
-              '& .MuiInputBase-root': {
-                fontSize: '0.82rem',
-                backgroundColor: '#111422',
-                color: '#E2E6F2',
-              },
-            }}
-          />
-          <TextField
-            label={t.lastName}
-            size="small"
-            defaultValue="Lovelace"
-            fullWidth
-            slotProps={{ inputLabel: { shrink: true } }}
-            sx={{
-              '& .MuiInputBase-root': {
-                fontSize: '0.82rem',
-                backgroundColor: '#111422',
-                color: '#E2E6F2',
-              },
-            }}
-          />
-        </Box>
-
-        <TextField
-          label={t.workEmail}
-          size="small"
-          defaultValue="ada.lovelace@analytical.engine"
-          fullWidth
-          slotProps={{ inputLabel: { shrink: true } }}
-          sx={{
-            '& .MuiInputBase-root': {
-              fontSize: '0.82rem',
-              backgroundColor: '#111422',
-              color: '#E2E6F2',
-            },
-          }}
+        {/* Outreach Modal Header */}
+        <CardHeader
+          avatar={
+            <Avatar
+              sx={{
+                bgcolor: '#5951ff',
+                color: '#FFFFFF',
+                width: 32,
+                height: 32,
+                borderRadius: '6px',
+              }}
+            >
+              <PersonAddAlt1Icon sx={{ fontSize: 18 }} />
+            </Avatar>
+          }
+          action={
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                p: 0.5,
+                color: '#666666',
+                backgroundColor: '#f5f4ff',
+                borderRadius: '6px',
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 16 }} />
+            </Box>
+          }
+          title={
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#120042', fontSize: '0.94rem' }}>
+              {t.modalTitle}
+            </Typography>
+          }
+          subheader={
+            <Typography variant="caption" sx={{ color: '#666666', fontSize: '0.74rem' }}>
+              {t.modalSubheader}
+            </Typography>
+          }
+          sx={{ p: '12px 16px', pb: 1 }}
         />
 
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <TextField
-            label={t.targetAccount}
-            size="small"
-            defaultValue="Babbage Industries"
-            fullWidth
-            slotProps={{ inputLabel: { shrink: true } }}
-            sx={{
-              '& .MuiInputBase-root': {
-                fontSize: '0.82rem',
-                backgroundColor: '#111422',
-                color: '#E2E6F2',
-              },
-            }}
-          />
-          <TextField
-            label={t.stage}
-            size="small"
-            defaultValue={t.stageValue}
-            fullWidth
-            slotProps={{ inputLabel: { shrink: true } }}
-            sx={{
-              '& .MuiInputBase-root': {
-                fontSize: '0.82rem',
-                backgroundColor: '#111422',
-                color: '#E2E6F2',
-              },
-            }}
-          />
-        </Box>
+        <Divider sx={{ borderColor: '#e8e6f5' }} />
 
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 0.5 }}>
-          <Box sx={{ display: 'flex', gap: 0.75 }}>
-            <Chip
-              label={t.tierBadge}
+        {/* Form Fields from Outreach CreateProspect */}
+        <CardContent sx={{ p: '14px 16px', display: 'flex', flexDirection: 'column', gap: 1.4 }}>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <TextField
+              label={t.firstName}
               size="small"
-              sx={{
-                fontSize: '0.68rem',
-                height: 22,
-                backgroundColor: 'rgba(0, 210, 180, 0.15)',
-                color: '#00D2B4',
-                border: '1px solid rgba(0, 210, 180, 0.3)',
+              defaultValue="Ada"
+              fullWidth
+              slotProps={{
+                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                input: {
+                  sx: {
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    backgroundColor: '#FFFFFF',
+                    color: '#120042',
+                    borderRadius: '6px',
+                    '& fieldset': { borderColor: '#d4d2e3' },
+                  },
+                },
               }}
             />
-            <Chip
-              label={t.ownerBadge}
+            <TextField
+              label={t.lastName}
               size="small"
-              sx={{
-                fontSize: '0.68rem',
-                height: 22,
-                backgroundColor: 'rgba(110, 63, 243, 0.15)',
-                color: '#C4B5FD',
-                border: '1px solid rgba(110, 63, 243, 0.3)',
+              defaultValue="Lovelace"
+              fullWidth
+              slotProps={{
+                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                input: {
+                  sx: {
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    backgroundColor: '#FFFFFF',
+                    color: '#120042',
+                    borderRadius: '6px',
+                    '& fieldset': { borderColor: '#d4d2e3' },
+                  },
+                },
               }}
             />
           </Box>
-        </Box>
-      </CardContent>
 
-      <Divider sx={{ borderColor: '#232842' }} />
+          <TextField
+            label={t.workEmail}
+            size="small"
+            defaultValue="ada.lovelace@analytical.engine"
+            fullWidth
+            slotProps={{
+              inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+              input: {
+                sx: {
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  backgroundColor: '#FFFFFF',
+                  color: '#120042',
+                  borderRadius: '6px',
+                  '& fieldset': { borderColor: '#d4d2e3' },
+                },
+              },
+            }}
+          />
 
-      {/* Modal Actions */}
-      <CardActions sx={{ p: '10px 16px', justifyContent: 'flex-end', gap: 1 }}>
-        <Button
-          size="small"
-          sx={{
-            color: '#8E95B2',
-            fontSize: '0.78rem',
-            minWidth: 60,
-          }}
-        >
-          {t.cancelBtn}
-        </Button>
-        <Button
-          variant="contained"
-          size="small"
-          sx={{
-            backgroundColor: '#6E3FF3',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            '&:hover': {
-              backgroundColor: '#5930D9',
-            },
-          }}
-        >
-          {t.saveBtn}
-        </Button>
-      </CardActions>
-    </Card>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <TextField
+              label={t.targetAccount}
+              size="small"
+              defaultValue="Babbage Industries"
+              fullWidth
+              slotProps={{
+                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                input: {
+                  sx: {
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    backgroundColor: '#FFFFFF',
+                    color: '#120042',
+                    borderRadius: '6px',
+                    '& fieldset': { borderColor: '#d4d2e3' },
+                  },
+                },
+              }}
+            />
+            <TextField
+              label={t.stage}
+              size="small"
+              defaultValue={t.stageValue}
+              fullWidth
+              slotProps={{
+                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                input: {
+                  sx: {
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    backgroundColor: '#FFFFFF',
+                    color: '#120042',
+                    borderRadius: '6px',
+                    '& fieldset': { borderColor: '#d4d2e3' },
+                  },
+                },
+              }}
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 0.5 }}>
+            <Box sx={{ display: 'flex', gap: 0.75 }}>
+              <Chip
+                label={t.tierBadge}
+                size="small"
+                sx={{
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  height: 22,
+                  backgroundColor: 'rgba(0, 210, 180, 0.15)',
+                  color: '#008775',
+                  border: '1px solid rgba(0, 210, 180, 0.35)',
+                }}
+              />
+              <Chip
+                label={t.ownerBadge}
+                size="small"
+                sx={{
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  height: 22,
+                  backgroundColor: 'rgba(89, 81, 255, 0.12)',
+                  color: '#5951ff',
+                  border: '1px solid rgba(89, 81, 255, 0.3)',
+                }}
+              />
+            </Box>
+          </Box>
+        </CardContent>
+
+        <Divider sx={{ borderColor: '#e8e6f5' }} />
+
+        {/* Modal Actions */}
+        <CardActions sx={{ p: '10px 16px', justifyContent: 'flex-end', gap: 1, backgroundColor: '#faf9ff' }}>
+          <Button
+            size="small"
+            sx={{
+              color: '#666666',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              minWidth: 60,
+              textTransform: 'none',
+            }}
+          >
+            {t.cancelBtn}
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              backgroundColor: '#5951ff',
+              color: '#FFFFFF',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              borderRadius: '6px',
+              textTransform: 'none',
+              boxShadow: 'none',
+              '&:hover': {
+                backgroundColor: '#3028a1',
+                boxShadow: 'none',
+              },
+            }}
+          >
+            {t.saveBtn}
+          </Button>
+        </CardActions>
+      </Card>
   );
 });
 

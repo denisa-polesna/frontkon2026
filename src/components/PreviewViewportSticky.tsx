@@ -8,22 +8,26 @@ import type { translations } from '../utils/i18n';
 export type StickyStatus = 'off' | 'fixed_escaped' | 'sticky_no_bottom' | 'solved';
 
 interface PreviewViewportStickyProps {
-  userCss: string;
-  onStatusChange: (status: StickyStatus, isSolved: boolean) => void;
-  isSolved: boolean;
+  userCss?: string;
+  onStatusChange?: (status: StickyStatus, solved: boolean) => void;
+  isSolved?: boolean;
   t: typeof translations['en'];
+  isTarget?: boolean;
 }
 
 export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
-  userCss,
+  userCss = '',
   onStatusChange,
-  isSolved,
+  isSolved = false,
   t,
+  isTarget = false,
 }) => {
   const actionBarRef = useRef<HTMLDivElement | null>(null);
   const [status, setStatus] = useState<StickyStatus>('off');
 
   useEffect(() => {
+    if (isTarget) return;
+
     const checkSticky = () => {
       if (!actionBarRef.current) return;
 
@@ -48,14 +52,16 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
       }
 
       setStatus(currentStatus);
-      onStatusChange(currentStatus, solved);
+      if (onStatusChange) {
+        onStatusChange(currentStatus, solved);
+      }
     };
 
     checkSticky();
     const timer = setTimeout(checkSticky, 50);
 
     return () => clearTimeout(timer);
-  }, [userCss, onStatusChange]);
+  }, [userCss, onStatusChange, isTarget]);
 
   const getStatusChip = () => {
     if (isSolved) {
@@ -96,6 +102,8 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
 
   const chip = getStatusChip();
 
+  const stageId = isTarget ? 'target-stage-l2' : 'sticky-stage';
+
   return (
     <Box
       sx={{
@@ -103,28 +111,39 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
         flexDirection: 'column',
         borderRadius: 2.5,
         overflow: 'hidden',
-        border: isSolved ? '2px solid #00D2B4' : '1px solid #232842',
-        boxShadow: isSolved
+        border: isSolved && !isTarget ? '2px solid #00D2B4' : '1px solid #232842',
+        boxShadow: isSolved && !isTarget
           ? '0 0 30px rgba(0, 210, 180, 0.25), 0 10px 30px rgba(0,0,0,0.5)'
           : '0 10px 30px rgba(0, 0, 0, 0.4)',
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
-        minHeight: { xs: 340, sm: 420, md: 500 },
+        minHeight: { xs: 320, sm: 380, md: 440 },
       }}
     >
-      {/* Dynamic Scoped Styles for the Sticky Action Bar */}
+      {/* Scoped Styles */}
       <style>
-        {`
-          #sticky-stage .deal-action-bar {
-            width: 100%;
-            display: block;
-            box-sizing: border-box;
-            z-index: 10;
-            transition: all 0.2s ease;
-            ${userCss || '/* DevBot defaults */ position: absolute; top: 4800px; z-index: 2147483647 !important;'}
-          }
-        `}
+        {isTarget
+          ? `
+            #${stageId} .deal-action-bar {
+              width: 100%;
+              display: block;
+              box-sizing: border-box;
+              position: sticky;
+              bottom: 0;
+              z-index: 10;
+            }
+          `
+          : `
+            #${stageId} .deal-action-bar {
+              width: 100%;
+              display: block;
+              box-sizing: border-box;
+              z-index: 10;
+              transition: all 0.2s ease;
+              ${userCss || '/* DevBot defaults */ position: absolute; top: 4800px; z-index: 2147483647 !important;'}
+            }
+          `}
       </style>
 
       {/* Browser Chrome Header */}
@@ -133,65 +152,51 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: { xs: '6px 12px', sm: '10px 16px' },
+          padding: { xs: '6px 10px', sm: '8px 14px' },
           backgroundColor: '#161A2D',
           borderBottom: '1px solid #232842',
           gap: 1,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexShrink: 0 }}>
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FF5F56' }} />
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#27C93F' }} />
-        </Box>
-
-        <Box
-          sx={{
-            display: { xs: 'none', sm: 'flex' },
-            alignItems: 'center',
-            backgroundColor: '#0D101D',
-            px: 2,
-            py: 0.5,
-            borderRadius: 1.5,
-            border: '1px solid #232842',
-            maxWidth: 320,
-            width: '100%',
-            justifyContent: 'center',
-          }}
-        >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, flexShrink: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#27C93F' }} />
+          </Box>
           <Typography
             sx={{
-              fontFamily: 'monospace',
-              fontSize: '0.74rem',
-              color: '#8B94B2',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#FFFFFF',
+              letterSpacing: '0.02em',
             }}
           >
-            https://app.outreach.io/deals/acme-corp
+            {isTarget ? t.targetGoalHeader : t.codeOutputHeader}
           </Typography>
         </Box>
 
-        <Chip
-          icon={chip.icon}
-          label={chip.label}
-          size="small"
-          sx={{
-            fontSize: '0.72rem',
-            fontWeight: 700,
-            height: 24,
-            flexShrink: 0,
-            backgroundColor: chip.bg,
-            color: chip.color,
-            border: `1px solid ${chip.border}`,
-          }}
-        />
+        {!isTarget && isSolved && (
+          <Chip
+            icon={chip.icon}
+            label={chip.label}
+            size="small"
+            sx={{
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              height: 24,
+              flexShrink: 0,
+              backgroundColor: chip.bg,
+              color: chip.color,
+              border: `1px solid ${chip.border}`,
+            }}
+          />
+        )}
       </Box>
 
       {/* Viewport Canvas Stage */}
       <Box
-        id="sticky-stage"
+        id={stageId}
         sx={{
           position: 'relative',
           flex: 1,
@@ -210,7 +215,7 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
           backgroundColor: '#0A0C16',
         }}
       >
-        <DealTimelineCard actionBarRef={actionBarRef} t={t} />
+        <DealTimelineCard actionBarRef={isTarget ? undefined : actionBarRef} t={t} />
       </Box>
     </Box>
   );

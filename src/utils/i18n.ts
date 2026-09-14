@@ -24,7 +24,7 @@ export const translations = {
     nameModalSubtitle: 'Enter your name or handle. DevBot-3000 will challenge and roast you by name!',
     nameInputLabel: 'Your Name or Handle',
     nameInputPlaceholder: 'e.g. Sarah the CSS Guru',
-    nameSubmitBtn: "LET'S GO 🚀",
+    nameSubmitBtn: "LET'S GO",
 
     // Jira Ticket Common
     jiraIssueType: 'Bug',
@@ -80,6 +80,13 @@ export const translations = {
     stepLabel: 'Step {step}',
     leaderboardTitleMenu: 'FrontKon Booth Leaderboard',
 
+    // Viewport Common
+    codeOutputHeader: 'Code output',
+    targetGoalHeader: 'Recreate this target',
+    mobileTabEditor: 'Editor',
+    mobileTabOutput: 'Code output',
+    mobileTabTarget: 'Target',
+
     // Viewport L1
     targetLabel: '🎯 Target Center',
     targetAligned: 'Target Aligned ✓',
@@ -133,7 +140,7 @@ export const translations = {
     useFlexBtn: 'Use Flexbox',
     editorPlaceholder: '  /* Write clean CSS properties here */\n  ',
     autoCheckLabel: 'Auto-checks alignment in real-time',
-    verifyBtn: 'Verify & Merge PR',
+    verifyBtn: 'Submit',
     mergedBtn: 'PR Merged! 🎉',
     verifyFailedToast: '❌ PR Checks Failed: Acceptance Criteria not met!',
     verifyFailedBadge: 'CI/CD FAILED ❌',
@@ -186,7 +193,7 @@ export const translations = {
     victoryTitleL1: 'PR #404 REJECTED & FIXED! 🎉',
     victoryTitleL2: 'PR #407 REJECTED & FIXED! 🎉',
     victoryTitleL3: 'PR #405 REJECTED & FIXED! 🎉',
-    victorySubtitle: 'You outsmarted the AI Junior in pure CSS.',
+    victorySubtitle: 'You outsmarted the AI Junior.',
     newRecordBadge: 'NEW BOOTH RECORD! 🏆',
     timeTakenLabel: 'TIME TAKEN',
     cssGolfLabel: 'CSS GOLF',
@@ -236,7 +243,7 @@ export const translations = {
     nameModalSubtitle: 'Zadej své jméno nebo přezdívku do žebříčku. DevBot-3000 tě vyzve a bude tě oslovovat přímo tvým jménem!',
     nameInputLabel: 'Tvé jméno nebo přezdívka',
     nameInputPlaceholder: 'např. Sarah CSS Guru',
-    nameSubmitBtn: 'JDEME NA TO 🚀',
+    nameSubmitBtn: 'JDEME NA TO',
 
     // Jira Ticket Common
     jiraIssueType: 'Bug',
@@ -292,6 +299,13 @@ export const translations = {
     stepLabel: 'Krok {step}',
     leaderboardTitleMenu: 'Žebříček stánku FrontKon',
 
+    // Viewport Common
+    codeOutputHeader: 'Výstup kódu',
+    targetGoalHeader: 'Cílový stav',
+    mobileTabEditor: 'Editor',
+    mobileTabOutput: 'Výstup kódu',
+    mobileTabTarget: 'Cílový stav',
+
     // Viewport L1
     targetLabel: '🎯 Cílový střed',
     targetAligned: 'Cíl zarovnán ✓',
@@ -345,7 +359,7 @@ export const translations = {
     useFlexBtn: 'Použít Flexbox',
     editorPlaceholder: '  /* Napiš sem CSS vlastnosti */\n  ',
     autoCheckLabel: 'Automatická kontrola v reálném čase',
-    verifyBtn: 'Ověřit a mergnout PR',
+    verifyBtn: 'Odeslat',
     mergedBtn: 'PR Mergnuto! 🎉',
     verifyFailedToast: '❌ PR testy selhaly: Akceptační kritéria nejsou splněna!',
     verifyFailedBadge: 'CI/CD SELHALO ❌',
@@ -398,7 +412,7 @@ export const translations = {
     victoryTitleL1: 'PR #404 ZAMÍTNUTO A OPRAVENO! 🎉',
     victoryTitleL2: 'PR #407 ZAMÍTNUTO A OPRAVENO! 🎉',
     victoryTitleL3: 'PR #405 ZAMÍTNUTO A OPRAVENO! 🎉',
-    victorySubtitle: 'Přechytračil jsi AI juniora čistým CSSkem.',
+    victorySubtitle: 'Přechytračil jsi AI juniora.',
     newRecordBadge: 'NOVÝ REKORD STÁNKU! 🏆',
     timeTakenLabel: 'ČAS',
     cssGolfLabel: 'CSS GOLF',

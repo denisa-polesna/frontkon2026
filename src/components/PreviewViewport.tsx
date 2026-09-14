@@ -1,38 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Chip } from '@mui/material';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
-import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { ProspectModal } from './ProspectModal';
 import type { translations } from '../utils/i18n';
 
 export type AlignmentStatus = 'off' | 'horizontal_only' | 'vertical_only' | 'centered';
 
 interface PreviewViewportProps {
-  userCss: string;
-  onDistanceChange: (distance: number, isCentered: boolean, status: AlignmentStatus) => void;
-  isSolved: boolean;
+  userCss?: string;
+  onDistanceChange?: (distance: number, isCentered: boolean, status: AlignmentStatus) => void;
+  isSolved?: boolean;
   t: typeof translations['en'];
+  isTarget?: boolean;
 }
 
 export const PreviewViewport: React.FC<PreviewViewportProps> = ({
-  userCss,
+  userCss = '',
   onDistanceChange,
-  isSolved,
+  isSolved = false,
   t,
+  isTarget = false,
 }) => {
   const stageRef = useRef<HTMLDivElement>(null);
   const targetRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const [distance, setDistance] = useState<number>(350);
-  const [alignmentStatus, setAlignmentStatus] = useState<AlignmentStatus>('off');
   const [modalDimensions, setModalDimensions] = useState<{ width: number; height: number }>({
     width: 380,
     height: 380,
   });
 
-  // Measure alignment on resize or CSS change
+  // Measure alignment on resize or CSS change (only in active challenge mode)
   useEffect(() => {
+    if (isTarget) return;
+
     const checkAlignment = () => {
       if (!targetRef.current || !modalRef.current) return;
 
@@ -57,8 +58,6 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
       const dy = Math.abs(targetCenterY - modalCenterY);
       const dist = Math.round(Math.hypot(dx, dy));
 
-      setDistance(dist);
-
       // BOTH horizontal and vertical axes must be centered!
       const isHorizontallyCentered = dx <= 10;
       const isVerticallyCentered = dy <= 10;
@@ -73,8 +72,9 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
         status = 'vertical_only';
       }
 
-      setAlignmentStatus(status);
-      onDistanceChange(dist, centered, status);
+      if (onDistanceChange) {
+        onDistanceChange(dist, centered, status);
+      }
     };
 
     // Run immediately and after CSS transitions
@@ -90,14 +90,9 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
       clearTimeout(timer2);
       window.removeEventListener('resize', handleResize);
     };
-  }, [userCss, onDistanceChange, modalDimensions.height]);
+  }, [userCss, onDistanceChange, modalDimensions.height, isTarget]);
 
-  const getChipLabel = () => {
-    if (isSolved) return t.centeredRadar;
-    if (alignmentStatus === 'horizontal_only') return t.horizontalOnlyRadar;
-    if (alignmentStatus === 'vertical_only') return t.verticalOnlyRadar;
-    return t.distanceRadar.replace('{dist}', distance.toString());
-  };
+  const stageId = isTarget ? 'target-stage-l1' : 'challenge-stage';
 
   return (
     <Box
@@ -106,34 +101,49 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
         flexDirection: 'column',
         borderRadius: 2.5,
         overflow: 'hidden',
-        border: isSolved ? '2px solid #00D2B4' : '1px solid #232842',
-        boxShadow: isSolved
+        border: isSolved && !isTarget ? '2px solid #00D2B4' : '1px solid #232842',
+        boxShadow: isSolved && !isTarget
           ? '0 0 30px rgba(0, 210, 180, 0.25), 0 10px 30px rgba(0,0,0,0.5)'
           : '0 10px 30px rgba(0, 0, 0, 0.4)',
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
-        minHeight: { xs: 340, sm: 420, md: 500 },
+        minHeight: { xs: 320, sm: 380, md: 440 },
       }}
     >
-      {/* Dynamic Scoped Styles for the User's CSS */}
+      {/* Scoped Styles */}
       <style>
-        {`
-          #challenge-stage .modal-viewport {
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            ${userCss || '/* DevBot defaults */ display: block; padding: 16px;'}
-          }
-
-          #challenge-stage .modal-viewport > #prospect-modal {
-            height: fit-content;
-            max-height: fit-content;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1),
-                        margin 0.3s cubic-bezier(0.2, 0.9, 0.3, 1),
-                        opacity 0.3s ease;
-          }
-        `}
+        {isTarget
+          ? `
+            #${stageId} .modal-viewport {
+              box-sizing: border-box;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 16px;
+            }
+            #${stageId} .modal-viewport > #prospect-modal {
+              height: fit-content;
+              max-height: fit-content;
+            }
+          `
+          : `
+            #${stageId} .modal-viewport {
+              box-sizing: border-box;
+              width: 100%;
+              height: 100%;
+              ${userCss || '/* DevBot defaults */ display: block; padding: 16px;'}
+            }
+            #${stageId} .modal-viewport > #prospect-modal {
+              height: fit-content;
+              max-height: fit-content;
+              transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1),
+                          margin 0.3s cubic-bezier(0.2, 0.9, 0.3, 1),
+                          opacity 0.3s ease;
+            }
+          `}
       </style>
 
       {/* Browser Chrome Header */}
@@ -142,83 +152,54 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: { xs: '6px 12px', sm: '10px 16px' },
+          padding: { xs: '6px 10px', sm: '8px 14px' },
           backgroundColor: '#161A2D',
           borderBottom: '1px solid #232842',
           gap: 1,
         }}
       >
-        {/* macOS window dots */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexShrink: 0 }}>
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FF5F56' }} />
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
-          <Box sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#27C93F' }} />
-        </Box>
-
-        {/* Browser URL Bar (hidden on mobile to give room to Radar Chip) */}
-        <Box
-          sx={{
-            display: { xs: 'none', sm: 'flex' },
-            alignItems: 'center',
-            backgroundColor: '#0D101D',
-            px: 2,
-            py: 0.5,
-            borderRadius: 1.5,
-            border: '1px solid #232842',
-            maxWidth: 320,
-            width: '100%',
-            justifyContent: 'center',
-          }}
-        >
+        {/* macOS window dots & Pane Title */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, flexShrink: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#27C93F' }} />
+          </Box>
           <Typography
             sx={{
-              fontFamily: 'monospace',
-              fontSize: '0.74rem',
-              color: '#8B94B2',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#FFFFFF',
+              letterSpacing: '0.02em',
             }}
           >
-            https://app.outreach.io/prospects/new
+            {isTarget ? t.targetGoalHeader : t.codeOutputHeader}
           </Typography>
         </Box>
 
-        {/* Alignment Radar Status */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
-          <Chip
-            icon={isSolved ? <CheckCircleOutlinedIcon sx={{ fontSize: '14px !important' }} /> : <MyLocationIcon sx={{ fontSize: '14px !important' }} />}
-            label={getChipLabel()}
-            size="small"
-            sx={{
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              height: 24,
-              backgroundColor: isSolved
-                ? 'rgba(0, 210, 180, 0.2)'
-                : alignmentStatus === 'horizontal_only' || alignmentStatus === 'vertical_only'
-                ? 'rgba(110, 63, 243, 0.2)'
-                : 'rgba(255, 176, 32, 0.15)',
-              color: isSolved
-                ? '#00D2B4'
-                : alignmentStatus === 'horizontal_only' || alignmentStatus === 'vertical_only'
-                ? '#C4B5FD'
-                : '#FFB020',
-              border: `1px solid ${
-                isSolved
-                  ? '#00D2B4'
-                  : alignmentStatus === 'horizontal_only' || alignmentStatus === 'vertical_only'
-                  ? 'rgba(110, 63, 243, 0.4)'
-                  : 'rgba(255, 176, 32, 0.3)'
-              }`,
-            }}
-          />
-        </Box>
+        {/* Header Right: Only show solved status when completed, no distance displayed */}
+        {!isTarget && isSolved && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
+            <Chip
+              icon={<CheckCircleOutlinedIcon sx={{ fontSize: '14px !important' }} />}
+              label={t.centeredRadar}
+              size="small"
+              sx={{
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                height: 24,
+                backgroundColor: 'rgba(0, 210, 180, 0.2)',
+                color: '#00D2B4',
+                border: '1px solid #00D2B4',
+              }}
+            />
+          </Box>
+        )}
       </Box>
 
       {/* Viewport Canvas Stage */}
       <Box
-        id="challenge-stage"
+        id={stageId}
         ref={stageRef}
         sx={{
           position: 'relative',
@@ -234,53 +215,29 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
           backgroundColor: '#0A0C16',
         }}
       >
-        {/* Target Ghost Box (The Ground Truth Center) */}
-        <Box
-          ref={targetRef}
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: modalDimensions.width || 380,
-            maxWidth: '92%',
-            height: modalDimensions.height || 380,
-            borderRadius: 2.5,
-            border: `2px dashed ${isSolved ? '#00D2B4' : 'rgba(110, 63, 243, 0.5)'}`,
-            backgroundColor: isSolved ? 'rgba(0, 210, 180, 0.05)' : 'rgba(110, 63, 243, 0.05)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            pointerEvents: 'none',
-            zIndex: 1,
-            transition: 'all 0.3s ease',
-          }}
-        >
+        {/* Target Ghost Box (The Ground Truth Center) - shown only on active challenge stage */}
+        {!isTarget && (
           <Box
+            ref={targetRef}
             sx={{
-              backgroundColor: isSolved ? 'rgba(0, 210, 180, 0.15)' : 'rgba(110, 63, 243, 0.2)',
-              px: 1.5,
-              py: 0.5,
-              borderRadius: 1.5,
-              border: `1px solid ${isSolved ? 'rgba(0, 210, 180, 0.4)' : 'rgba(110, 63, 243, 0.4)'}`,
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: modalDimensions.width || 380,
+              maxWidth: '92%',
+              height: modalDimensions.height || 380,
+              borderRadius: 2.5,
+              border: `2px dashed ${isSolved ? '#00D2B4' : 'rgba(110, 63, 243, 0.4)'}`,
+              backgroundColor: isSolved ? 'rgba(0, 210, 180, 0.04)' : 'rgba(110, 63, 243, 0.04)',
+              pointerEvents: 'none',
+              zIndex: 1,
+              transition: 'all 0.3s ease',
             }}
-          >
-            <Typography
-              sx={{
-                fontSize: '0.74rem',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                color: isSolved ? '#00D2B4' : '#C4B5FD',
-                fontFamily: 'monospace',
-                textTransform: 'uppercase',
-              }}
-            >
-              {isSolved ? t.targetAligned : t.targetLabel}
-            </Typography>
-          </Box>
-        </Box>
+          />
+        )}
 
-        {/* Live Container with User's CSS applied */}
+        {/* Live Container */}
         <div className="modal-viewport" style={{ position: 'relative', zIndex: 2 }}>
           <ProspectModal ref={modalRef} t={t} />
         </div>

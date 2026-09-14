@@ -43,17 +43,60 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#160844',
+        backgroundColor: '#0F1322',
         borderRadius: 2.5,
-        border: isSolved ? '1.5px solid #00D2B4' : '1px solid rgba(179, 176, 255, 0.18)',
+        border: isSolved ? '2px solid #00D2B4' : '1px solid #232842',
         boxShadow: isSolved
           ? '0 0 24px rgba(0, 210, 180, 0.2)'
           : '0 8px 24px rgba(0, 0, 0, 0.35)',
         overflow: 'hidden',
         height: '100%',
-        minHeight: { xs: 240, md: 360 },
+        minHeight: { xs: 320, sm: 380, md: 440 },
       }}
     >
+      {/* Sleek Minimal Toolbar Header */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: { xs: '6px 10px', sm: '8px 14px' },
+          backgroundColor: '#161A2D',
+          borderBottom: '1px solid #232842',
+          gap: 1,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, flexShrink: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#27C93F' }} />
+          </Box>
+          <Typography
+            sx={{
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#FFFFFF',
+              letterSpacing: '0.02em',
+            }}
+          >
+            {t.mobileTabEditor || 'Editor'}
+          </Typography>
+        </Box>
+
+        {/* Right: Char count */}
+        <Typography
+          sx={{
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '0.74rem',
+            color: '#8E95B2',
+            fontWeight: 700,
+          }}
+        >
+          {value.trim().length} chars
+        </Typography>
+      </Box>
+
       {/* Code Editor Body */}
       <Box
         sx={{
@@ -73,7 +116,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
             mb: 0.5,
           }}
         >
-          <span style={{ color: '#b3b0ff', fontWeight: 700 }}>.modal-viewport</span> &#123;
+          <span style={{ color: '#00D2B4', fontWeight: 700 }}>.modal-viewport</span> &#123;
         </Typography>
 
         <Box sx={{ flex: 1, minHeight: { xs: 100, md: 150 } }}>
@@ -117,8 +160,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           justifyContent: 'space-between',
           px: { xs: 1.5, sm: 2 },
           py: 1.2,
-          backgroundColor: '#14063e',
-          borderTop: '1px solid rgba(179, 176, 255, 0.18)',
+          backgroundColor: '#161A2D',
+          borderTop: '1px solid #232842',
           gap: 1,
         }}
       >
@@ -164,7 +207,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
             },
           }}
         >
-          {isSolved ? t.mergedBtn : t.verifyBtn}
+          {t.verifyBtn}
         </Button>
       </Box>
     </Box>

@@ -90,28 +90,18 @@ export function saveRun(timeMs: number, charCount: number, playerTag = 'Senior D
 export function clearStats(): GameStats {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem('frontkon_player_name');
   } catch {
     // Ignore
   }
   return DEFAULT_STATS;
 }
 
-const PLAYER_NAME_KEY = 'frontkon_player_name';
-
-export function getStoredPlayerName(): string {
-  try {
-    return localStorage.getItem(PLAYER_NAME_KEY) || '';
-  } catch {
-    return '';
-  }
-}
-
-export function saveStoredPlayerName(name: string) {
-  try {
-    localStorage.setItem(PLAYER_NAME_KEY, name);
-  } catch {
-    // Ignore
-  }
+// Ensure legacy stored name is cleared from browser
+try {
+  localStorage.removeItem('frontkon_player_name');
+} catch {
+  // Ignore
 }
 
 export function formatTime(ms: number | null): string {

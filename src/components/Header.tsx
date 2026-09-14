@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Typography,
-  Chip,
   IconButton,
   Tooltip,
   Button,
@@ -31,23 +30,13 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   elapsedMs,
-  isRunning,
   onBackToMenu,
-  currentLevel,
   soundEnabled = true,
   onToggleSound,
   language,
   onToggleLanguage,
   t,
 }) => {
-  const levelNumber = currentLevel === 'level1' ? '1' : currentLevel === 'level2' ? '2' : '3';
-  const levelBadgeLabel =
-    currentLevel === 'level1'
-      ? t.l1Badge
-      : currentLevel === 'level2'
-      ? t.l2Badge
-      : t.l3Badge;
-
   return (
     <Box
       component="header"
@@ -104,48 +93,9 @@ export const Header: React.FC<HeaderProps> = ({
           </Tooltip>
         )}
 
-        <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <OutreachLogo height={24} />
         </Box>
-
-        <Chip
-          label={
-            <Box component="span">
-              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                {levelBadgeLabel}
-              </Box>
-              <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
-                L{levelNumber}
-              </Box>
-            </Box>
-          }
-          size="small"
-          sx={{
-            height: 24,
-            fontSize: '0.72rem',
-            fontWeight: 800,
-            borderRadius: '6px',
-            backgroundColor:
-              currentLevel === 'level1'
-                ? 'rgba(89, 81, 255, 0.25)'
-                : currentLevel === 'level2'
-                ? 'rgba(0, 210, 180, 0.15)'
-                : 'rgba(255, 176, 32, 0.15)',
-            color:
-              currentLevel === 'level1'
-                ? '#b3b0ff'
-                : currentLevel === 'level2'
-                ? '#00D2B4'
-                : '#FFD166',
-            border: `1px solid ${
-              currentLevel === 'level1'
-                ? 'rgba(179, 176, 255, 0.35)'
-                : currentLevel === 'level2'
-                ? 'rgba(0, 210, 180, 0.35)'
-                : 'rgba(255, 176, 32, 0.35)'
-            }`,
-          }}
-        />
       </Box>
 
       {/* Middle: Clean Live Timer & Record centered in header */}
@@ -164,19 +114,14 @@ export const Header: React.FC<HeaderProps> = ({
           sx={{
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#141414',
-            px: { xs: 1.4, sm: 2 },
+            px: { xs: 1, sm: 1.5 },
             py: '4px',
-            borderRadius: '6px',
-            border: `1px solid ${isRunning ? '#5951ff' : '#333333'}`,
-            boxShadow: isRunning ? '0 0 14px rgba(89, 81, 255, 0.35)' : 'none',
-            transition: 'all 0.25s ease',
           }}
         >
           <Typography
             sx={{
               fontFamily: 'ui-monospace, monospace',
-              fontSize: { xs: '0.95rem', sm: '1.15rem' },
+              fontSize: { xs: '1rem', sm: '1.18rem' },
               fontWeight: 800,
               color: '#FFFFFF',
               letterSpacing: '0.04em',

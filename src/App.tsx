@@ -6,13 +6,11 @@ import {
   Container,
   Button,
   Typography,
-  ToggleButton,
-  ToggleButtonGroup,
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CodeIcon from '@mui/icons-material/Code';
-import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import confetti from 'canvas-confetti';
 import { outreachTheme } from './theme';
 import { Header } from './components/Header';
@@ -31,20 +29,36 @@ import {
   getStoredStats,
   saveRun,
   clearStats,
-  getStoredPlayerName,
-  saveStoredPlayerName,
   type GameStats,
 } from './utils/storage';
 import { submitRemoteRun } from './utils/leaderboardApi';
 import { sound } from './utils/audio';
 import { getStoredLanguage, saveLanguage, translations, type Language } from './utils/i18n';
 
+const DEFAULT_L1_CSS = `/* DevBot-3000 hallucination */
+display: block;
+position: absolute;
+left: 10px;
+top: -200px;
+float: left;`;
+
+const DEFAULT_L2_CSS = `/* DevBot-3000 hallucination */
+position: absolute;
+top: 4800px;
+z-index: 2147483647;`;
+
+const DEFAULT_L3_CSS = `/* DevBot-3000 hallucination */
+width: 99999px;
+white-space: nowrap;
+font-size: 8px;
+color: #FF7081;`;
+
 export function App() {
   // Navigation: 'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3'
   const [currentScreen, setCurrentScreen] = useState<'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3'>('menu');
 
-  // Player Name State
-  const [playerName, setPlayerName] = useState<string>(() => getStoredPlayerName());
+  // Player Name State (In-Memory Session State only)
+  const [playerName, setPlayerName] = useState<string>('');
   const [showNameModal, setShowNameModal] = useState<boolean>(false);
 
   // Language state (defaults to cz for FrontKon Prague)
@@ -66,22 +80,43 @@ export function App() {
   const startTimeRef = useRef<number | null>(null);
   const timerFrameRef = useRef<number | null>(null);
 
-  // Mobile View Switcher: 'both' (split) | 'code' | 'preview'
-  const [mobileView, setMobileView] = useState<'both' | 'code' | 'preview'>('both');
+  // Mobile Swipe Carousel State
+  const arenaScrollRef = useRef<HTMLDivElement | null>(null);
+  const [mobileTabIndex, setMobileTabIndex] = useState<number>(0);
+
+  const handleArenaScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.clientWidth > 0) {
+      const page = Math.round(el.scrollLeft / el.clientWidth);
+      if (page >= 0 && page <= 2 && page !== mobileTabIndex) {
+        setMobileTabIndex(page);
+      }
+    }
+  };
+
+  const handleMobileTabClick = (index: number) => {
+    setMobileTabIndex(index);
+    if (arenaScrollRef.current) {
+      arenaScrollRef.current.scrollTo({
+        left: index * arenaScrollRef.current.clientWidth,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   // Level 1 State (Center Modal)
-  const [l1Css, setL1Css] = useState<string>('');
+  const [l1Css, setL1Css] = useState<string>(DEFAULT_L1_CSS);
   const [l1Solved, setL1Solved] = useState<boolean>(false);
   const [l1Distance, setL1Distance] = useState<number>(350);
   const [l1AlignmentStatus, setL1AlignmentStatus] = useState<AlignmentStatus>('off');
 
   // Level 2 State (Sticky CTA Button)
-  const [l2Css, setL2Css] = useState<string>('');
+  const [l2Css, setL2Css] = useState<string>(DEFAULT_L2_CSS);
   const [l2Solved, setL2Solved] = useState<boolean>(false);
   const [l2StickyStatus, setL2StickyStatus] = useState<StickyStatus>('off');
 
   // Level 3 State (Meeting Title Overflow)
-  const [l3Css, setL3Css] = useState<string>('');
+  const [l3Css, setL3Css] = useState<string>(DEFAULT_L3_CSS);
   const [l3Solved, setL3Solved] = useState<boolean>(false);
   const [l3Status, setL3Status] = useState<OverflowStatus>('overflowing');
 
@@ -128,107 +163,32 @@ export function App() {
     };
   }, [isRunning]);
 
-  // Level 1 alignment check (auto-saves on victory!)
+  // Level 1 alignment check
   const handleL1DistanceChange = useCallback(
     (dist: number, centered: boolean, status: AlignmentStatus) => {
       setL1Distance(dist);
       setL1AlignmentStatus(status);
-
-      if (centered && !l1Solved) {
-        setL1Solved(true);
-        setIsRunning(false);
-        sound.playSuccess();
-
-        confetti({
-          particleCount: 140,
-          spread: 90,
-          origin: { y: 0.6 },
-          colors: ['#00D2B4', '#6E3FF3', '#FFB020', '#FFFFFF'],
-        });
-
-        const currentBest = stats.levelBestTimes['level1'] || null;
-        setIsNewBest(currentBest === null || elapsedMs < currentBest);
-
-        // Auto-save to leaderboard immediately!
-        const charCount = l1Css.trim().length;
-        const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level1');
-        setStats(updated);
-        submitRemoteRun({ timeMs: elapsedMs, charCount, playerTag: playerName || 'Senior Dev', levelId: 'level1' });
-
-        setTimeout(() => {
-          setShowVictory(true);
-        }, 350);
-      }
+      setL1Solved(centered);
     },
-    [l1Solved, stats.levelBestTimes, elapsedMs, l1Css, playerName]
+    []
   );
 
-  // Level 2 (Sticky CTA) check (auto-saves on victory!)
+  // Level 2 (Sticky CTA) check
   const handleL2StickyChange = useCallback(
     (status: StickyStatus, solved: boolean) => {
       setL2StickyStatus(status);
-
-      if (solved && !l2Solved) {
-        setL2Solved(true);
-        setIsRunning(false);
-        sound.playSuccess();
-
-        confetti({
-          particleCount: 150,
-          spread: 95,
-          origin: { y: 0.6 },
-          colors: ['#00D2B4', '#6E3FF3', '#FFB020', '#FFFFFF'],
-        });
-
-        const currentBest = stats.levelBestTimes['level2'] || null;
-        setIsNewBest(currentBest === null || elapsedMs < currentBest);
-
-        // Auto-save to leaderboard immediately!
-        const charCount = l2Css.trim().length;
-        const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level2');
-        setStats(updated);
-        submitRemoteRun({ timeMs: elapsedMs, charCount, playerTag: playerName || 'Senior Dev', levelId: 'level2' });
-
-        setTimeout(() => {
-          setShowVictory(true);
-        }, 350);
-      }
+      setL2Solved(solved);
     },
-    [l2Solved, stats.levelBestTimes, elapsedMs, l2Css, playerName]
+    []
   );
 
-  // Level 3 (Meeting Title Overflow) check (auto-saves on victory!)
+  // Level 3 (Meeting Title Overflow) check
   const handleL3StatusChange = useCallback(
     (status: OverflowStatus, solved: boolean) => {
       setL3Status(status);
-
-      if (solved && !l3Solved) {
-        setL3Solved(true);
-        setIsRunning(false);
-        sound.playSuccess();
-
-        confetti({
-          particleCount: 170,
-          spread: 110,
-          origin: { y: 0.6 },
-          colors: ['#00D2B4', '#6E3FF3', '#FFD166', '#FFFFFF'],
-        });
-
-        const currentBest = stats.levelBestTimes['level3'] || null;
-        setIsNewBest(currentBest === null || elapsedMs < currentBest);
-
-        // Auto-save to leaderboard immediately!
-        const charCount = l3Css.trim().length;
-        const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', 'level3');
-        setStats(updated);
-        submitRemoteRun({ timeMs: elapsedMs, charCount, playerTag: playerName || 'Senior Dev', levelId: 'level3' });
-
-        setTimeout(() => {
-          setShowVictory(true);
-        }, 350);
-      }
+      setL3Solved(solved);
     },
-    [l3Solved, stats.levelBestTimes, elapsedMs, l3Css, playerName]
+    []
   );
 
   // Start timer on first keystroke
@@ -265,15 +225,15 @@ export function App() {
     setFailedVerify(false);
 
     if (activeLevel === 'level1') {
-      setL1Css('');
+      setL1Css(DEFAULT_L1_CSS);
       setL1Solved(false);
       setL1AlignmentStatus('off');
     } else if (activeLevel === 'level2') {
-      setL2Css('');
+      setL2Css(DEFAULT_L2_CSS);
       setL2Solved(false);
       setL2StickyStatus('off');
     } else {
-      setL3Css('');
+      setL3Css(DEFAULT_L3_CSS);
       setL3Solved(false);
       setL3Status('overflowing');
     }
@@ -307,20 +267,15 @@ export function App() {
     setCurrentScreen('menu');
   };
 
-  // Start Campaign: Prompt for name if not set yet!
+  // Start Campaign: Prompt for name
   const handleStartCampaign = () => {
     sound.playBlip();
-    if (!playerName || playerName.trim() === '') {
-      setShowNameModal(true);
-    } else {
-      handleSelectLevel('level1');
-    }
+    setShowNameModal(true);
   };
 
   // When player registers their name
   const handleNameRegistered = (name: string) => {
     setPlayerName(name);
-    saveStoredPlayerName(name);
     setShowNameModal(false);
     handleSelectLevel('level1');
   };
@@ -328,18 +283,44 @@ export function App() {
   // User clicked "Verify & Merge PR"
   const handleSolveAttempt = () => {
     if (isCurrentLevelSolved) {
+      setIsRunning(false);
       sound.playSuccess();
-      setShowVictory(true);
+
+      confetti({
+        particleCount: 150,
+        spread: 95,
+        origin: { y: 0.6 },
+        colors: ['#00D2B4', '#5951ff', '#FFB020', '#FFFFFF'],
+      });
+
+      const currentBest = stats.levelBestTimes[activeLevel] || null;
+      setIsNewBest(currentBest === null || elapsedMs < currentBest);
+
+      // Auto-save to leaderboard immediately!
+      const charCount = activeUserCss.trim().length;
+      const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', activeLevel);
+      setStats(updated);
+      submitRemoteRun({
+        timeMs: elapsedMs,
+        charCount,
+        playerTag: playerName || 'Senior Dev',
+        levelId: activeLevel,
+      });
+
+      setTimeout(() => {
+        setShowVictory(true);
+      }, 350);
     } else {
       sound.playFail();
       setFailedVerify(true);
-      setTimeout(() => setFailedVerify(false), 3500);
+      setTimeout(() => setFailedVerify(false), 3000);
     }
   };
 
   const handleClearLeaderboard = () => {
     const fresh = clearStats();
     setStats(fresh);
+    setPlayerName('');
   };
 
   const handleToggleSound = () => {
@@ -370,6 +351,10 @@ export function App() {
     }
     if (failedVerify) {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
+    }
+    // Initial state before player starts modifying CSS:
+    if (!isLevelStarted || l1Css.trim() === DEFAULT_L1_CSS.trim()) {
+      return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
     }
     if (l1AlignmentStatus === 'horizontal_only') {
       return { mood: 'confident', message: formatName(t.devbotHorizontalOnly), badgeLabel: t.badgeHalfway };
@@ -404,6 +389,9 @@ export function App() {
     if (failedVerify) {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
+    if (!isLevelStarted || l2Css.trim() === DEFAULT_L2_CSS.trim()) {
+      return { mood: 'confident', message: formatName(t.devbotL2StickyInitial), badgeLabel: t.badge10x };
+    }
     if (l2StickyStatus === 'fixed_escaped') {
       return { mood: 'confident', message: formatName(t.devbotL2StickyFixed), badgeLabel: t.badgeHalfway };
     }
@@ -430,6 +418,9 @@ export function App() {
     }
     if (failedVerify) {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
+    }
+    if (!isLevelStarted || l3Css.trim() === DEFAULT_L3_CSS.trim()) {
+      return { mood: 'confident', message: formatName(t.devbotL3Initial), badgeLabel: t.badge10x };
     }
     if (l3Status === 'clipped_no_ellipsis') {
       return { mood: 'confident', message: formatName(t.devbotL3ClippedNoEllipsis), badgeLabel: t.badgeHalfway };
@@ -540,63 +531,131 @@ export function App() {
               t={t}
             />
 
-            {/* Mobile View Switcher (Only visible on screens < md) */}
+            {/* Mobile View Switcher Tabs & Dots (Only visible on screens < lg) */}
             <Box
               sx={{
-                display: { xs: 'flex', md: 'none' },
-                justifyContent: 'center',
+                display: { xs: 'flex', lg: 'none' },
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 1,
               }}
             >
-              <ToggleButtonGroup
-                value={mobileView}
-                exclusive
-                onChange={(_, val) => val && setMobileView(val)}
-                size="small"
+              <Box
                 sx={{
+                  display: 'flex',
                   backgroundColor: '#160844',
                   border: '1px solid rgba(179, 176, 255, 0.2)',
-                  borderRadius: 2,
-                  '& .MuiToggleButton-root': {
-                    py: '3px',
-                    px: 1.5,
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    color: '#b3b0ff',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.5,
-                    '&.Mui-selected': {
-                      backgroundColor: '#5951ff',
-                      color: '#FFF',
-                      '&:hover': { backgroundColor: '#433adb' },
-                    },
-                  },
+                  borderRadius: '8px',
+                  p: '3px',
+                  gap: 0.5,
+                  maxWidth: '100%',
                 }}
               >
-                <ToggleButton value="both">
-                  <ViewSidebarIcon sx={{ fontSize: 13 }} />
-                  <span>Split</span>
-                </ToggleButton>
-                <ToggleButton value="code">
-                  <CodeIcon sx={{ fontSize: 13 }} />
-                  <span>Editor</span>
-                </ToggleButton>
-                <ToggleButton value="preview">
-                  <VisibilityIcon sx={{ fontSize: 13 }} />
-                  <span>Preview</span>
-                </ToggleButton>
-              </ToggleButtonGroup>
+                <Button
+                  size="small"
+                  onClick={() => handleMobileTabClick(0)}
+                  startIcon={<CodeIcon sx={{ fontSize: '14px !important' }} />}
+                  sx={{
+                    py: '4px',
+                    px: { xs: 1.4, sm: 2 },
+                    fontSize: '0.74rem',
+                    fontWeight: mobileTabIndex === 0 ? 700 : 500,
+                    color: mobileTabIndex === 0 ? '#FFFFFF' : '#b3b0ff',
+                    backgroundColor: mobileTabIndex === 0 ? '#5951ff' : 'transparent',
+                    borderRadius: '6px',
+                    textTransform: 'none',
+                    minWidth: 0,
+                    '&:hover': {
+                      backgroundColor: mobileTabIndex === 0 ? '#5951ff' : 'rgba(89, 81, 255, 0.15)',
+                    },
+                  }}
+                >
+                  {t.mobileTabEditor}
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleMobileTabClick(1)}
+                  startIcon={<VisibilityIcon sx={{ fontSize: '14px !important' }} />}
+                  sx={{
+                    py: '4px',
+                    px: { xs: 1.4, sm: 2 },
+                    fontSize: '0.74rem',
+                    fontWeight: mobileTabIndex === 1 ? 700 : 500,
+                    color: mobileTabIndex === 1 ? '#FFFFFF' : '#b3b0ff',
+                    backgroundColor: mobileTabIndex === 1 ? '#5951ff' : 'transparent',
+                    borderRadius: '6px',
+                    textTransform: 'none',
+                    minWidth: 0,
+                    '&:hover': {
+                      backgroundColor: mobileTabIndex === 1 ? '#5951ff' : 'rgba(89, 81, 255, 0.15)',
+                    },
+                  }}
+                >
+                  {t.mobileTabOutput}
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleMobileTabClick(2)}
+                  startIcon={<TrackChangesIcon sx={{ fontSize: '14px !important' }} />}
+                  sx={{
+                    py: '4px',
+                    px: { xs: 1.4, sm: 2 },
+                    fontSize: '0.74rem',
+                    fontWeight: mobileTabIndex === 2 ? 700 : 500,
+                    color: mobileTabIndex === 2 ? '#FFFFFF' : '#b3b0ff',
+                    backgroundColor: mobileTabIndex === 2 ? '#5951ff' : 'transparent',
+                    borderRadius: '6px',
+                    textTransform: 'none',
+                    minWidth: 0,
+                    '&:hover': {
+                      backgroundColor: mobileTabIndex === 2 ? '#5951ff' : 'rgba(89, 81, 255, 0.15)',
+                    },
+                  }}
+                >
+                  {t.mobileTabTarget}
+                </Button>
+              </Box>
+
+              {/* Dots indicator */}
+              <Box sx={{ display: 'flex', gap: 0.8, alignItems: 'center' }}>
+                {[0, 1, 2].map((idx) => (
+                  <Box
+                    key={idx}
+                    onClick={() => handleMobileTabClick(idx)}
+                    sx={{
+                      width: mobileTabIndex === idx ? 18 : 6,
+                      height: 6,
+                      borderRadius: '3px',
+                      backgroundColor: mobileTabIndex === idx ? '#5951ff' : 'rgba(179, 176, 255, 0.3)',
+                      transition: 'all 0.25s ease',
+                      cursor: 'pointer',
+                    }}
+                  />
+                ))}
+              </Box>
             </Box>
 
-            {/* Split Screen: Live Preview (Left) & Code Editor (Right) */}
+            {/* CSSBattle-style Arena: Horizontal Swipe Carousel on Mobile (< lg) | 3-Column Grid on Desktop (>= lg) */}
             <Box
+              ref={arenaScrollRef}
+              onScroll={handleArenaScroll}
               sx={{
                 position: 'relative',
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', lg: '1.25fr 1fr' },
-                gap: { xs: 1.5, sm: 2.5 },
+                display: { xs: 'flex', lg: 'grid' },
+                flexDirection: { xs: 'row', lg: 'unset' },
+                overflowX: { xs: 'auto', lg: 'visible' },
+                scrollSnapType: { xs: 'x mandatory', lg: 'none' },
+                scrollBehavior: 'smooth',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
+                '&::-webkit-scrollbar': { display: 'none' },
+                gridTemplateColumns: {
+                  lg: '1.05fr 1fr 1fr',
+                },
+                gap: { xs: 0, lg: 2.2 },
                 flex: 1,
+                alignItems: 'stretch',
+                width: '100%',
               }}
             >
               {/* Frosted Glass Blur Overlay before player hits Start */}
@@ -628,6 +687,22 @@ export function App() {
                       gap: 2,
                     }}
                   >
+                    <Typography
+                      sx={{
+                        fontSize: { xs: '1.05rem', sm: '1.25rem' },
+                        fontWeight: 800,
+                        color: '#FFFFFF',
+                        letterSpacing: '-0.01em',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {activeLevel === 'level1'
+                        ? (language === 'cz' ? 'Úkol 1: Vycentrovat modal' : 'Task 1: Center Modal')
+                        : activeLevel === 'level2'
+                        ? (language === 'cz' ? 'Úkol 2: Sticky CTA' : 'Task 2: Sticky CTA')
+                        : (language === 'cz' ? 'Úkol 3: Text Overflow' : 'Task 3: Text Overflow')}
+                    </Typography>
+
                     <Button
                       variant="contained"
                       size="large"
@@ -654,58 +729,22 @@ export function App() {
                     >
                       {t.startLevelTimerBtn}
                     </Button>
-
-                    <Typography variant="body2" sx={{ color: '#C4B5FD', fontWeight: 600, fontSize: '0.85rem' }}>
-                      {t.readyPrompt}
-                    </Typography>
                   </Box>
                 </Box>
               )}
 
-              {/* Viewport Column */}
+              {/* 1. Code Editor Column / Slide */}
               <Box
                 sx={{
-                  display: {
-                    xs: mobileView === 'code' ? 'none' : 'flex',
-                    md: 'flex',
-                  },
+                  flex: { xs: '0 0 100%', lg: 'unset' },
+                  width: { xs: '100%', lg: 'auto' },
+                  minWidth: { xs: '100%', lg: 0 },
+                  scrollSnapAlign: { xs: 'start', lg: 'none' },
+                  scrollSnapStop: { xs: 'always', lg: 'unset' },
+                  display: 'flex',
                   flexDirection: 'column',
-                }}
-              >
-                {activeLevel === 'level1' && (
-                  <PreviewViewport
-                    userCss={l1Css}
-                    onDistanceChange={handleL1DistanceChange}
-                    isSolved={l1Solved}
-                    t={t}
-                  />
-                )}
-                {activeLevel === 'level2' && (
-                  <PreviewViewportSticky
-                    userCss={l2Css}
-                    onStatusChange={handleL2StickyChange}
-                    isSolved={l2Solved}
-                    t={t}
-                  />
-                )}
-                {activeLevel === 'level3' && (
-                  <PreviewViewportLevel2
-                    userCss={l3Css}
-                    onStatusChange={handleL3StatusChange}
-                    isSolved={l3Solved}
-                    t={t}
-                  />
-                )}
-              </Box>
-
-              {/* Code Editor Column */}
-              <Box
-                sx={{
-                  display: {
-                    xs: mobileView === 'preview' ? 'none' : 'flex',
-                    md: 'flex',
-                  },
-                  flexDirection: 'column',
+                  order: 1,
+                  boxSizing: 'border-box',
                 }}
               >
                 {activeLevel === 'level1' && (
@@ -736,6 +775,80 @@ export function App() {
                   />
                 )}
               </Box>
+
+              {/* 2. Code Output Column / Slide (Center / Live Preview) */}
+              <Box
+                sx={{
+                  flex: { xs: '0 0 100%', lg: 'unset' },
+                  width: { xs: '100%', lg: 'auto' },
+                  minWidth: { xs: '100%', lg: 0 },
+                  scrollSnapAlign: { xs: 'start', lg: 'none' },
+                  scrollSnapStop: { xs: 'always', lg: 'unset' },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  order: 2,
+                  boxSizing: 'border-box',
+                }}
+              >
+                {activeLevel === 'level1' && (
+                  <PreviewViewport
+                    userCss={l1Css}
+                    onDistanceChange={handleL1DistanceChange}
+                    isSolved={l1Solved}
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level2' && (
+                  <PreviewViewportSticky
+                    userCss={l2Css}
+                    onStatusChange={handleL2StickyChange}
+                    isSolved={l2Solved}
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level3' && (
+                  <PreviewViewportLevel2
+                    userCss={l3Css}
+                    onStatusChange={handleL3StatusChange}
+                    isSolved={l3Solved}
+                    t={t}
+                  />
+                )}
+              </Box>
+
+              {/* 3. Recreate This Target Column / Slide (Right / Goal) */}
+              <Box
+                sx={{
+                  flex: { xs: '0 0 100%', lg: 'unset' },
+                  width: { xs: '100%', lg: 'auto' },
+                  minWidth: { xs: '100%', lg: 0 },
+                  scrollSnapAlign: { xs: 'start', lg: 'none' },
+                  scrollSnapStop: { xs: 'always', lg: 'unset' },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  order: 3,
+                  boxSizing: 'border-box',
+                }}
+              >
+                {activeLevel === 'level1' && (
+                  <PreviewViewport
+                    isTarget
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level2' && (
+                  <PreviewViewportSticky
+                    isTarget
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level3' && (
+                  <PreviewViewportLevel2
+                    isTarget
+                    t={t}
+                  />
+                )}
+              </Box>
             </Box>
           </Container>
 
@@ -760,7 +873,6 @@ export function App() {
         open={showNameModal}
         onClose={() => setShowNameModal(false)}
         onSubmit={handleNameRegistered}
-        initialName={playerName}
         t={t}
       />
     </ThemeProvider>

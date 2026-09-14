@@ -6,7 +6,6 @@ import {
   Chip,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import FlashOnIcon from '@mui/icons-material/FlashOn';
 import CodeMirror, { oneDark } from '@uiw/react-codemirror';
 import { css } from '@codemirror/lang-css';
 import { cssEditorExtensions } from '../utils/cssAutocomplete';
@@ -29,10 +28,6 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
 }) => {
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
 
-  const applyPreset = (presetCss: string) => {
-    onChange(presetCss);
-  };
-
   const handleVerifyClick = () => {
     if (isSolved) {
       onSolveAttempt();
@@ -43,22 +38,20 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
     }
   };
 
-  const charCount = value.trim().length;
-
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#101324',
+        backgroundColor: '#0F1322',
         borderRadius: 2.5,
-        border: isSolved ? '1.5px solid #00D2B4' : '1px solid #202642',
+        border: isSolved ? '2px solid #00D2B4' : '1px solid #232842',
         boxShadow: isSolved
           ? '0 0 24px rgba(0, 210, 180, 0.2)'
           : '0 8px 24px rgba(0, 0, 0, 0.35)',
         overflow: 'hidden',
         height: '100%',
-        minHeight: { xs: 240, md: 360 },
+        minHeight: { xs: 320, sm: 380, md: 440 },
       }}
     >
       {/* Sleek Minimal Toolbar Header */}
@@ -67,52 +60,31 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          px: { xs: 1.5, sm: 2 },
-          py: 1,
-          backgroundColor: '#14182C',
-          borderBottom: '1px solid #202642',
-          flexWrap: 'wrap',
+          padding: { xs: '6px 10px', sm: '8px 14px' },
+          backgroundColor: '#161A2D',
+          borderBottom: '1px solid #232842',
           gap: 1,
         }}
       >
-        {/* Left: Selector Tag & Shortcut */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, flexShrink: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#27C93F' }} />
+          </Box>
           <Typography
             sx={{
-              color: '#FFD166',
-              fontFamily: 'ui-monospace, monospace',
-              fontWeight: 800,
-              fontSize: '0.82rem',
-            }}
-          >
-            .meeting-title
-          </Typography>
-
-          <Button
-            size="small"
-            startIcon={<FlashOnIcon sx={{ fontSize: '12px !important' }} />}
-            onClick={() =>
-              applyPreset('overflow: hidden;\ntext-overflow: ellipsis;\nwhite-space: nowrap;')
-            }
-            sx={{
-              py: '2px',
-              px: 1,
-              minWidth: 'auto',
-              fontSize: '0.68rem',
+              fontSize: '0.8rem',
               fontWeight: 700,
-              color: '#FFD166',
-              backgroundColor: 'rgba(255, 209, 102, 0.1)',
-              border: '1px solid rgba(255, 209, 102, 0.25)',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 209, 102, 0.2)',
-              },
+              color: '#FFFFFF',
+              letterSpacing: '0.02em',
             }}
           >
-            Ellipsis
-          </Button>
+            {t.mobileTabEditor || 'Editor'}
+          </Typography>
         </Box>
 
-        {/* Right: Golf count */}
+        {/* Right: Char count */}
         <Typography
           sx={{
             fontFamily: 'ui-monospace, monospace',
@@ -121,7 +93,7 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
             fontWeight: 700,
           }}
         >
-          {t.golfCount.replace('{chars}', charCount.toString())}
+          {value.trim().length} chars
         </Typography>
       </Box>
 
@@ -188,8 +160,8 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
           justifyContent: 'space-between',
           px: { xs: 1.5, sm: 2 },
           py: 1.2,
-          backgroundColor: '#12162A',
-          borderTop: '1px solid #202642',
+          backgroundColor: '#161A2D',
+          borderTop: '1px solid #232842',
           gap: 1,
         }}
       >
@@ -230,7 +202,7 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
             },
           }}
         >
-          {isSolved ? t.mergedBtn : t.verifyBtn}
+          {t.verifyBtn}
         </Button>
       </Box>
     </Box>
