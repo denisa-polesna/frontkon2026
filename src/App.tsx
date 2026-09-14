@@ -23,6 +23,7 @@ import { CodeEditorSticky } from './components/CodeEditorSticky';
 import { PreviewViewportLevel2, type OverflowStatus } from './components/PreviewViewportLevel2';
 import { CodeEditorLevel2 } from './components/CodeEditorLevel2';
 import { VictoryModal } from './components/VictoryModal';
+import { FailureModal } from './components/FailureModal';
 import { LeaderboardScreen } from './components/LeaderboardScreen';
 import { NameRegistrationModal } from './components/NameRegistrationModal';
 import {
@@ -68,6 +69,7 @@ export function App() {
   // Global Stats & Modals
   const [stats, setStats] = useState<GameStats>(() => getStoredStats());
   const [showVictory, setShowVictory] = useState<boolean>(false);
+  const [showFailureModal, setShowFailureModal] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isNewBest, setIsNewBest] = useState<boolean>(false);
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
@@ -313,6 +315,7 @@ export function App() {
     } else {
       sound.playFail();
       setFailedVerify(true);
+      setShowFailureModal(true);
       setTimeout(() => setFailedVerify(false), 3000);
     }
   };
@@ -863,6 +866,13 @@ export function App() {
             isNewBest={isNewBest}
             onNextLevel={handleNextLevelProgression}
             language={language}
+            t={t}
+          />
+
+          {/* Failure Feedback Modal */}
+          <FailureModal
+            open={showFailureModal}
+            onClose={() => setShowFailureModal(false)}
             t={t}
           />
         </Box>

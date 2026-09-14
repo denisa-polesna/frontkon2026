@@ -143,6 +143,9 @@ export const translations = {
     verifyBtn: 'Submit',
     mergedBtn: 'PR Merged! 🎉',
     verifyFailedToast: '❌ PR Checks Failed: Acceptance Criteria not met!',
+    failedModalTitle: 'Tests Failed',
+    failedModalSubtitle: 'Your CSS changes did not meet the requirements yet. Review your code and try again!',
+    failedModalBtn: 'Back to Code',
     verifyFailedBadge: 'CI/CD FAILED ❌',
     verifyFailedDevbot: 'Nice try, {name}! Your PR failed CI/CD pipeline tests! Did you even read the Jira ticket AC?',
 
@@ -362,6 +365,9 @@ export const translations = {
     verifyBtn: 'Odeslat',
     mergedBtn: 'PR Mergnuto! 🎉',
     verifyFailedToast: '❌ PR testy selhaly: Akceptační kritéria nejsou splněna!',
+    failedModalTitle: 'Testy neprošly',
+    failedModalSubtitle: 'Tvé CSS změny ještě nesplňují zadání úkolu. Zkontroluj kód a zkus to znovu!',
+    failedModalBtn: 'Zpět ke kódu',
     verifyFailedBadge: 'CI/CD SELHALO ❌',
     verifyFailedDevbot: 'Dobrý pokus, {name}! Tvoje PRko neprošlo CI/CD testy! Přečetl sis vůbec akceptační kritéria v Jira ticketu?',
 
