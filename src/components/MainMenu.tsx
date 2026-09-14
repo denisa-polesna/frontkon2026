@@ -8,7 +8,6 @@ import {
   Tooltip,
 } from '@mui/material';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -39,7 +38,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        height: '100dvh',
+        minHeight: '100dvh',
+        maxHeight: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: '#120042',
@@ -47,6 +48,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         backgroundPosition: '50% 0',
         backgroundRepeat: 'no-repeat',
         backgroundSize: { xs: 'cover', md: '100% auto' },
+        overflow: 'hidden',
       }}
     >
       {/* Top Navbar */}
@@ -56,9 +58,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           px: { xs: 2, sm: 4 },
-          py: { xs: 1.6, sm: 2.2 },
+          py: { xs: 1.2, sm: 1.8 },
           backgroundColor: '#1f1f1f',
           borderBottom: '1px solid #2e2e2e',
+          flexShrink: 0,
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -126,91 +129,103 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          py: { xs: 2.5, sm: 3.5 },
-          px: { xs: 3.5, sm: 4 },
+          gap: '40px',
+          py: { xs: 2, sm: 3 },
+          px: { xs: 2.5, sm: 4 },
           textAlign: 'center',
+          minHeight: 0,
         }}
       >
-        {/* FrontKon 2026 Eyebrow Badge */}
+        {/* Headline Block */}
         <Box
           sx={{
-            display: 'inline-flex',
+            display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            gap: 1,
-            px: 1.6,
-            py: 0.5,
-            mb: { xs: 1, sm: 1.4 },
-            borderRadius: '999px',
-            backgroundColor: 'rgba(89, 81, 255, 0.16)',
-            border: '1px solid rgba(179, 176, 255, 0.35)',
-            boxShadow: '0 2px 14px rgba(89, 81, 255, 0.25)',
+            gap: { xs: 1, sm: 1.2 },
           }}
         >
+          {/* FrontKon 2026 Eyebrow Badge */}
           <Box
             sx={{
-              width: 7,
-              height: 7,
-              borderRadius: '50%',
-              backgroundColor: '#00D2B4',
-              boxShadow: '0 0 8px #00D2B4',
-            }}
-          />
-          <Typography
-            sx={{
-              color: '#FFFFFF',
-              fontSize: { xs: '0.72rem', sm: '0.8rem' },
-              fontWeight: 700,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 1.2,
+              px: { xs: 2, sm: 2.6 },
+              py: { xs: 0.5, sm: 0.7 },
+              borderRadius: '999px',
+              backgroundColor: 'rgba(89, 81, 255, 0.18)',
+              border: '1px solid rgba(179, 176, 255, 0.45)',
+              boxShadow: '0 2px 18px rgba(89, 81, 255, 0.35)',
             }}
           >
-            FrontKon 2026 • Prague
+            <Box
+              sx={{
+                width: 9,
+                height: 9,
+                borderRadius: '50%',
+                backgroundColor: '#00D2B4',
+                boxShadow: '0 0 10px #00D2B4',
+                flexShrink: 0,
+              }}
+            />
+            <Typography
+              sx={{
+                color: '#FFFFFF',
+                fontSize: { xs: '0.84rem', sm: '0.96rem', md: '1.02rem' },
+                fontWeight: 800,
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+              }}
+            >
+              FrontKon 2026 • Prague
+            </Typography>
+          </Box>
+
+          <Typography
+            variant="h2"
+            sx={{
+              fontWeight: 900,
+              fontSize: { xs: '2rem', sm: '3rem', md: '3.8rem' },
+              letterSpacing: '-0.03em',
+              color: '#FFFFFF',
+              lineHeight: 1.1,
+              m: 0,
+            }}
+          >
+            GIT BLAME: AI
+          </Typography>
+
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: '#FFFFFF',
+              opacity: 0.9,
+              maxWidth: 580,
+              lineHeight: { xs: 1.45, sm: 1.6 },
+              fontSize: { xs: '0.84rem', sm: '0.98rem', md: '1.05rem' },
+              m: 0,
+            }}
+          >
+            {t.menuSubtitle}
           </Typography>
         </Box>
-
-        <Typography
-          variant="h2"
-          sx={{
-            fontWeight: 900,
-            fontSize: { xs: '2.4rem', sm: '3.4rem', md: '4.2rem' },
-            letterSpacing: '-0.03em',
-            color: '#FFFFFF',
-            mb: 0.8,
-          }}
-        >
-          GIT BLAME: AI
-        </Typography>
-
-        <Typography
-          variant="subtitle1"
-          sx={{
-            color: '#FFFFFF',
-            opacity: 0.9,
-            maxWidth: 580,
-            margin: '0 auto',
-            lineHeight: 1.6,
-            fontSize: { xs: '0.94rem', sm: '1.08rem' },
-          }}
-        >
-          {t.menuSubtitle}
-        </Typography>
 
         {/* Rival DevBot speech card - aligned to same width as action buttons */}
         <Box
           sx={{
             maxWidth: { xs: '100%', sm: 440 },
             width: '100%',
-            my: { xs: 3.5, sm: 4.5 },
-            mx: 'auto',
+            m: 0,
             backgroundColor: '#FFFFFF',
             backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/698651938e6808536770fe17_dot-repeat-svg.svg")`,
             backgroundRepeat: 'repeat',
             border: '1px solid rgba(89, 81, 255, 0.35)',
             borderRadius: '12px',
-            p: { xs: 1.8, sm: 2.2 },
+            p: { xs: 1.4, sm: 1.8, md: 2.2 },
             display: 'flex',
             alignItems: 'center',
-            gap: 1.8,
+            gap: { xs: 1.4, sm: 1.8 },
             textAlign: 'left',
             boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
           }}
@@ -218,8 +233,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           {/* Exact outreach.ai icon square: background #5951ff, color #fff, radius 6px */}
           <Box
             sx={{
-              width: { xs: 44, sm: 48 },
-              height: { xs: 44, sm: 48 },
+              width: { xs: 40, sm: 46 },
+              height: { xs: 40, sm: 46 },
               borderRadius: '6px',
               backgroundColor: '#5951ff',
               color: '#FFFFFF',
@@ -230,10 +245,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
               boxShadow: '0 4px 14px rgba(89, 81, 255, 0.35)',
             }}
           >
-            <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: { xs: 26, sm: 30 } }} />
+            <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: { xs: 24, sm: 28 } }} />
           </Box>
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#000000', fontSize: '0.88rem', mb: 0.3 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#000000', fontSize: '0.85rem', mb: 0.2 }}>
               DevBot-3000
             </Typography>
             <Typography
@@ -241,8 +256,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({
               sx={{
                 color: '#000000',
                 fontStyle: 'italic',
-                fontSize: { xs: '0.82rem', sm: '0.88rem' },
-                lineHeight: 1.45,
+                fontSize: { xs: '0.78rem', sm: '0.84rem', md: '0.88rem' },
+                lineHeight: 1.4,
               }}
             >
               &ldquo;{t.menuDevbotTaunt}&rdquo;
@@ -256,10 +271,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 1.5,
+            gap: 1.2,
             width: '100%',
             maxWidth: { xs: '100%', sm: 440 },
-            margin: '0 auto',
+            m: 0,
           }}
         >
           <Button
@@ -268,8 +283,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             fullWidth
             onClick={onStartCampaign}
             sx={{
-              py: 1.4,
-              fontSize: { xs: '1rem', sm: '1.08rem' },
+              py: { xs: 1.1, sm: 1.3 },
+              fontSize: { xs: '0.94rem', sm: '1.05rem' },
               fontWeight: 600,
               letterSpacing: '0.01em',
               borderRadius: '6px',
@@ -295,11 +310,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             variant="outlined"
             size="large"
             fullWidth
-            startIcon={<LeaderboardIcon sx={{ fontSize: '20px !important', color: '#FFFFFF' }} />}
             onClick={onOpenLeaderboard}
             sx={{
-              py: 1.4,
-              fontSize: { xs: '0.94rem', sm: '1.02rem' },
+              py: { xs: 1.1, sm: 1.3 },
+              fontSize: { xs: '0.94rem', sm: '1.05rem' },
               fontWeight: 600,
               borderRadius: '6px',
               borderColor: 'rgba(179, 176, 255, 0.35)',
@@ -322,56 +336,66 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       <Box
         component="footer"
         sx={{
-          py: { xs: 1.8, sm: 2.2 },
-          px: { xs: 2, sm: 4 },
+          py: { xs: 1.6, sm: 2 },
+          px: { xs: 2, sm: 4, md: 5 },
           backgroundColor: '#1f1f1f',
           borderTop: '1px solid #2e2e2e',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          flexDirection: { xs: 'column', sm: 'row' },
-          gap: 1.5,
+          justifyContent: 'center',
+          gap: 0.8,
+          flexShrink: 0,
           zIndex: 10,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <OutreachLogo height={20} />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: { xs: 1, sm: 1.2 },
+            flexWrap: 'nowrap',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <OutreachLogo height={18} />
           <Typography
             sx={{
               color: '#888888',
-              fontSize: '0.78rem',
+              fontSize: { xs: '0.74rem', sm: '0.84rem' },
               fontWeight: 400,
+              whiteSpace: 'nowrap',
             }}
           >
-            © 2026 Outreach, Inc.
+            © 2026 Outreach,&nbsp;Inc.
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography
-            component="a"
-            href="https://www.outreach.ai/"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              color: '#FFFFFF',
-              fontSize: '0.82rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 0.6,
-              transition: 'color 0.2s ease',
-              '&:hover': {
-                color: '#5951ff',
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            outreach.ai
-            <OpenInNewIcon sx={{ fontSize: 14, color: 'inherit' }} />
-          </Typography>
-        </Box>
+        <Typography
+          component="a"
+          href="https://www.outreach.ai/"
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            color: '#FFFFFF',
+            fontSize: { xs: '0.8rem', sm: '0.88rem' },
+            fontWeight: 600,
+            textDecoration: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.6,
+            whiteSpace: 'nowrap',
+            transition: 'color 0.2s ease',
+            '&:hover': {
+              color: '#5951ff',
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          outreach.ai
+          <OpenInNewIcon sx={{ fontSize: { xs: 13, sm: 15 }, color: 'inherit' }} />
+        </Typography>
       </Box>
     </Box>
   );
