@@ -38,9 +38,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   return (
     <Box
       sx={{
-        height: '100dvh',
-        minHeight: '100dvh',
-        maxHeight: '100dvh',
+        height: '100%',
+        minHeight: '100%',
+        flex: 1,
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: '#120042',
@@ -129,7 +129,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '40px',
+          gap: { xs: 2.5, sm: 3, md: '40px' },
           py: { xs: 2, sm: 3 },
           px: { xs: 2.5, sm: 4 },
           textAlign: 'center',
