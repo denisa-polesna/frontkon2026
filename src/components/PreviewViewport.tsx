@@ -108,7 +108,7 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
-        minHeight: { xs: 320, sm: 380, md: 440 },
+        minHeight: 0,
       }}
     >
       {/* Scoped Styles */}
@@ -134,7 +134,7 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
               box-sizing: border-box;
               width: 100%;
               height: 100%;
-              ${userCss || '/* DevBot defaults */ display: block; padding: 16px;'}
+              ${userCss || '/* DevBot defaults */ display: block; margin-top: -240px; margin-left: 20px; float: left;'}
             }
             #${stageId} .modal-viewport > #prospect-modal {
               height: fit-content;

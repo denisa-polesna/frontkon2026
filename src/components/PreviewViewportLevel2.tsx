@@ -120,7 +120,7 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
-        minHeight: { xs: 320, sm: 380, md: 440 },
+        minHeight: 0,
       }}
     >
       {/* Scoped Styles */}

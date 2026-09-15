@@ -75,12 +75,7 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
               {t.modalTitle}
             </Typography>
           }
-          subheader={
-            <Typography variant="caption" sx={{ color: '#666666', fontSize: '0.74rem' }}>
-              {t.modalSubheader}
-            </Typography>
-          }
-          sx={{ p: '12px 16px', pb: 1 }}
+          sx={{ p: '12px 16px' }}
         />
 
         <Divider sx={{ borderColor: '#e8e6f5' }} />

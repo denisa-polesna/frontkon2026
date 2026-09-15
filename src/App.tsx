@@ -38,9 +38,8 @@ import { getStoredLanguage, saveLanguage, translations, type Language } from './
 
 const DEFAULT_L1_CSS = `/* DevBot-3000 hallucination */
 display: block;
-position: absolute;
-left: 10px;
-top: -200px;
+margin-top: -240px;
+margin-left: 20px;
 float: left;`;
 
 const DEFAULT_L2_CSS = `/* DevBot-3000 hallucination */
@@ -489,9 +488,11 @@ export function App() {
       ) : (
         <Box
           sx={{
-            minHeight: '100vh',
+            height: '100vh',
+            maxHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'hidden',
             backgroundColor: '#120042',
             backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/69e7e28ad18979a7c4351f30_Hero%20Frame.svg")`,
             backgroundPosition: '50% 0',
@@ -519,11 +520,13 @@ export function App() {
             maxWidth="xl"
             sx={{
               flex: 1,
-              py: { xs: 1.2, sm: 2 },
-              px: { xs: 1.5, sm: 3 },
+              minHeight: 0,
+              py: { xs: 1, sm: 1.4 },
+              px: { xs: 1.5, sm: 2.5 },
               display: 'flex',
               flexDirection: 'column',
-              gap: { xs: 1.2, sm: 1.8 },
+              gap: 1.2,
+              overflow: 'hidden',
             }}
           >
             {/* Integrated Mission Banner: Jira Bug + DevBot Live Roast */}
@@ -646,7 +649,8 @@ export function App() {
                 position: 'relative',
                 display: { xs: 'flex', lg: 'grid' },
                 flexDirection: { xs: 'row', lg: 'unset' },
-                overflowX: { xs: 'auto', lg: 'visible' },
+                overflowX: { xs: 'auto', lg: 'hidden' },
+                overflowY: 'hidden',
                 scrollSnapType: { xs: 'x mandatory', lg: 'none' },
                 scrollBehavior: 'smooth',
                 WebkitOverflowScrolling: 'touch',
@@ -655,10 +659,12 @@ export function App() {
                 gridTemplateColumns: {
                   lg: '1.05fr 1fr 1fr',
                 },
-                gap: { xs: 0, lg: 2.2 },
+                gap: { xs: 0, lg: 2 },
                 flex: 1,
+                minHeight: 0,
                 alignItems: 'stretch',
                 width: '100%',
+                height: '100%',
               }}
             >
               {/* Frosted Glass Blur Overlay before player hits Start */}
@@ -742,6 +748,8 @@ export function App() {
                   flex: { xs: '0 0 100%', lg: 'unset' },
                   width: { xs: '100%', lg: 'auto' },
                   minWidth: { xs: '100%', lg: 0 },
+                  height: '100%',
+                  minHeight: 0,
                   scrollSnapAlign: { xs: 'start', lg: 'none' },
                   scrollSnapStop: { xs: 'always', lg: 'unset' },
                   display: 'flex',
@@ -785,6 +793,8 @@ export function App() {
                   flex: { xs: '0 0 100%', lg: 'unset' },
                   width: { xs: '100%', lg: 'auto' },
                   minWidth: { xs: '100%', lg: 0 },
+                  height: '100%',
+                  minHeight: 0,
                   scrollSnapAlign: { xs: 'start', lg: 'none' },
                   scrollSnapStop: { xs: 'always', lg: 'unset' },
                   display: 'flex',
@@ -825,6 +835,8 @@ export function App() {
                   flex: { xs: '0 0 100%', lg: 'unset' },
                   width: { xs: '100%', lg: 'auto' },
                   minWidth: { xs: '100%', lg: 0 },
+                  height: '100%',
+                  minHeight: 0,
                   scrollSnapAlign: { xs: 'start', lg: 'none' },
                   scrollSnapStop: { xs: 'always', lg: 'unset' },
                   display: 'flex',
@@ -873,6 +885,7 @@ export function App() {
           <FailureModal
             open={showFailureModal}
             onClose={() => setShowFailureModal(false)}
+            playerName={playerName}
             t={t}
           />
         </Box>

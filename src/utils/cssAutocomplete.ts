@@ -243,6 +243,7 @@ export function cssCustomCompletionSource(context: CompletionContext): Completio
   };
 }
 
+import { Prec } from '@codemirror/state';
 import { autocompletion, acceptCompletion } from '@codemirror/autocomplete';
 import { indentWithTab } from '@codemirror/commands';
 import { keymap } from '@uiw/react-codemirror';
@@ -252,11 +253,17 @@ export const cssEditorExtensions = [
     override: [cssCustomCompletionSource],
     defaultKeymap: true,
   }),
-  keymap.of([
-    {
-      key: 'Tab',
-      run: acceptCompletion,
-    },
-    indentWithTab,
-  ]),
+  Prec.highest(
+    keymap.of([
+      {
+        key: 'Tab',
+        run: acceptCompletion,
+      },
+      {
+        key: 'Enter',
+        run: acceptCompletion,
+      },
+    ])
+  ),
+  keymap.of([indentWithTab]),
 ];

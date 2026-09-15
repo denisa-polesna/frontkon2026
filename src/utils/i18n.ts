@@ -143,21 +143,24 @@ export const translations = {
     verifyBtn: 'Submit',
     mergedBtn: 'PR Merged! 🎉',
     verifyFailedToast: '❌ PR Checks Failed: Acceptance Criteria not met!',
-    failedModalTitle: 'Tests Failed',
+    failedModalTitle: 'Task Incomplete',
     failedModalSubtitle: 'Your CSS changes did not meet the requirements yet. Review your code and try again!',
     failedModalBtn: 'Back to Code',
     verifyFailedBadge: 'CI/CD FAILED ❌',
-    verifyFailedDevbot: 'Nice try, {name}! Your PR failed CI/CD pipeline tests! Did you even read the Jira ticket AC?',
+    verifyFailedDevbot: 'Nice try, {name}! Your solution failed tests! Did you even read the task requirements?',
 
     // Code Editor L1
+    taskCommentL1: '/* Task: Center the modal in the viewport */',
     prTitle: 'PR #404: Center the Outreach modal',
 
     // Code Editor L2 (Sticky)
+    taskCommentL2: '/* Task: Dock the action bar to the bottom (sticky) */',
     l2StickyPrTitle: 'PR #407: Make CTA button always visible',
     l2DevbotStickyExcuse: '“CSS needs 64-bit z-index support”',
     l2HintSticky: 'Use position: sticky',
 
     // Code Editor L3 (Meeting Title)
+    taskCommentL3: '/* Task: Truncate text with ellipsis so it does not overflow */',
     l3PrTitle: 'PR #405: Ensure calendar title never cuts off',
     l3DevbotExcuse: '“Enterprise clients should simply buy wider ultrawide monitors”',
     l3HintEllipsis: 'Modern Truncation (Ellipsis)',
@@ -365,21 +368,24 @@ export const translations = {
     verifyBtn: 'Odeslat',
     mergedBtn: 'PR Mergnuto! 🎉',
     verifyFailedToast: '❌ PR testy selhaly: Akceptační kritéria nejsou splněna!',
-    failedModalTitle: 'Testy neprošly',
+    failedModalTitle: 'Úkol nesplněn',
     failedModalSubtitle: 'Tvé CSS změny ještě nesplňují zadání úkolu. Zkontroluj kód a zkus to znovu!',
     failedModalBtn: 'Zpět ke kódu',
     verifyFailedBadge: 'CI/CD SELHALO ❌',
-    verifyFailedDevbot: 'Dobrý pokus, {name}! Tvoje PRko neprošlo CI/CD testy! Přečetl sis vůbec akceptační kritéria v Jira ticketu?',
+    verifyFailedDevbot: 'Dobrý pokus, {name}! Tvoje řešení neprošlo testy! Přečetl sis vůbec zadání úkolu?',
 
     // Code Editor L1
+    taskCommentL1: '/* Úkol: Vycentruj modal na střed obrazovky */',
     prTitle: 'PR #404: Vycentrovat Outreach modal',
 
     // Code Editor L2 (Sticky)
+    taskCommentL2: '/* Úkol: Ukotvi akční lištu na spodek okna (sticky) */',
     l2StickyPrTitle: 'PR #407: Tlačítko podpisu musí být vždy viditelné',
     l2DevbotStickyExcuse: '„CSS nutně potřebuje 64-bitový z-index“',
     l2HintSticky: 'Použít position: sticky',
 
     // Code Editor L3 (Meeting Title)
+    taskCommentL3: '/* Úkol: Zkrať text tečkami, aby nepřetékal (ellipsis) */',
     l3PrTitle: 'PR #405: Zajistit, že se název schůzky nikdy neořízne',
     l3DevbotExcuse: '„Klienti by si prostě měli koupit širší ultrawide monitory“',
     l3HintEllipsis: 'Moderní zkrácení (Ellipsis)',
