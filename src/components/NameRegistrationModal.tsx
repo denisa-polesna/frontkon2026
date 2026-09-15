@@ -100,6 +100,7 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
+      transitionDuration={0}
       maxWidth="xs"
       fullWidth
       slotProps={{

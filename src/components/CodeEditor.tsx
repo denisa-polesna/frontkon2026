@@ -7,6 +7,7 @@ import {
 import CodeMirror, { oneDark } from '@uiw/react-codemirror';
 import { lineNumbers, EditorView } from '@codemirror/view';
 import { css } from '@codemirror/lang-css';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { cssEditorExtensions } from '../utils/cssAutocomplete';
 import type { translations } from '../utils/i18n';
 
@@ -22,10 +23,12 @@ export interface CodeEditorProps {
   value: string;
   onChange: (val: string) => void;
   onSolveAttempt: () => void;
+  onExit?: () => void;
   readOnlyLines: CodeEditorLine[];
   t: typeof translations['en'];
   placeholder?: string;
   isSolved?: boolean;
+  hideClosingBrace?: boolean;
 }
 
 const FONT_FAMILY = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
@@ -74,10 +77,12 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   value,
   onChange,
   onSolveAttempt,
+  onExit,
   readOnlyLines,
   t,
   placeholder,
   isSolved: _isSolved,
+  hideClosingBrace = false,
 }) => {
   const readOnlyCount = readOnlyLines.length;
   const lineCount = useMemo(() => value.split('\n').length, [value]);
@@ -231,36 +236,38 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
             placeholder={placeholder || t.editorPlaceholder}
           />
 
-          {/* Closing brace line immediately after user's last CSS line */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              height: LINE_HEIGHT,
-              lineHeight: LINE_HEIGHT,
-              fontFamily: FONT_FAMILY,
-              fontSize: FONT_SIZE,
-              userSelect: 'none',
-              flexShrink: 0,
-            }}
-          >
+          {/* Closing brace line immediately after user's last CSS line (hidden when user code manages multiple rules with braces) */}
+          {!hideClosingBrace && (
             <Box
               sx={{
-                width: `${GUTTER_WIDTH}px`,
-                minWidth: `${GUTTER_WIDTH}px`,
-                textAlign: 'right',
-                pr: '10px',
-                color: '#495162',
-                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                height: LINE_HEIGHT,
+                lineHeight: LINE_HEIGHT,
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZE,
                 userSelect: 'none',
+                flexShrink: 0,
               }}
             >
-              {closingLineNo}
+              <Box
+                sx={{
+                  width: `${GUTTER_WIDTH}px`,
+                  minWidth: `${GUTTER_WIDTH}px`,
+                  textAlign: 'right',
+                  pr: '10px',
+                  color: '#495162',
+                  flexShrink: 0,
+                  userSelect: 'none',
+                }}
+              >
+                {closingLineNo}
+              </Box>
+              <Box sx={{ pl: '8px', color: '#FFFFFF', fontWeight: 700 }}>
+                &#125;
+              </Box>
             </Box>
-            <Box sx={{ pl: '8px', color: '#FFFFFF', fontWeight: 700 }}>
-              &#125;
-            </Box>
-          </Box>
+          )}
         </Box>
       </Box>
 
@@ -269,7 +276,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'flex-end',
+          justifyContent: onExit ? 'space-between' : 'flex-end',
           px: { xs: 1.5, sm: 2 },
           py: 1.2,
           backgroundColor: '#161A2D',
@@ -278,6 +285,33 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           flexShrink: 0,
         }}
       >
+        {onExit && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={onExit}
+            startIcon={<ExitToAppIcon sx={{ fontSize: 16 }} />}
+            sx={{
+              py: 0.7,
+              px: { xs: 1.4, sm: 1.8 },
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              borderRadius: '6px',
+              borderColor: 'rgba(255, 255, 255, 0.15)',
+              color: '#B0B8C8',
+              backgroundColor: 'transparent',
+              textTransform: 'none',
+              '&:hover': {
+                borderColor: '#FF5F56',
+                color: '#FF5F56',
+                backgroundColor: 'rgba(255, 95, 86, 0.08)',
+              },
+            }}
+          >
+            {t.exitBtn}
+          </Button>
+        )}
+
         <Button
           variant="contained"
           size="small"

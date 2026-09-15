@@ -63,8 +63,6 @@ export const DevBotAvatar: React.FC<DevBotAvatarProps> = ({ mood, message, badge
         >
           <SmartToyIcon sx={{ color: moodColor, fontSize: 28 }} />
         </Box>
-
-        {/* Pulsing Green Online Dot */}
         <Box
           sx={{
             position: 'absolute',
@@ -74,7 +72,6 @@ export const DevBotAvatar: React.FC<DevBotAvatarProps> = ({ mood, message, badge
             height: 13,
             borderRadius: '50%',
             backgroundColor: '#00D2B4',
-            border: '2px solid #090B14',
             animation: 'pulseGlow 2s infinite',
           }}
         />

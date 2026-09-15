@@ -32,8 +32,6 @@ export const MissionBanner: React.FC<MissionBannerProps> = ({
     <Box
       sx={{
         backgroundColor: '#FFFFFF',
-        backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/698651938e6808536770fe17_dot-repeat-svg.svg")`,
-        backgroundRepeat: 'repeat',
         borderRadius: '12px',
         border: '1px solid rgba(89, 81, 255, 0.3)',
         boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
@@ -72,7 +70,6 @@ export const MissionBanner: React.FC<MissionBannerProps> = ({
             height: 11,
             borderRadius: '50%',
             backgroundColor: '#00D2B4',
-            border: '2px solid #FFFFFF',
             boxShadow: '0 0 10px #00D2B4, 0 0 16px rgba(0, 210, 180, 0.7)',
             animation: 'botGreenPulse 2s infinite ease-in-out',
             '@keyframes botGreenPulse': {

@@ -6,12 +6,10 @@ import {
   Tooltip,
   Button,
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { OutreachLogo } from './OutreachLogo';
 import { formatTime } from '../utils/storage';
-import { sound } from '../utils/audio';
 import type { Language, translations } from '../utils/i18n';
 
 interface HeaderProps {
@@ -19,7 +17,6 @@ interface HeaderProps {
   bestTimeMs?: number | null;
   isRunning: boolean;
   onReset?: () => void;
-  onBackToMenu?: () => void;
   currentLevel: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
   soundEnabled?: boolean;
   onToggleSound?: () => void;
@@ -30,7 +27,6 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   elapsedMs,
-  onBackToMenu,
   soundEnabled = true,
   onToggleSound,
   language,
@@ -54,45 +50,8 @@ export const Header: React.FC<HeaderProps> = ({
         zIndex: 100,
       }}
     >
-      {/* Left: Back + Brand + Level */}
+      {/* Left: Brand */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 1.5 }, minWidth: 0 }}>
-        {onBackToMenu && (
-          <Tooltip title={t.menuBtn}>
-            <Button
-              size="small"
-              variant="outlined"
-              startIcon={<ArrowBackIcon sx={{ fontSize: 16 }} />}
-              onClick={() => {
-                sound.playBlip();
-                onBackToMenu();
-              }}
-              sx={{
-                borderColor: '#3a3a3a',
-                color: '#FFFFFF',
-                backgroundColor: '#282828',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                minWidth: { xs: 36, sm: 72 },
-                px: { xs: 1, sm: 1.5 },
-                py: '5px',
-                borderRadius: '6px',
-                '& .MuiButton-startIcon': {
-                  mr: { xs: 0, sm: 0.8 },
-                },
-                '&:hover': {
-                  borderColor: '#5951ff',
-                  backgroundColor: '#5951ff',
-                  color: '#FFFFFF',
-                },
-              }}
-            >
-              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                {t.menuBtn}
-              </Box>
-            </Button>
-          </Tooltip>
-        )}
-
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <OutreachLogo height={24} />
         </Box>

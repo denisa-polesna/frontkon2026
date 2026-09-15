@@ -19,7 +19,7 @@ import { MissionBanner } from './components/MissionBanner';
 import { PreviewViewport, type AlignmentStatus } from './components/PreviewViewport';
 import { CodeEditor, type CodeEditorLine } from './components/CodeEditor';
 import { PreviewViewportDropdown, type DropdownStatus } from './components/PreviewViewportDropdown';
-import { PreviewViewportSticky, type StickyStatus } from './components/PreviewViewportSticky';
+import { PreviewViewportTooltip, type TooltipStatus } from './components/PreviewViewportTooltip';
 import { PreviewViewportLevel2, type OverflowStatus } from './components/PreviewViewportLevel2';
 import { PreviewViewportList, type ListStatus } from './components/PreviewViewportList';
 import { VictoryModal } from './components/VictoryModal';
@@ -57,10 +57,18 @@ const DEFAULT_L4_CSS = `display: flex;
 flex-direction: row;
 gap: 0px;`;
 
-// Level 5: Sticky CTA lišta (position: sticky; bottom: 0)
-const DEFAULT_L5_CSS = `position: absolute;
-top: 4800px;
-z-index: 2147483647;`;
+// Level 5: Tooltip (relative a absolute na dvou třídách)
+const DEFAULT_L5_CSS = `.tooltip-container {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.tooltip {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  z-index: 999999;
+}`;
 
 export function App() {
   // Navigation: 'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3' | 'level4' | 'level5'
@@ -135,10 +143,10 @@ export function App() {
   const [l4Solved, setL4Solved] = useState<boolean>(false);
   const [, setL4ListStatus] = useState<ListStatus>('row_crammed');
 
-  // Level 5 State (Sticky CTA Button)
+  // Level 5 State (Tooltip: relative container + absolute tooltip)
   const [l5Css, setL5Css] = useState<string>(DEFAULT_L5_CSS);
   const [l5Solved, setL5Solved] = useState<boolean>(false);
-  const [l5StickyStatus, setL5StickyStatus] = useState<StickyStatus>('off');
+  const [, setL5TooltipStatus] = useState<TooltipStatus>('not_relative');
 
   // Active level helper
   const activeLevel: 'level1' | 'level2' | 'level3' | 'level4' | 'level5' =
@@ -210,10 +218,9 @@ export function App() {
       case 'level5':
       default:
         return [
-          { text: language === 'cz' ? '/* Úkol: Ukotvi lištu na spodní hranu' : '/* Task: Dock the action bar to bottom', isComment: true },
-          { text: language === 'cz' ? '   při skrolování */' : '   while scrolling */', isComment: true },
+          { text: language === 'cz' ? '/* Úkol: Přichyť tooltip k tlačítku' : '/* Task: Anchor tooltip to button', isComment: true },
+          { text: language === 'cz' ? '   pomocí relative a absolute */' : '   using relative and absolute */', isComment: true },
           { text: '' },
-          { text: '.deal-action-bar {', isSelector: true },
         ];
     }
   };
@@ -286,10 +293,10 @@ export function App() {
     []
   );
 
-  // Level 5 (Sticky CTA) check
-  const handleL5StickyChange = useCallback(
-    (status: StickyStatus, solved: boolean) => {
-      setL5StickyStatus(status);
+  // Level 5 (Tooltip) check
+  const handleL5TooltipChange = useCallback(
+    (status: TooltipStatus, solved: boolean) => {
+      setL5TooltipStatus(status);
       setL5Solved(solved);
     },
     []
@@ -359,7 +366,7 @@ export function App() {
     } else {
       setL5Css(DEFAULT_L5_CSS);
       setL5Solved(false);
-      setL5StickyStatus('off');
+      setL5TooltipStatus('not_relative');
     }
   };
 
@@ -382,13 +389,6 @@ export function App() {
     setIsLevelStarted(true);
     startTimeRef.current = performance.now();
     setIsRunning(true);
-  };
-
-  // Back to Menu
-  const handleBackToMenu = () => {
-    setIsRunning(false);
-    setFailedVerify(false);
-    setCurrentScreen('menu');
   };
 
   // Start Campaign: Prompt for name
@@ -418,7 +418,7 @@ export function App() {
     setL4ListStatus('row_crammed');
     setL5Css(DEFAULT_L5_CSS);
     setL5Solved(false);
-    setL5StickyStatus('off');
+    setL5TooltipStatus('not_relative');
     handleSelectLevel('level1');
   };
 
@@ -464,6 +464,27 @@ export function App() {
     const fresh = clearStats();
     setStats(fresh);
     setPlayerName('');
+  };
+
+  const handleExitGame = () => {
+    sound.playBlip();
+    setIsRunning(false);
+
+    // Check if player has completed any levels in this campaign
+    const currentName = (playerName || '').trim();
+    const hasAnyCompleted = currentName
+      ? stats.history.some(
+          (r) => (r.playerTag || '').trim() === currentName && r.levelId !== 'uncompleted' && r.timeMs > 0
+        )
+      : false;
+
+    if (hasAnyCompleted) {
+      // Completed at least 1 round: show them in leaderboard with their completed rounds
+      setCurrentScreen('leaderboard');
+    } else {
+      // 0 completed rounds: do not show on leaderboard, return to main menu
+      setCurrentScreen('menu');
+    }
   };
 
   const handleToggleSound = () => {
@@ -564,7 +585,7 @@ export function App() {
     return { mood: 'confident', message: formatName(t.devbotL4ListInitial), badgeLabel: t.badge10x };
   };
 
-  // DevBot Dialogue for Level 5 (Sticky CTA)
+  // DevBot Dialogue for Level 5 (Tooltip: relative + absolute)
   const getL5Dialogue = (): {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
     message: string;
@@ -574,18 +595,15 @@ export function App() {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (!isLevelStarted || l5Css.trim() === DEFAULT_L5_CSS.trim()) {
-      return { mood: 'confident', message: formatName(t.devbotL5StickyInitial), badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotL5TooltipInitial), badgeLabel: t.badge10x };
     }
-    if (l5StickyStatus === 'fixed_escaped') {
-      return { mood: 'confident', message: formatName(t.devbotL5StickyFixed), badgeLabel: t.badgeHalfway };
+    if (!l5Css.includes('relative')) {
+      return { mood: 'confident', message: formatName(t.devbotL5TooltipNoRelative), badgeLabel: t.badgeHalfway };
     }
-    if (l5StickyStatus === 'sticky_no_bottom') {
-      return { mood: 'confident', message: formatName(t.devbotL5StickyNoBottom), badgeLabel: t.badgeHalfway };
+    if (!l5Css.includes('absolute')) {
+      return { mood: 'confident', message: formatName(t.devbotL5TooltipNoAbsolute), badgeLabel: t.badgeHalfway };
     }
-    if (l5Css.includes('z-index') || l5Css.includes('fixed')) {
-      return { mood: 'confident', message: formatName(t.devbotL5StickyFixed), badgeLabel: t.badge10x };
-    }
-    return { mood: 'confident', message: formatName(t.devbotL5StickyInitial), badgeLabel: t.badge10x };
+    return { mood: 'confident', message: formatName(t.devbotL5TooltipInitial), badgeLabel: t.badge10x };
   };
 
   const getDevBotState = () => {
@@ -661,7 +679,6 @@ export function App() {
             bestTimeMs={activeBestTime}
             isRunning={isRunning}
             onReset={handleResetLevel}
-            onBackToMenu={handleBackToMenu}
             currentLevel={activeLevel}
             soundEnabled={soundEnabled}
             onToggleSound={handleToggleSound}
@@ -831,8 +848,8 @@ export function App() {
                   sx={{
                     position: 'absolute',
                     inset: -4,
-                    backdropFilter: 'blur(10px)',
-                    backgroundColor: 'rgba(31, 31, 31, 0.92)',
+                    backdropFilter: 'blur(16px)',
+                    backgroundColor: 'rgba(20, 20, 28, 0.98)',
                     zIndex: 99999,
                     borderRadius: 2.5,
                     border: '1px solid #2e2e2e',
@@ -842,7 +859,7 @@ export function App() {
                     justifyContent: 'center',
                     p: 3,
                     textAlign: 'center',
-                    animation: 'notificationBounce 0.3s ease-out',
+                    opacity: 1,
                   }}
                 >
                   <Box
@@ -948,8 +965,10 @@ export function App() {
                   value={activeUserCss}
                   onChange={handleCssChange}
                   onSolveAttempt={handleSolveAttempt}
+                  onExit={handleExitGame}
                   readOnlyLines={activeReadOnlyLines}
                   isSolved={isCurrentLevelSolved}
+                  hideClosingBrace={activeLevel === 'level5'}
                   t={t}
                 />
               </Box>
@@ -1004,9 +1023,9 @@ export function App() {
                   />
                 )}
                 {activeLevel === 'level5' && (
-                  <PreviewViewportSticky
+                  <PreviewViewportTooltip
                     userCss={l5Css}
-                    onStatusChange={handleL5StickyChange}
+                    onStatusChange={handleL5TooltipChange}
                     isSolved={l5Solved}
                     t={t}
                   />
@@ -1055,7 +1074,7 @@ export function App() {
                   />
                 )}
                 {activeLevel === 'level5' && (
-                  <PreviewViewportSticky
+                  <PreviewViewportTooltip
                     isTarget
                     t={t}
                   />

@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   Button,
-  Chip,
   Container,
   Table,
   TableBody,
@@ -65,7 +64,9 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
     };
   }, []);
 
-  const displayRuns = remoteRuns !== null ? remoteRuns : localRuns;
+  const displayRuns = useMemo(() => {
+    return [...(localRuns || []), ...(remoteRuns || [])];
+  }, [localRuns, remoteRuns]);
 
   const aggregatedPlayers = useMemo(() => {
     const playerMap: Record<
@@ -86,9 +87,11 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
           lastUpdated: run.timestamp,
         };
       }
-      const currentBest = playerMap[name].levelTimes[run.levelId];
-      if (currentBest === undefined || run.timeMs < currentBest) {
-        playerMap[name].levelTimes[run.levelId] = run.timeMs;
+      if (run.levelId && run.levelId !== 'uncompleted') {
+        const currentBest = playerMap[name].levelTimes[run.levelId];
+        if (currentBest === undefined || run.timeMs < currentBest) {
+          playerMap[name].levelTimes[run.levelId] = run.timeMs;
+        }
       }
       playerMap[name].lastUpdated = Math.max(playerMap[name].lastUpdated, run.timestamp);
     }
@@ -104,6 +107,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
           lastUpdated: player.lastUpdated,
         };
       })
+      .filter((player) => player.completedCount > 0)
       .sort((a, b) => {
         // 1. More completed rounds ranks first
         if (b.completedCount !== a.completedCount) {
@@ -301,9 +305,10 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                   }}
                 >
                   <TableRow sx={{ '& th': { borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' } }}>
-                    <TableCell width="44%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colPlayer}</TableCell>
-                    <TableCell width="32%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRounds || t.colRating || 'Dokončená kola'}</TableCell>
-                    <TableCell width="24%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
+                    <TableCell width="14%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRank || 'Místo'}</TableCell>
+                    <TableCell width="40%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colPlayer}</TableCell>
+                    <TableCell width="26%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRounds || t.colRating || 'Dokončená kola'}</TableCell>
+                    <TableCell width="20%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -313,9 +318,9 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                       sx={{
                         '& td': {
                           borderColor: '#e2e0ed',
-                          color: '#120042',
+                          color: '#1f1f1f',
                           fontSize: { xs: '0.88rem', sm: '1rem', md: '1.08rem', lg: '1.15rem' },
-                          py: { xs: 1.2, sm: 1.6, md: 2 },
+                          py: { xs: 1.4, sm: 1.8, md: 2 },
                           px: { xs: 1.5, sm: 2.5, md: 3, lg: 4 },
                         },
                         backgroundColor: '#FFFFFF',
@@ -324,53 +329,28 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                         },
                       }}
                     >
-                      <TableCell sx={{ fontWeight: 700, color: '#120042' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.2, sm: 2 } }}>
-                          <Typography
-                            component="span"
-                            sx={{
-                              fontWeight: 700,
-                              fontSize: { xs: '0.9rem', sm: '1.02rem', md: '1.14rem' },
-                              color: '#120042',
-                              minWidth: { xs: 20, sm: 28 },
-                              flexShrink: 0,
-                              textAlign: 'right',
-                            }}
-                          >
-                            {idx + 1}
-                          </Typography>
-                          <Typography
-                            component="span"
-                            sx={{
-                              fontWeight: 700,
-                              color: '#120042',
-                              fontSize: 'inherit',
-                            }}
-                          >
-                            {player.playerName}
-                          </Typography>
-                        </Box>
+                      <TableCell sx={{ fontWeight: 700, color: '#1f1f1f' }}>
+                        {idx + 1}
                       </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={`${player.completedCount} / 5`}
-                          size="small"
+                      <TableCell sx={{ fontWeight: 700, color: '#1f1f1f' }}>
+                        {player.playerName}
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: 500, color: '#1f1f1f' }}>
+                        <Typography
+                          component="span"
                           sx={{
-                            height: { xs: 24, sm: 26, md: 30 },
-                            fontSize: { xs: '0.78rem', sm: '0.86rem', md: '0.92rem' },
-                            fontWeight: 700,
-                            borderRadius: '6px',
-                            bgcolor: player.completedCount === 5 ? 'rgba(0, 210, 180, 0.14)' : 'rgba(89, 81, 255, 0.08)',
-                            color: player.completedCount === 5 ? '#007A68' : '#3028A1',
-                            border: '1px solid',
-                            borderColor: player.completedCount === 5 ? 'rgba(0, 210, 180, 0.35)' : 'rgba(89, 81, 255, 0.25)',
+                            color: '#1f1f1f',
+                            fontWeight: 500,
+                            fontSize: 'inherit',
                           }}
-                        />
+                        >
+                          {player.completedCount} / 5
+                        </Typography>
                       </TableCell>
                       <TableCell
                         sx={{
                           fontFamily: 'ui-monospace, monospace',
-                          color: '#120042',
+                          color: '#1f1f1f',
                           fontWeight: 800,
                           fontSize: { xs: '0.92rem', sm: '1.05rem', md: '1.22rem', lg: '1.32rem' },
                         }}
