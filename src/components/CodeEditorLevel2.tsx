@@ -4,7 +4,6 @@ import {
   Typography,
   Button,
 } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CodeMirror, { oneDark } from '@uiw/react-codemirror';
 import { css } from '@codemirror/lang-css';
 import { cssEditorExtensions } from '../utils/cssAutocomplete';
@@ -21,7 +20,7 @@ interface CodeEditorLevel2Props {
 export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
   value,
   onChange,
-  isSolved,
+  isSolved: _isSolved,
   onSolveAttempt,
   t,
 }) => {
@@ -32,10 +31,8 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
         flexDirection: 'column',
         backgroundColor: '#0A0C16',
         borderRadius: 2.5,
-        border: isSolved ? '2px solid #00D2B4' : '1px solid #232842',
-        boxShadow: isSolved
-          ? '0 0 24px rgba(0, 210, 180, 0.2)'
-          : '0 8px 24px rgba(0, 0, 0, 0.35)',
+        border: '1px solid #232842',
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
         overflow: 'hidden',
         height: '100%',
         minHeight: 0,
@@ -71,18 +68,6 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
             {t.mobileTabEditor || 'Editor'}
           </Typography>
         </Box>
-
-        {/* Right: Char count */}
-        <Typography
-          sx={{
-            fontFamily: 'ui-monospace, monospace',
-            fontSize: '0.74rem',
-            color: '#8E95B2',
-            fontWeight: 700,
-          }}
-        >
-          {value.trim().length} chars
-        </Typography>
       </Box>
 
       {/* Code Editor Body */}
@@ -121,7 +106,7 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
             flexShrink: 0,
           }}
         >
-          <span style={{ color: '#FFD166', fontWeight: 700 }}>.meeting-title</span> &#123;
+          <span style={{ color: '#FFFFFF', fontWeight: 700 }}>.meeting-title</span> &#123;
         </Typography>
 
         <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
@@ -175,7 +160,6 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
         <Button
           variant="contained"
           size="small"
-          startIcon={isSolved ? <CheckCircleIcon /> : undefined}
           onClick={onSolveAttempt}
           sx={{
             py: 0.8,
@@ -183,16 +167,17 @@ export const CodeEditorLevel2: React.FC<CodeEditorLevel2Props> = ({
             fontSize: '0.8rem',
             fontWeight: 600,
             borderRadius: '6px',
-            backgroundColor: isSolved ? '#00D2B4' : '#5951ff',
-            color: isSolved ? '#08141B' : '#FFF',
+            backgroundColor: '#5951ff',
+            color: '#FFF',
             flexShrink: 0,
             boxShadow: 'none',
+            textTransform: 'none',
             '&:hover': {
-              backgroundColor: isSolved ? '#33DBC2' : '#3028a1',
+              backgroundColor: '#3028a1',
               boxShadow: 'none',
             },
             '&:active': {
-              backgroundColor: isSolved ? '#00A890' : '#030268',
+              backgroundColor: '#030268',
             },
           }}
         >

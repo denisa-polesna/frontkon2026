@@ -9,7 +9,7 @@ import { css } from '@codemirror/lang-css';
 import { cssEditorExtensions } from '../utils/cssAutocomplete';
 import type { translations } from '../utils/i18n';
 
-interface CodeEditorStickyProps {
+interface CodeEditorDropdownProps {
   value: string;
   onChange: (val: string) => void;
   isSolved: boolean;
@@ -17,7 +17,7 @@ interface CodeEditorStickyProps {
   t: typeof translations['en'];
 }
 
-export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
+export const CodeEditorDropdown: React.FC<CodeEditorDropdownProps> = ({
   value,
   onChange,
   isSolved: _isSolved,
@@ -51,7 +51,8 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
           flexShrink: 0,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, flexShrink: 0 }}>
+        {/* Left: Window Dots & Title */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
             <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FF5F56' }} />
             <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
@@ -89,11 +90,11 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
             color: '#7E88A8',
             fontStyle: 'italic',
             userSelect: 'none',
-            mb: 0.6,
+            mb: 0.8,
             flexShrink: 0,
           }}
         >
-          {t.taskCommentL2}
+          {t.editorTaskCommentL2 || '/* Úkol: Vyřeš z-index tak, aby dropdown nebyl schovaný za headerem */'}
         </Typography>
 
         <Typography
@@ -106,7 +107,7 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
             flexShrink: 0,
           }}
         >
-          <span style={{ color: '#FFFFFF', fontWeight: 700 }}>.deal-action-bar</span> &#123;
+          <span style={{ color: '#FFFFFF', fontWeight: 700 }}>.header</span> &#123;
         </Typography>
 
         <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
@@ -123,9 +124,7 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
               dropCursor: false,
               allowMultipleSelections: false,
               indentOnInput: true,
-              autocompletion: false,
             }}
-            placeholder={t.editorPlaceholder}
           />
         </Box>
 
@@ -133,7 +132,8 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
           sx={{
             fontFamily: 'ui-monospace, monospace',
             fontSize: '0.84rem',
-            color: '#8E95B2',
+            color: '#FFFFFF',
+            fontWeight: 700,
             userSelect: 'none',
             mt: 0.5,
             flexShrink: 0,
@@ -143,7 +143,7 @@ export const CodeEditorSticky: React.FC<CodeEditorStickyProps> = ({
         </Typography>
       </Box>
 
-      {/* Clean Bottom Action Bar */}
+      {/* Action Footer */}
       <Box
         sx={{
           display: 'flex',

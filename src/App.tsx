@@ -18,6 +18,8 @@ import { MainMenu } from './components/MainMenu';
 import { MissionBanner } from './components/MissionBanner';
 import { PreviewViewport, type AlignmentStatus } from './components/PreviewViewport';
 import { CodeEditor } from './components/CodeEditor';
+import { PreviewViewportDropdown, type DropdownStatus } from './components/PreviewViewportDropdown';
+import { CodeEditorDropdown } from './components/CodeEditorDropdown';
 import { PreviewViewportSticky, type StickyStatus } from './components/PreviewViewportSticky';
 import { CodeEditorSticky } from './components/CodeEditorSticky';
 import { PreviewViewportLevel2, type OverflowStatus } from './components/PreviewViewportLevel2';
@@ -43,9 +45,8 @@ margin-left: 20px;
 float: left;`;
 
 const DEFAULT_L2_CSS = `/* DevBot-3000 hallucination */
-position: absolute;
-top: 4800px;
-z-index: 2147483647;`;
+position: sticky;
+z-index: 100;`;
 
 const DEFAULT_L3_CSS = `/* DevBot-3000 hallucination */
 width: 99999px;
@@ -53,9 +54,14 @@ white-space: nowrap;
 font-size: 8px;
 color: #FF7081;`;
 
+const DEFAULT_L4_CSS = `/* DevBot-3000 hallucination */
+position: absolute;
+top: 4800px;
+z-index: 2147483647;`;
+
 export function App() {
-  // Navigation: 'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3'
-  const [currentScreen, setCurrentScreen] = useState<'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3'>('menu');
+  // Navigation: 'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3' | 'level4'
+  const [currentScreen, setCurrentScreen] = useState<'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3' | 'level4'>('menu');
 
   // Player Name State (In-Memory Session State only)
   const [playerName, setPlayerName] = useState<string>('');
@@ -111,27 +117,45 @@ export function App() {
   const [l1Distance, setL1Distance] = useState<number>(350);
   const [l1AlignmentStatus, setL1AlignmentStatus] = useState<AlignmentStatus>('off');
 
-  // Level 2 State (Sticky CTA Button)
+  // Level 2 State (Dropdown Behind Header)
   const [l2Css, setL2Css] = useState<string>(DEFAULT_L2_CSS);
   const [l2Solved, setL2Solved] = useState<boolean>(false);
-  const [l2StickyStatus, setL2StickyStatus] = useState<StickyStatus>('off');
+  const [, setL2DropdownStatus] = useState<DropdownStatus>('hidden_behind_header');
 
   // Level 3 State (Meeting Title Overflow)
   const [l3Css, setL3Css] = useState<string>(DEFAULT_L3_CSS);
   const [l3Solved, setL3Solved] = useState<boolean>(false);
   const [l3Status, setL3Status] = useState<OverflowStatus>('overflowing');
 
+  // Level 4 State (Sticky CTA Button)
+  const [l4Css, setL4Css] = useState<string>(DEFAULT_L4_CSS);
+  const [l4Solved, setL4Solved] = useState<boolean>(false);
+  const [l4StickyStatus, setL4StickyStatus] = useState<StickyStatus>('off');
+
   // Active level helper
-  const activeLevel: 'level1' | 'level2' | 'level3' =
-    currentScreen === 'level3' ? 'level3' : currentScreen === 'level2' ? 'level2' : 'level1';
+  const activeLevel: 'level1' | 'level2' | 'level3' | 'level4' =
+    currentScreen === 'level4'
+      ? 'level4'
+      : currentScreen === 'level3'
+      ? 'level3'
+      : currentScreen === 'level2'
+      ? 'level2'
+      : 'level1';
 
   const isCurrentLevelSolved =
-    activeLevel === 'level1' ? l1Solved : activeLevel === 'level2' ? l2Solved : l3Solved;
+    activeLevel === 'level1'
+      ? l1Solved
+      : activeLevel === 'level2'
+      ? l2Solved
+      : activeLevel === 'level3'
+      ? l3Solved
+      : l4Solved;
 
   const getActiveUserCss = () => {
     if (activeLevel === 'level1') return l1Css;
     if (activeLevel === 'level2') return l2Css;
-    return l3Css;
+    if (activeLevel === 'level3') return l3Css;
+    return l4Css;
   };
 
   const activeUserCss = getActiveUserCss();
@@ -174,10 +198,10 @@ export function App() {
     []
   );
 
-  // Level 2 (Sticky CTA) check
-  const handleL2StickyChange = useCallback(
-    (status: StickyStatus, solved: boolean) => {
-      setL2StickyStatus(status);
+  // Level 2 (Dropdown Behind Header) check
+  const handleL2DropdownChange = useCallback(
+    (status: DropdownStatus, solved: boolean) => {
+      setL2DropdownStatus(status);
       setL2Solved(solved);
     },
     []
@@ -192,10 +216,25 @@ export function App() {
     []
   );
 
+  // Level 4 (Sticky CTA) check
+  const handleL4StickyChange = useCallback(
+    (status: StickyStatus, solved: boolean) => {
+      setL4StickyStatus(status);
+      setL4Solved(solved);
+    },
+    []
+  );
+
   // Start timer on first keystroke
   const handleCssChange = (newCss: string) => {
     const isLevelSolved =
-      activeLevel === 'level1' ? l1Solved : activeLevel === 'level2' ? l2Solved : l3Solved;
+      activeLevel === 'level1'
+        ? l1Solved
+        : activeLevel === 'level2'
+        ? l2Solved
+        : activeLevel === 'level3'
+        ? l3Solved
+        : l4Solved;
 
     if (!isLevelStarted) {
       setIsLevelStarted(true);
@@ -210,8 +249,10 @@ export function App() {
       setL1Css(newCss);
     } else if (activeLevel === 'level2') {
       setL2Css(newCss);
-    } else {
+    } else if (activeLevel === 'level3') {
       setL3Css(newCss);
+    } else {
+      setL4Css(newCss);
     }
   };
 
@@ -232,16 +273,20 @@ export function App() {
     } else if (activeLevel === 'level2') {
       setL2Css(DEFAULT_L2_CSS);
       setL2Solved(false);
-      setL2StickyStatus('off');
-    } else {
+      setL2DropdownStatus('hidden_behind_header');
+    } else if (activeLevel === 'level3') {
       setL3Css(DEFAULT_L3_CSS);
       setL3Solved(false);
       setL3Status('overflowing');
+    } else {
+      setL4Css(DEFAULT_L4_CSS);
+      setL4Solved(false);
+      setL4StickyStatus('off');
     }
   };
 
   // Navigate to Level (shows blurred task until player hits start)
-  const handleSelectLevel = (levelId: 'level1' | 'level2' | 'level3') => {
+  const handleSelectLevel = (levelId: 'level1' | 'level2' | 'level3' | 'level4') => {
     sound.playBlip();
     setCurrentScreen(levelId);
     setElapsedMs(0);
@@ -276,8 +321,23 @@ export function App() {
 
   // When player registers their name
   const handleNameRegistered = (name: string) => {
-    setPlayerName(name);
+    const trimmed = name?.trim();
+    if (!trimmed) return;
+    setPlayerName(trimmed);
     setShowNameModal(false);
+    // Reset all level states and CSS so player starts completely fresh
+    setL1Css(DEFAULT_L1_CSS);
+    setL1Solved(false);
+    setL1AlignmentStatus('off');
+    setL2Css(DEFAULT_L2_CSS);
+    setL2Solved(false);
+    setL2DropdownStatus('hidden_behind_header');
+    setL3Css(DEFAULT_L3_CSS);
+    setL3Solved(false);
+    setL3Status('overflowing');
+    setL4Css(DEFAULT_L4_CSS);
+    setL4Solved(false);
+    setL4StickyStatus('off');
     handleSelectLevel('level1');
   };
 
@@ -342,30 +402,17 @@ export function App() {
   const activeName = playerName || (language === 'cz' ? 'člověče' : 'human');
   const formatName = (text: string) => text.replace(/{name}/g, activeName);
 
-  // DevBot Dialogue for Level 1
+  // DevBot Dialogue for Level 1 (Never reveals if solution is correct during coding)
   const getL1Dialogue = (): {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
     message: string;
     badgeLabel: string;
   } => {
-    if (l1Solved) {
-      return { mood: 'defeated', message: formatName(t.devbotDefeated), badgeLabel: t.badgeDefeated };
-    }
     if (failedVerify) {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
-    // Initial state before player starts modifying CSS:
     if (!isLevelStarted || l1Css.trim() === DEFAULT_L1_CSS.trim()) {
       return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
-    }
-    if (l1AlignmentStatus === 'horizontal_only') {
-      return { mood: 'confident', message: formatName(t.devbotHorizontalOnly), badgeLabel: t.badgeHalfway };
-    }
-    if (l1AlignmentStatus === 'vertical_only') {
-      return { mood: 'confident', message: formatName(t.devbotVerticalOnly), badgeLabel: t.badgeHalfway };
-    }
-    if (l1Distance <= 40) {
-      return { mood: 'panicked', message: formatName(t.devbotPanickedClose), badgeLabel: t.badgeSweating };
     }
     if (l1Css.includes('grid') || l1Css.includes('flex')) {
       return { mood: 'confused', message: formatName(t.devbotModern), badgeLabel: t.badgeOffended };
@@ -373,40 +420,28 @@ export function App() {
     if (l1Css.includes('margin') || l1Css.includes('top:') || l1Css.includes('left:')) {
       return { mood: 'confident', message: formatName(t.devbotMargins), badgeLabel: t.badge10x };
     }
-    if (l1Css.trim().length > 0 && l1Distance > 250) {
+    if (l1AlignmentStatus === 'off' && l1Distance > 100) {
       return { mood: 'confused', message: formatName(t.devbotConfused), badgeLabel: t.badgeSyntax };
     }
     return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
   };
 
-  // DevBot Dialogue for Level 2 (Sticky CTA)
+  // DevBot Dialogue for Level 2 (Dropdown Behind Header)
   const getL2Dialogue = (): {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
     message: string;
     badgeLabel: string;
   } => {
-    if (l2Solved) {
-      return { mood: 'defeated', message: formatName(t.devbotL2StickyDefeated), badgeLabel: t.badgeDefeated };
-    }
     if (failedVerify) {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (!isLevelStarted || l2Css.trim() === DEFAULT_L2_CSS.trim()) {
-      return { mood: 'confident', message: formatName(t.devbotL2StickyInitial), badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
     }
-    if (l2StickyStatus === 'fixed_escaped') {
-      return { mood: 'confident', message: formatName(t.devbotL2StickyFixed), badgeLabel: t.badgeHalfway };
+    if (l2Css.includes('z-index') && !l2Css.includes('100')) {
+      return { mood: 'confident', message: formatName(t.devbotL2DropdownFixed), badgeLabel: t.badgeHalfway };
     }
-    if (l2StickyStatus === 'sticky_no_bottom') {
-      return { mood: 'confident', message: formatName(t.devbotL2StickyNoBottom), badgeLabel: t.badgeHalfway };
-    }
-    if (l2Css.includes('sticky')) {
-      return { mood: 'panicked', message: formatName(t.devbotPanickedClose), badgeLabel: t.badgeSweating };
-    }
-    if (l2Css.includes('z-index')) {
-      return { mood: 'confident', message: formatName(t.devbotL2StickyInitial), badgeLabel: t.badge10x };
-    }
-    return { mood: 'confident', message: formatName(t.devbotL2StickyInitial), badgeLabel: t.badge10x };
+    return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
   };
 
   // DevBot Dialogue for Level 3 (Meeting Title)
@@ -415,9 +450,6 @@ export function App() {
     message: string;
     badgeLabel: string;
   } => {
-    if (l3Solved) {
-      return { mood: 'defeated', message: formatName(t.devbotL3Defeated), badgeLabel: t.badgeDefeated };
-    }
     if (failedVerify) {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
@@ -430,19 +462,41 @@ export function App() {
     if (l3Status === 'wrapped') {
       return { mood: 'confident', message: formatName(t.devbotL3Wrapped), badgeLabel: t.badgeHalfway };
     }
-    if (l3Css.includes('ellipsis')) {
-      return { mood: 'panicked', message: formatName(t.devbotPanickedClose), badgeLabel: t.badgeSweating };
-    }
     if (l3Css.includes('font-size')) {
       return { mood: 'confident', message: formatName(t.devbotMargins), badgeLabel: t.badge10x };
     }
     return { mood: 'confident', message: formatName(t.devbotL3Initial), badgeLabel: t.badge10x };
   };
 
+  // DevBot Dialogue for Level 4 (Sticky CTA)
+  const getL4Dialogue = (): {
+    mood: 'confident' | 'confused' | 'panicked' | 'defeated';
+    message: string;
+    badgeLabel: string;
+  } => {
+    if (failedVerify) {
+      return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
+    }
+    if (!isLevelStarted || l4Css.trim() === DEFAULT_L4_CSS.trim()) {
+      return { mood: 'confident', message: formatName(t.devbotL4StickyInitial), badgeLabel: t.badge10x };
+    }
+    if (l4StickyStatus === 'fixed_escaped') {
+      return { mood: 'confident', message: formatName(t.devbotL4StickyFixed), badgeLabel: t.badgeHalfway };
+    }
+    if (l4StickyStatus === 'sticky_no_bottom') {
+      return { mood: 'confident', message: formatName(t.devbotL4StickyNoBottom), badgeLabel: t.badgeHalfway };
+    }
+    if (l4Css.includes('z-index') || l4Css.includes('fixed')) {
+      return { mood: 'confident', message: formatName(t.devbotL4StickyFixed), badgeLabel: t.badge10x };
+    }
+    return { mood: 'confident', message: formatName(t.devbotL4StickyInitial), badgeLabel: t.badge10x };
+  };
+
   const getDevBotState = () => {
     if (activeLevel === 'level1') return getL1Dialogue();
     if (activeLevel === 'level2') return getL2Dialogue();
-    return getL3Dialogue();
+    if (activeLevel === 'level3') return getL3Dialogue();
+    return getL4Dialogue();
   };
 
   const devBotState = getDevBotState();
@@ -453,6 +507,8 @@ export function App() {
       handleSelectLevel('level2');
     } else if (activeLevel === 'level2') {
       handleSelectLevel('level3');
+    } else if (activeLevel === 'level3') {
+      handleSelectLevel('level4');
     } else {
       setCurrentScreen('leaderboard');
     }
@@ -674,10 +730,10 @@ export function App() {
                     position: 'absolute',
                     inset: -4,
                     backdropFilter: 'blur(10px)',
-                    backgroundColor: 'rgba(18, 0, 68, 0.85)',
-                    zIndex: 20,
+                    backgroundColor: 'rgba(31, 31, 31, 0.92)',
+                    zIndex: 99999,
                     borderRadius: 2.5,
-                    border: '1px solid rgba(179, 176, 255, 0.25)',
+                    border: '1px solid #2e2e2e',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -689,28 +745,51 @@ export function App() {
                 >
                   <Box
                     sx={{
-                      maxWidth: 440,
+                      maxWidth: 480,
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      gap: 2,
+                      gap: 2.2,
+                      px: { xs: 2, sm: 3 },
                     }}
                   >
-                    <Typography
-                      sx={{
-                        fontSize: { xs: '1.05rem', sm: '1.25rem' },
-                        fontWeight: 800,
-                        color: '#FFFFFF',
-                        letterSpacing: '-0.01em',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {activeLevel === 'level1'
-                        ? (language === 'cz' ? 'Úkol 1: Vycentrovat modal' : 'Task 1: Center Modal')
-                        : activeLevel === 'level2'
-                        ? (language === 'cz' ? 'Úkol 2: Sticky CTA' : 'Task 2: Sticky CTA')
-                        : (language === 'cz' ? 'Úkol 3: Text Overflow' : 'Task 3: Text Overflow')}
-                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '1.25rem', sm: '1.45rem' },
+                          fontWeight: 800,
+                          color: '#FFFFFF',
+                          letterSpacing: '-0.02em',
+                          textAlign: 'center',
+                        }}
+                      >
+                        {activeLevel === 'level1'
+                          ? t.taskOverlayTitleL1
+                          : activeLevel === 'level2'
+                          ? t.taskOverlayTitleL2
+                          : activeLevel === 'level3'
+                          ? t.taskOverlayTitleL3
+                          : t.taskOverlayTitleL4}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '0.88rem', sm: '0.96rem' },
+                          fontWeight: 400,
+                          color: '#C4B5FD',
+                          lineHeight: 1.5,
+                          textAlign: 'center',
+                          maxWidth: 420,
+                        }}
+                      >
+                        {activeLevel === 'level1'
+                          ? t.taskOverlayDescL1
+                          : activeLevel === 'level2'
+                          ? t.taskOverlayDescL2
+                          : activeLevel === 'level3'
+                          ? t.taskOverlayDescL3
+                          : t.taskOverlayDescL4}
+                      </Typography>
+                    </Box>
 
                     <Button
                       variant="contained"
@@ -756,6 +835,7 @@ export function App() {
                   flexDirection: 'column',
                   order: 1,
                   boxSizing: 'border-box',
+                  isolation: 'isolate',
                 }}
               >
                 {activeLevel === 'level1' && (
@@ -768,7 +848,7 @@ export function App() {
                   />
                 )}
                 {activeLevel === 'level2' && (
-                  <CodeEditorSticky
+                  <CodeEditorDropdown
                     value={l2Css}
                     onChange={handleCssChange}
                     isSolved={l2Solved}
@@ -781,6 +861,15 @@ export function App() {
                     value={l3Css}
                     onChange={handleCssChange}
                     isSolved={l3Solved}
+                    onSolveAttempt={handleSolveAttempt}
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level4' && (
+                  <CodeEditorSticky
+                    value={l4Css}
+                    onChange={handleCssChange}
+                    isSolved={l4Solved}
                     onSolveAttempt={handleSolveAttempt}
                     t={t}
                   />
@@ -801,6 +890,7 @@ export function App() {
                   flexDirection: 'column',
                   order: 2,
                   boxSizing: 'border-box',
+                  isolation: 'isolate',
                 }}
               >
                 {activeLevel === 'level1' && (
@@ -812,9 +902,9 @@ export function App() {
                   />
                 )}
                 {activeLevel === 'level2' && (
-                  <PreviewViewportSticky
+                  <PreviewViewportDropdown
                     userCss={l2Css}
-                    onStatusChange={handleL2StickyChange}
+                    onStatusChange={handleL2DropdownChange}
                     isSolved={l2Solved}
                     t={t}
                   />
@@ -824,6 +914,14 @@ export function App() {
                     userCss={l3Css}
                     onStatusChange={handleL3StatusChange}
                     isSolved={l3Solved}
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level4' && (
+                  <PreviewViewportSticky
+                    userCss={l4Css}
+                    onStatusChange={handleL4StickyChange}
+                    isSolved={l4Solved}
                     t={t}
                   />
                 )}
@@ -843,6 +941,7 @@ export function App() {
                   flexDirection: 'column',
                   order: 3,
                   boxSizing: 'border-box',
+                  isolation: 'isolate',
                 }}
               >
                 {activeLevel === 'level1' && (
@@ -852,13 +951,19 @@ export function App() {
                   />
                 )}
                 {activeLevel === 'level2' && (
-                  <PreviewViewportSticky
+                  <PreviewViewportDropdown
                     isTarget
                     t={t}
                   />
                 )}
                 {activeLevel === 'level3' && (
                   <PreviewViewportLevel2
+                    isTarget
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level4' && (
+                  <PreviewViewportSticky
                     isTarget
                     t={t}
                   />
@@ -893,6 +998,7 @@ export function App() {
 
       {/* Player Name Registration Modal before starting campaign */}
       <NameRegistrationModal
+        key={showNameModal ? 'modal-open' : 'modal-closed'}
         open={showNameModal}
         onClose={() => setShowNameModal(false)}
         onSubmit={handleNameRegistered}

@@ -91,6 +91,40 @@ export async function submitRemoteRun(run: {
   }
 }
 
+export async function isPlayerNameTaken(name: string): Promise<boolean> {
+  const trimmed = name.trim();
+  if (!trimmed) return false;
+  if (!isSupabaseConfigured || !SUPABASE_URL || !SUPABASE_KEY) {
+    return false;
+  }
+
+  try {
+    const sanitized = trimmed.replace(/"/g, '');
+    const encoded = encodeURIComponent(`"${sanitized}"`);
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/leaderboard?or=(player_name.ilike.${encoded},player_tag.ilike.${encoded})&select=id&limit=1`,
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!res.ok) {
+      console.warn('Failed to check name availability on Supabase:', res.statusText);
+      return false;
+    }
+
+    const rows = await res.json();
+    return Array.isArray(rows) && rows.length > 0;
+  } catch (err) {
+    console.warn('Network error checking player name in Supabase:', err);
+    return false;
+  }
+}
+
 export async function clearRemoteRuns(): Promise<boolean> {
   if (!isSupabaseConfigured || !SUPABASE_URL || !SUPABASE_KEY) {
     return false;

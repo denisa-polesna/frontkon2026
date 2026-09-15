@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Typography, Chip } from '@mui/material';
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import { Box, Typography } from '@mui/material';
 import { ProspectModal } from './ProspectModal';
 import type { translations } from '../utils/i18n';
 
@@ -17,7 +16,7 @@ interface PreviewViewportProps {
 export const PreviewViewport: React.FC<PreviewViewportProps> = ({
   userCss = '',
   onDistanceChange,
-  isSolved = false,
+  isSolved: _isSolved = false,
   t,
   isTarget = false,
 }) => {
@@ -101,10 +100,8 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
         flexDirection: 'column',
         borderRadius: 2.5,
         overflow: 'hidden',
-        border: isSolved && !isTarget ? '2px solid #00D2B4' : '1px solid #232842',
-        boxShadow: isSolved && !isTarget
-          ? '0 0 30px rgba(0, 210, 180, 0.25), 0 10px 30px rgba(0,0,0,0.5)'
-          : '0 10px 30px rgba(0, 0, 0, 0.4)',
+        border: '1px solid #232842',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
@@ -176,25 +173,6 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
             {isTarget ? t.targetGoalHeader : t.codeOutputHeader}
           </Typography>
         </Box>
-
-        {/* Header Right: Only show solved status when completed, no distance displayed */}
-        {!isTarget && isSolved && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
-            <Chip
-              icon={<CheckCircleOutlinedIcon sx={{ fontSize: '14px !important' }} />}
-              label={t.centeredRadar}
-              size="small"
-              sx={{
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                height: 24,
-                backgroundColor: 'rgba(0, 210, 180, 0.2)',
-                color: '#00D2B4',
-                border: '1px solid #00D2B4',
-              }}
-            />
-          </Box>
-        )}
       </Box>
 
       {/* Viewport Canvas Stage */}
@@ -228,8 +206,8 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
               maxWidth: '92%',
               height: modalDimensions.height || 380,
               borderRadius: 2.5,
-              border: `2px dashed ${isSolved ? '#00D2B4' : 'rgba(110, 63, 243, 0.4)'}`,
-              backgroundColor: isSolved ? 'rgba(0, 210, 180, 0.04)' : 'rgba(110, 63, 243, 0.04)',
+              border: '2px dashed rgba(110, 63, 243, 0.4)',
+              backgroundColor: 'rgba(110, 63, 243, 0.04)',
               pointerEvents: 'none',
               zIndex: 1,
               transition: 'all 0.3s ease',

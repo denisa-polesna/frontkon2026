@@ -5,7 +5,7 @@ import { sound } from '../utils/audio';
 import type { translations } from '../utils/i18n';
 
 interface MissionBannerProps {
-  levelId: 'level1' | 'level2' | 'level3';
+  levelId: 'level1' | 'level2' | 'level3' | 'level4';
   isSolved: boolean;
   devBot: {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
@@ -16,7 +16,7 @@ interface MissionBannerProps {
 }
 
 export const MissionBanner: React.FC<MissionBannerProps> = ({
-  isSolved,
+  isSolved: _isSolved,
   devBot,
 }) => {
   const prevMessageRef = useRef<string>(devBot.message);
@@ -35,10 +35,8 @@ export const MissionBanner: React.FC<MissionBannerProps> = ({
         backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/698651938e6808536770fe17_dot-repeat-svg.svg")`,
         backgroundRepeat: 'repeat',
         borderRadius: '12px',
-        border: isSolved ? '1.5px solid #00D2B4' : '1px solid rgba(89, 81, 255, 0.3)',
-        boxShadow: isSolved
-          ? '0 0 24px rgba(0, 210, 180, 0.2)'
-          : '0 4px 16px rgba(0, 0, 0, 0.2)',
+        border: '1px solid rgba(89, 81, 255, 0.3)',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
         overflow: 'hidden',
         transition: 'all 0.3s ease',
         px: { xs: 1.5, sm: 2 },

@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Typography, Chip } from '@mui/material';
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import { Box, Typography } from '@mui/material';
 import { DealTimelineCard } from './DealTimelineCard';
 import type { translations } from '../utils/i18n';
 
@@ -18,12 +16,12 @@ interface PreviewViewportStickyProps {
 export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
   userCss = '',
   onStatusChange,
-  isSolved = false,
+  isSolved: _isSolved = false,
   t,
   isTarget = false,
 }) => {
   const actionBarRef = useRef<HTMLDivElement | null>(null);
-  const [status, setStatus] = useState<StickyStatus>('off');
+  const [, setStatus] = useState<StickyStatus>('off');
 
   useEffect(() => {
     if (isTarget) return;
@@ -63,45 +61,6 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
     return () => clearTimeout(timer);
   }, [userCss, onStatusChange, isTarget]);
 
-  const getStatusChip = () => {
-    if (isSolved) {
-      return {
-        label: t.stickySolvedRadar || 'Sticky Docked! 🎯',
-        color: '#00D2B4',
-        bg: 'rgba(0, 210, 180, 0.2)',
-        border: '#00D2B4',
-        icon: <CheckCircleOutlinedIcon sx={{ fontSize: '14px !important' }} />,
-      };
-    }
-    if (status === 'fixed_escaped') {
-      return {
-        label: t.stickyFixedRadar || 'Fixed (Escaped container!) ⚠️',
-        color: '#FFB020',
-        bg: 'rgba(255, 176, 32, 0.15)',
-        border: 'rgba(255, 176, 32, 0.3)',
-        icon: <ErrorOutlineOutlinedIcon sx={{ fontSize: '14px !important' }} />,
-      };
-    }
-    if (status === 'sticky_no_bottom') {
-      return {
-        label: t.stickyNoBottomRadar || 'Sticky but missing bottom: 0!',
-        color: '#C4B5FD',
-        bg: 'rgba(110, 63, 243, 0.2)',
-        border: 'rgba(110, 63, 243, 0.4)',
-        icon: <ErrorOutlineOutlinedIcon sx={{ fontSize: '14px !important' }} />,
-      };
-    }
-    return {
-      label: t.stickyOffRadar || 'Scrolled out of view! 💥',
-      color: '#FF4C61',
-      bg: 'rgba(255, 76, 97, 0.15)',
-      border: 'rgba(255, 76, 97, 0.3)',
-      icon: <ErrorOutlineOutlinedIcon sx={{ fontSize: '14px !important' }} />,
-    };
-  };
-
-  const chip = getStatusChip();
-
   const stageId = isTarget ? 'target-stage-l2' : 'sticky-stage';
 
   return (
@@ -111,10 +70,8 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
         flexDirection: 'column',
         borderRadius: 2.5,
         overflow: 'hidden',
-        border: isSolved && !isTarget ? '2px solid #00D2B4' : '1px solid #232842',
-        boxShadow: isSolved && !isTarget
-          ? '0 0 30px rgba(0, 210, 180, 0.25), 0 10px 30px rgba(0,0,0,0.5)'
-          : '0 10px 30px rgba(0, 0, 0, 0.4)',
+        border: '1px solid #232842',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
         backgroundColor: '#0F1322',
         transition: 'all 0.3s ease',
         height: '100%',
@@ -175,23 +132,6 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
             {isTarget ? t.targetGoalHeader : t.codeOutputHeader}
           </Typography>
         </Box>
-
-        {!isTarget && isSolved && (
-          <Chip
-            icon={chip.icon}
-            label={chip.label}
-            size="small"
-            sx={{
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              height: 24,
-              flexShrink: 0,
-              backgroundColor: chip.bg,
-              color: chip.color,
-              border: `1px solid ${chip.border}`,
-            }}
-          />
-        )}
       </Box>
 
       {/* Viewport Canvas Stage */}

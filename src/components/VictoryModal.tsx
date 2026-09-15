@@ -2,22 +2,19 @@ import React from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogActions,
   Typography,
   Button,
   Box,
   Chip,
 } from '@mui/material';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import TimerIcon from '@mui/icons-material/Timer';
-import CodeIcon from '@mui/icons-material/Code';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { formatTime, getPlayerBadge } from '../utils/storage';
+import { formatTime } from '../utils/storage';
 import type { Language, translations } from '../utils/i18n';
 
 interface VictoryModalProps {
   open: boolean;
-  levelId: 'level1' | 'level2' | 'level3';
+  levelId: 'level1' | 'level2' | 'level3' | 'level4';
   playerName: string;
   timeMs: number;
   charCount: number;
@@ -31,21 +28,30 @@ interface VictoryModalProps {
 export const VictoryModal: React.FC<VictoryModalProps> = ({
   open,
   levelId,
+  playerName,
   timeMs,
-  charCount,
+  charCount: _charCount,
+  userCss = '',
   isNewBest,
   onNextLevel,
-  language,
+  language: _language,
   t,
 }) => {
-  const badge = getPlayerBadge(timeMs);
-  const badgeTitle = language === 'cz' ? badge.titleCz : badge.titleEn;
-  const badgeSub = language === 'cz' ? badge.subCz : badge.subEn;
-
-  const getNextLevelNumber = () => {
-    if (levelId === 'level1') return 2;
-    if (levelId === 'level2') return 3;
-    return 1;
+  const getPostMortem = () => {
+    if (levelId === 'level1') {
+      const isFlex = userCss.toLowerCase().includes('flex');
+      const isGrid = userCss.toLowerCase().includes('grid');
+      let quote = t.postMortemTextL1;
+      if (isFlex) {
+        quote = t.postMortemTextL1Flex;
+      } else if (isGrid) {
+        quote = t.postMortemTextL1Grid;
+      }
+      return quote.replace(/{name}/g, playerName);
+    }
+    if (levelId === 'level2') return t.postMortemTextL2.replace(/{name}/g, playerName);
+    if (levelId === 'level3') return t.postMortemTextL3.replace(/{name}/g, playerName);
+    return t.postMortemTextL4.replace(/{name}/g, playerName);
   };
 
   return (
@@ -65,31 +71,17 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         },
       }}
     >
-      <Box
+      <DialogContent
         sx={{
-          background: 'linear-gradient(135deg, rgba(89, 81, 255, 0.08) 0%, rgba(0, 210, 180, 0.08) 100%)',
-          p: { xs: 2.5, sm: 3 },
+          p: { xs: 2.5, sm: 3.5 },
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 2,
           textAlign: 'center',
-          position: 'relative',
         }}
       >
-        <Box
-          sx={{
-            width: 56,
-            height: 56,
-            borderRadius: '50%',
-            backgroundColor: '#5951ff',
-            color: '#FFFFFF',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 12px auto',
-            boxShadow: '0 4px 16px rgba(89, 81, 255, 0.35)',
-          }}
-        >
-          <EmojiEventsIcon sx={{ fontSize: 32 }} />
-        </Box>
-
+        {/* Title */}
         <Typography
           variant="h5"
           sx={{
@@ -97,115 +89,135 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             color: '#120042',
             fontSize: { xs: '1.25rem', sm: '1.45rem' },
             letterSpacing: '-0.02em',
-            mb: 0.5,
+            lineHeight: 1.25,
+            m: 0,
           }}
         >
           {t.victorySubtitle}
         </Typography>
 
+        {/* Record Chip */}
         {isNewBest && (
-          <Box sx={{ mt: 1 }}>
-            <Chip
-              label={t.newRecordBadge}
-              size="small"
+          <Chip
+            label={t.newRecordBadge}
+            size="small"
+            sx={{
+              backgroundColor: '#FFB020',
+              color: '#1A1202',
+              fontWeight: 800,
+              fontSize: '0.72rem',
+              height: 24,
+            }}
+          />
+        )}
+
+        {/* DevBot Defeated Post-Mortem Card */}
+        <Box
+          sx={{
+            backgroundColor: '#fbfaff',
+            backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/698651938e6808536770fe17_dot-repeat-svg.svg")`,
+            backgroundRepeat: 'repeat',
+            border: '1px solid rgba(89, 81, 255, 0.25)',
+            borderRadius: '10px',
+            p: { xs: 1.6, sm: 2 },
+            textAlign: 'left',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 1.4,
+          }}
+        >
+          {/* DevBot Avatar with glowing green notification dot */}
+          <Box sx={{ position: 'relative', flexShrink: 0, mt: 0.2 }}>
+            <Box
               sx={{
-                backgroundColor: '#FFB020',
-                color: '#1A1202',
-                fontWeight: 800,
-                fontSize: '0.72rem',
+                width: 34,
+                height: 34,
+                borderRadius: '8px',
+                backgroundColor: '#5951ff',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(89, 81, 255, 0.35)',
+              }}
+            >
+              <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: 20 }} />
+            </Box>
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: -2,
+                right: -2,
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                backgroundColor: '#00D2B4',
+                border: '2px solid #FFFFFF',
+                boxShadow: '0 0 8px #00D2B4, 0 0 12px rgba(0, 210, 180, 0.7)',
+                animation: 'botGreenPulse 2s infinite ease-in-out',
+                '@keyframes botGreenPulse': {
+                  '0%': { transform: 'scale(1)', boxShadow: '0 0 6px #00D2B4' },
+                  '50%': { transform: 'scale(1.2)', boxShadow: '0 0 12px #00D2B4, 0 0 16px rgba(0, 210, 180, 0.8)' },
+                  '100%': { transform: 'scale(1)', boxShadow: '0 0 6px #00D2B4' },
+                },
               }}
             />
           </Box>
-        )}
 
-        {/* 3 Badges Earned Ribbon */}
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: 800,
+                color: '#120042',
+                fontSize: '0.85rem',
+                mb: 0.3,
+              }}
+            >
+              DevBot-3000
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#222222',
+                fontStyle: 'italic',
+                fontSize: { xs: '0.82rem', sm: '0.88rem' },
+                lineHeight: 1.45,
+              }}
+            >
+              {getPostMortem()}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Single Stats Box: Time */}
         <Box
           sx={{
-            mt: 2,
-            p: 1.2,
+            backgroundColor: '#fbfaff',
+            py: 1.2,
+            px: 3,
             borderRadius: '10px',
-            backgroundColor: '#f6f5ff',
-            border: `1.5px solid ${badge.color}`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 1.2,
+            border: '1px solid #e2e0ed',
+            textAlign: 'center',
+            width: '100%',
+            maxWidth: 200,
           }}
         >
-          <Typography sx={{ fontSize: '1.4rem' }}>{badge.icon}</Typography>
-          <Box sx={{ textAlign: 'left' }}>
-            <Typography sx={{ fontSize: '0.82rem', fontWeight: 800, color: '#120042', lineHeight: 1.2 }}>
-              {badgeTitle}
-            </Typography>
-            <Typography sx={{ fontSize: '0.72rem', color: '#666666' }}>
-              {badgeSub}
-            </Typography>
-          </Box>
+          <Typography variant="h5" sx={{ fontFamily: 'monospace', fontWeight: 800, color: '#120042', m: 0 }}>
+            {formatTime(timeMs)}
+          </Typography>
         </Box>
-      </Box>
 
-      <DialogContent sx={{ p: { xs: 2.5, sm: 3 }, pb: 1 }}>
-        {/* Stats Grid */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 1.5,
-            mb: 1.5,
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: '#fbfaff',
-              p: 1.5,
-              borderRadius: '8px',
-              border: '1px solid #e2e0ed',
-              textAlign: 'center',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, color: '#666666', mb: 0.5 }}>
-              <TimerIcon sx={{ fontSize: 16 }} />
-              <Typography variant="caption" sx={{ fontWeight: 700 }}>
-                {t.timeTakenLabel}
-              </Typography>
-            </Box>
-            <Typography variant="h6" sx={{ fontFamily: 'monospace', fontWeight: 800, color: '#120042' }}>
-              {formatTime(timeMs)}
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              backgroundColor: '#fbfaff',
-              p: 1.5,
-              borderRadius: '8px',
-              border: '1px solid #e2e0ed',
-              textAlign: 'center',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, color: '#666666', mb: 0.5 }}>
-              <CodeIcon sx={{ fontSize: 16 }} />
-              <Typography variant="caption" sx={{ fontWeight: 700 }}>
-                {t.cssGolfLabel}
-              </Typography>
-            </Box>
-            <Typography variant="h6" sx={{ fontFamily: 'monospace', fontWeight: 800, color: '#5951ff' }}>
-              {charCount} chars
-            </Typography>
-          </Box>
-        </Box>
-      </DialogContent>
-
-      {/* Single Progression Button */}
-      <DialogActions sx={{ p: { xs: 2.5, sm: 3 }, pt: 0.5 }}>
+        {/* Progression Button */}
         <Button
           variant="contained"
           fullWidth
           size="large"
-          endIcon={levelId !== 'level3' ? <ArrowForwardIcon /> : undefined}
+          endIcon={levelId !== 'level4' ? <ArrowForwardIcon /> : undefined}
           onClick={onNextLevel}
           sx={{
-            py: 1.3,
+            height: 48,
             fontSize: '0.96rem',
             fontWeight: 600,
             borderRadius: '6px',
@@ -213,17 +225,16 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             color: '#FFFFFF',
             textTransform: 'none',
             boxShadow: 'none',
+            mt: 0.5,
             '&:hover': {
               backgroundColor: '#3028a1',
               boxShadow: 'none',
             },
           }}
         >
-          {levelId === 'level3'
-            ? t.finishCampaignBtn
-            : t.nextLevelBtn.replace('{next}', getNextLevelNumber().toString())}
+          {levelId === 'level4' ? t.finishCampaignBtn : t.nextLevelBtn}
         </Button>
-      </DialogActions>
+      </DialogContent>
     </Dialog>
   );
 };

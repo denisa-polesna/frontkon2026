@@ -221,8 +221,6 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
             width: '100%',
             maxWidth: { xs: '100%', sm: '100%', md: 1050, lg: 1320, xl: 1600 },
             backgroundColor: '#FFFFFF',
-            backgroundImage: `url("https://cdn.prod.website-files.com/696ea7504e736c595e9a2313/698651938e6808536770fe17_dot-repeat-svg.svg")`,
-            backgroundRepeat: 'repeat',
             borderRadius: '12px',
             border: '1px solid #2e2e2e',
             boxShadow: '0 12px 40px rgba(0, 0, 0, 0.35)',
@@ -237,7 +235,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
               </Typography>
             </Box>
           ) : (
-            <TableContainer sx={{ maxHeight: { xs: '65vh', sm: '70vh', md: 680, xl: 800 }, backgroundColor: 'transparent' }}>
+            <TableContainer sx={{ maxHeight: { xs: '65vh', sm: '70vh', md: 680, xl: 800 }, backgroundColor: '#FFFFFF' }}>
               <Table
                 stickyHeader
                 size="medium"
@@ -266,7 +264,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                   <TableRow sx={{ '& th': { borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' } }}>
                     <TableCell width="44%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colPlayer}</TableCell>
                     <TableCell width="36%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRating}</TableCell>
-                    <TableCell width="20%" align="right" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
+                    <TableCell width="20%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -365,7 +363,6 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                           />
                         </TableCell>
                         <TableCell
-                          align="right"
                           sx={{
                             fontFamily: 'ui-monospace, monospace',
                             color: '#007A68',

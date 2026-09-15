@@ -27,25 +27,23 @@ const DEFAULT_STATS: GameStats = {
   history: [],
 };
 
+// In-memory session stats only - nothing persisted to localStorage
+let sessionStats: GameStats = { ...DEFAULT_STATS };
+
+// Clear any previous persistent data from browser localStorage immediately
+try {
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem('frontkon_player_name');
+} catch {
+  // Ignore
+}
+
 export function getStoredStats(): GameStats {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_STATS;
-    const parsed = JSON.parse(raw);
-    return {
-      ...DEFAULT_STATS,
-      ...parsed,
-      completedLevels: parsed.completedLevels || {},
-      levelBestTimes: parsed.levelBestTimes || {},
-      history: parsed.history || [],
-    };
-  } catch {
-    return DEFAULT_STATS;
-  }
+  return { ...sessionStats };
 }
 
 export function saveRun(timeMs: number, charCount: number, playerTag = 'Senior Dev', levelId = 'level1'): GameStats {
-  const current = getStoredStats();
+  const current = sessionStats;
   const newRun: GameRun = {
     id: `${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     timestamp: Date.now(),
@@ -69,7 +67,7 @@ export function saveRun(timeMs: number, charCount: number, playerTag = 'Senior D
     [levelId]: true,
   };
 
-  const updated: GameStats = {
+  sessionStats = {
     bestTimeMs,
     fewestChars,
     totalWins: current.totalWins + 1,
@@ -78,13 +76,7 @@ export function saveRun(timeMs: number, charCount: number, playerTag = 'Senior D
     history,
   };
 
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  } catch {
-    // LocalStorage quota or disabled fallback
-  }
-
-  return updated;
+  return { ...sessionStats };
 }
 
 export function clearStats(): GameStats {
@@ -94,14 +86,8 @@ export function clearStats(): GameStats {
   } catch {
     // Ignore
   }
-  return DEFAULT_STATS;
-}
-
-// Ensure legacy stored name is cleared from browser
-try {
-  localStorage.removeItem('frontkon_player_name');
-} catch {
-  // Ignore
+  sessionStats = { ...DEFAULT_STATS };
+  return { ...sessionStats };
 }
 
 export function formatTime(ms: number | null): string {

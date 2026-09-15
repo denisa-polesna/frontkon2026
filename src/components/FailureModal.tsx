@@ -127,7 +127,8 @@ export const FailureModal: React.FC<FailureModalProps> = ({
             border: '1px solid rgba(89, 81, 255, 0.25)',
             borderRadius: '10px',
             p: { xs: 1.6, sm: 2 },
-            my: 2,
+            mt: 2,
+            mb: 3,
             textAlign: 'left',
           }}
         >
@@ -154,18 +155,6 @@ export const FailureModal: React.FC<FailureModalProps> = ({
             &ldquo;{t.verifyFailedDevbot.replace('{name}', playerName || 'Senior Dev')}&rdquo;
           </Typography>
         </Box>
-
-        <Typography
-          variant="body2"
-          sx={{
-            color: '#666666',
-            fontSize: { xs: '0.84rem', sm: '0.9rem' },
-            lineHeight: 1.45,
-            mb: 2.5,
-          }}
-        >
-          {t.failedModalSubtitle}
-        </Typography>
       </DialogContent>
 
       <DialogActions sx={{ p: 0 }}>

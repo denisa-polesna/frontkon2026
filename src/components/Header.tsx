@@ -20,7 +20,7 @@ interface HeaderProps {
   isRunning: boolean;
   onReset?: () => void;
   onBackToMenu?: () => void;
-  currentLevel: 'level1' | 'level2' | 'level3';
+  currentLevel: 'level1' | 'level2' | 'level3' | 'level4';
   soundEnabled?: boolean;
   onToggleSound?: () => void;
   language: Language;
@@ -98,30 +98,44 @@ export const Header: React.FC<HeaderProps> = ({
         </Box>
       </Box>
 
-      {/* Middle: Clean Live Timer & Record centered in header */}
+      {/* Desktop: Clean Live Timer centered in header */}
       <Box
         sx={{
+          display: { xs: 'none', md: 'flex' },
           position: 'absolute',
           left: '50%',
           transform: 'translateX(-50%)',
-          display: 'flex',
           alignItems: 'center',
-          gap: { xs: 0.8, sm: 1.2 },
           pointerEvents: 'none',
         }}
       >
+        <Typography
+          sx={{
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '1.15rem',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            letterSpacing: '0.04em',
+          }}
+        >
+          {formatTime(elapsedMs)}
+        </Typography>
+      </Box>
+
+      {/* Right Controls */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 1.2 } }}>
+        {/* On mobile: timer is placed here right before sound icon, aligned on same level */}
         <Box
           sx={{
-            display: 'flex',
+            display: { xs: 'flex', md: 'none' },
             alignItems: 'center',
-            px: { xs: 1, sm: 1.5 },
-            py: '4px',
+            pr: 0.5,
           }}
         >
           <Typography
             sx={{
               fontFamily: 'ui-monospace, monospace',
-              fontSize: { xs: '1rem', sm: '1.18rem' },
+              fontSize: '0.96rem',
               fontWeight: 800,
               color: '#FFFFFF',
               letterSpacing: '0.04em',
@@ -130,10 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
             {formatTime(elapsedMs)}
           </Typography>
         </Box>
-      </Box>
 
-      {/* Right Controls */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 0.8 } }}>
         {onToggleSound && (
           <Tooltip title={soundEnabled ? t.muteTooltip : t.unmuteTooltip}>
             <IconButton

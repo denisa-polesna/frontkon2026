@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -7,8 +7,10 @@ import {
   Box,
   TextField,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { isPlayerNameTaken } from '../utils/leaderboardApi';
 import type { translations } from '../utils/i18n';
 
 interface NameRegistrationModalProps {
@@ -24,21 +26,75 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
   onSubmit,
   t,
 }) => {
-  const [prevOpen, setPrevOpen] = useState(open);
   const [name, setName] = useState<string>('');
+  const [isChecking, setIsChecking] = useState<boolean>(false);
+  const [isTaken, setIsTaken] = useState<boolean>(false);
+  const [emptyError, setEmptyError] = useState<boolean>(false);
 
-  if (open !== prevOpen) {
-    setPrevOpen(open);
-    if (open) {
-      setName('');
+  // Debounced check against Supabase leaderboard
+  useEffect(() => {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      return;
     }
-  }
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const finalName = name.trim() || 'Senior Dev';
-    onSubmit(finalName);
+    let isMounted = true;
+    const timer = setTimeout(async () => {
+      try {
+        const taken = await isPlayerNameTaken(trimmed);
+        if (isMounted) {
+          setIsTaken(taken);
+          setIsChecking(false);
+        }
+      } catch {
+        if (isMounted) {
+          setIsChecking(false);
+        }
+      }
+    }, 350);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [name]);
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setEmptyError(true);
+      return;
+    }
+    if (isTaken || isChecking) {
+      return;
+    }
+
+    // Final direct verification before submitting
+    setIsChecking(true);
+    const taken = await isPlayerNameTaken(trimmed);
+    setIsChecking(false);
+    if (taken) {
+      setIsTaken(true);
+      return;
+    }
+
+    onSubmit(trimmed);
   };
+
+  const trimmedName = name.trim();
+  const isSubmitDisabled = !trimmedName || isChecking || isTaken;
+  const hasError = (emptyError && !trimmedName) || isTaken;
+  const helperMessage = (emptyError && !trimmedName)
+    ? t.nameRequiredError
+    : isTaken
+    ? t.nameTakenError
+    : isChecking
+    ? t.nameCheckingText
+    : undefined;
 
   return (
     <Dialog
@@ -81,7 +137,7 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
         <CloseIcon sx={{ fontSize: 18 }} />
       </IconButton>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <DialogContent sx={{ p: 0 }}>
           {/* Header */}
           <Box sx={{ mb: 2.2, pr: 3 }}>
@@ -110,18 +166,46 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
                 color: '#120042',
               }}
             >
-              {t.nameInputLabel}
+              {t.nameInputLabel}{' '}
+              <Box component="span" sx={{ color: '#d32f2f', fontWeight: 700 }}>
+                *
+              </Box>
             </Typography>
 
             <TextField
               id="player-name-input"
               autoFocus
+              error={hasError}
+              helperText={helperMessage}
               size="small"
               fullWidth
+              autoComplete="off"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setName(val);
+                setIsTaken(false);
+                setIsChecking(Boolean(val.trim()));
+                if (emptyError && val.trim()) {
+                  setEmptyError(false);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  if (!name.trim() || isTaken || isChecking) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!name.trim()) {
+                      setEmptyError(true);
+                    }
+                  }
+                }
+              }}
               placeholder={t.nameInputPlaceholder}
               slotProps={{
+                htmlInput: {
+                  autoComplete: 'off',
+                },
                 input: {
                   sx: {
                     height: 48,
@@ -137,13 +221,22 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
                       borderColor: '#5951ff',
                     },
                     '&.Mui-focused': {
-                      borderColor: '#5951ff',
-                      boxShadow: '0 0 0 3px rgba(89, 81, 255, 0.2)',
+                      borderColor: hasError ? '#d32f2f' : '#5951ff',
+                      boxShadow: hasError
+                        ? '0 0 0 3px rgba(211, 47, 47, 0.2)'
+                        : '0 0 0 3px rgba(89, 81, 255, 0.2)',
                     },
                     '& input::placeholder': {
                       color: '#767484',
                       opacity: 1,
                       fontWeight: 400,
+                    },
+                    '& input:-webkit-autofill, & input:-webkit-autofill:hover, & input:-webkit-autofill:focus, & input:-webkit-autofill:active': {
+                      WebkitBoxShadow: '0 0 0 1000px #FFFFFF inset !important',
+                      boxShadow: '0 0 0 1000px #FFFFFF inset !important',
+                      WebkitTextFillColor: '#120042 !important',
+                      caretColor: '#120042 !important',
+                      transition: 'background-color 5000s ease-in-out 0s',
                     },
                   },
                 },
@@ -157,6 +250,7 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
             variant="contained"
             fullWidth
             size="large"
+            disabled={isSubmitDisabled}
             sx={{
               height: 48,
               backgroundColor: '#5951ff',
@@ -167,14 +261,30 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
               borderRadius: '6px',
               textTransform: 'none',
               boxShadow: 'none',
-              transition: 'background-color 0.2s ease',
+              transition: 'all 0.2s ease',
               '&:hover': {
                 backgroundColor: '#3028a1',
                 boxShadow: 'none',
               },
+              '&.Mui-disabled, &:disabled': {
+                backgroundColor: '#E8E7F0 !important',
+                color: '#8C89A0 !important',
+                boxShadow: 'none !important',
+                cursor: 'not-allowed !important',
+                pointerEvents: 'none',
+              },
             }}
           >
-            {t.nameSubmitBtn}
+            {isChecking ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CircularProgress size={18} sx={{ color: '#8C89A0' }} />
+                <Typography sx={{ fontSize: '0.92rem', fontWeight: 600, color: '#8C89A0' }}>
+                  {t.nameCheckingText}
+                </Typography>
+              </Box>
+            ) : (
+              t.nameSubmitBtn
+            )}
           </Button>
         </DialogContent>
       </form>
