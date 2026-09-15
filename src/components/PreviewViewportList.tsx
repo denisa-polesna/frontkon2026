@@ -1,67 +1,60 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
-import { DealTimelineCard } from './DealTimelineCard';
+import { ActivityListModal } from './ActivityListModal';
 import type { translations } from '../utils/i18n';
 
-export type StickyStatus = 'off' | 'fixed_escaped' | 'sticky_no_bottom' | 'solved';
+export type ListStatus = 'row_crammed' | 'no_gap' | 'solved';
 
-interface PreviewViewportStickyProps {
+interface PreviewViewportListProps {
   userCss?: string;
-  onStatusChange?: (status: StickyStatus, solved: boolean) => void;
+  onStatusChange?: (status: ListStatus, solved: boolean) => void;
   isSolved?: boolean;
   t: typeof translations['en'];
   isTarget?: boolean;
 }
 
-export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
+export const PreviewViewportList: React.FC<PreviewViewportListProps> = ({
   userCss = '',
   onStatusChange,
   isSolved: _isSolved = false,
   t,
   isTarget = false,
 }) => {
-  const actionBarRef = useRef<HTMLDivElement | null>(null);
-  const [, setStatus] = useState<StickyStatus>('off');
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isTarget) return;
 
-    const checkSticky = () => {
-      if (!actionBarRef.current) return;
+    const checkList = () => {
+      if (!containerRef.current) return;
 
-      const el = actionBarRef.current;
-      const style = window.getComputedStyle(el);
+      const listEl = containerRef.current.querySelector('.activity-list') as HTMLElement | null;
+      if (!listEl) return;
 
-      const isSticky = style.position === 'sticky';
-      const isFixed = style.position === 'fixed';
-      const isBottomZero = style.bottom === '0px' || parseInt(style.bottom, 10) === 0;
+      const style = window.getComputedStyle(listEl);
+      const isColumnReverse = style.flexDirection === 'column-reverse';
+      const gapVal = parseInt(style.rowGap || style.gap, 10);
+      const has10pxGap = !isNaN(gapVal) && gapVal >= 8 && gapVal <= 14;
 
-      let currentStatus: StickyStatus = 'off';
-      const solved = isSticky && isBottomZero;
+      const solved = isColumnReverse && has10pxGap;
+      const status: ListStatus = solved
+        ? 'solved'
+        : isColumnReverse && !has10pxGap
+        ? 'no_gap'
+        : 'row_crammed';
 
-      if (solved) {
-        currentStatus = 'solved';
-      } else if (isFixed) {
-        currentStatus = 'fixed_escaped';
-      } else if (isSticky && !isBottomZero) {
-        currentStatus = 'sticky_no_bottom';
-      } else {
-        currentStatus = 'off';
-      }
-
-      setStatus(currentStatus);
       if (onStatusChange) {
-        onStatusChange(currentStatus, solved);
+        onStatusChange(status, solved);
       }
     };
 
-    checkSticky();
-    const timer = setTimeout(checkSticky, 50);
+    checkList();
+    const timer = setTimeout(checkList, 50);
 
     return () => clearTimeout(timer);
   }, [userCss, onStatusChange, isTarget]);
 
-  const stageId = isTarget ? 'target-stage-l2' : 'sticky-stage';
+  const stageId = isTarget ? 'target-stage-list' : 'list-stage';
 
   return (
     <Box
@@ -76,29 +69,22 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
         transition: 'all 0.3s ease',
         height: '100%',
         minHeight: 0,
+        isolation: 'isolate',
       }}
     >
       {/* Scoped Styles */}
       <style>
         {isTarget
           ? `
-            #${stageId} .deal-action-bar {
-              width: 100%;
-              display: block;
-              box-sizing: border-box;
-              position: sticky;
-              bottom: 0;
-              z-index: 10;
+            #${stageId} .activity-list {
+              display: flex;
+              flex-direction: column-reverse;
+              gap: 10px;
             }
           `
           : `
-            #${stageId} .deal-action-bar {
-              width: 100%;
-              display: block;
-              box-sizing: border-box;
-              z-index: 10;
-              transition: all 0.2s ease;
-              ${userCss || '/* DevBot defaults */ position: absolute; top: 4800px; z-index: 2147483647 !important;'}
+            #${stageId} .activity-list {
+              ${userCss || '/* DevBot */ display: flex; flex-direction: row; gap: 0px;'}
             }
           `}
       </style>
@@ -137,19 +123,20 @@ export const PreviewViewportSticky: React.FC<PreviewViewportStickyProps> = ({
       {/* Viewport Canvas Stage */}
       <Box
         id={stageId}
+        ref={containerRef}
         sx={{
           position: 'relative',
           flex: 1,
           width: '100%',
           overflow: 'hidden',
+          backgroundColor: '#0A0C16',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          p: { xs: 1.5, sm: 2.5 },
-          backgroundColor: '#0A0C16',
+          p: { xs: 1.5, sm: 2 },
         }}
       >
-        <DealTimelineCard actionBarRef={isTarget ? undefined : actionBarRef} t={t} />
+        <ActivityListModal />
       </Box>
     </Box>
   );

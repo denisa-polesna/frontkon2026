@@ -1,6 +1,22 @@
 import { createTheme } from '@mui/material/styles';
 
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xxl: true;
+  }
+}
+
 export const outreachTheme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+      xxl: 1920, // 2K / QHD (2560x1440) and large desktop monitors
+    },
+  },
   palette: {
     mode: 'dark',
     primary: {

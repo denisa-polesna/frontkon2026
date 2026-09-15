@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -19,7 +19,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { OutreachLogo } from './OutreachLogo';
-import { type GameRun, formatTime, getPlayerBadge } from '../utils/storage';
+import { type GameRun, formatTime } from '../utils/storage';
 import { fetchRemoteRuns, isSupabaseConfigured } from '../utils/leaderboardApi';
 import type { Language, translations } from '../utils/i18n';
 
@@ -66,14 +66,53 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   }, []);
 
   const displayRuns = remoteRuns !== null ? remoteRuns : localRuns;
-  const sortedRuns = [...displayRuns].sort((a, b) => a.timeMs - b.timeMs);
 
-  const getRankBadge = (index: number) => {
-    if (index === 0) return '🥇 1st';
-    if (index === 1) return '🥈 2nd';
-    if (index === 2) return '🥉 3rd';
-    return `#${index + 1}`;
-  };
+  const aggregatedPlayers = useMemo(() => {
+    const playerMap: Record<
+      string,
+      {
+        playerName: string;
+        levelTimes: Record<string, number>;
+        lastUpdated: number;
+      }
+    > = {};
+
+    for (const run of displayRuns) {
+      const name = (run.playerTag || 'Senior Dev').trim();
+      if (!playerMap[name]) {
+        playerMap[name] = {
+          playerName: name,
+          levelTimes: {},
+          lastUpdated: run.timestamp,
+        };
+      }
+      const currentBest = playerMap[name].levelTimes[run.levelId];
+      if (currentBest === undefined || run.timeMs < currentBest) {
+        playerMap[name].levelTimes[run.levelId] = run.timeMs;
+      }
+      playerMap[name].lastUpdated = Math.max(playerMap[name].lastUpdated, run.timestamp);
+    }
+
+    return Object.values(playerMap)
+      .map((player) => {
+        const completedCount = Object.keys(player.levelTimes).length;
+        const totalTimeMs = Object.values(player.levelTimes).reduce((sum, t) => sum + t, 0);
+        return {
+          playerName: player.playerName,
+          completedCount,
+          totalTimeMs,
+          lastUpdated: player.lastUpdated,
+        };
+      })
+      .sort((a, b) => {
+        // 1. More completed rounds ranks first
+        if (b.completedCount !== a.completedCount) {
+          return b.completedCount - a.completedCount;
+        }
+        // 2. Faster total time ranks first
+        return a.totalTimeMs - b.totalTimeMs;
+      });
+  }, [displayRuns]);
 
   return (
     <Box
@@ -228,7 +267,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
             mb: 3,
           }}
         >
-          {sortedRuns.length === 0 ? (
+          {aggregatedPlayers.length === 0 ? (
             <Box sx={{ py: 8, textAlign: 'center' }}>
               <Typography variant="body1" sx={{ color: '#000000', fontStyle: 'italic', fontWeight: 600 }}>
                 {t.noRunsYet}
@@ -263,118 +302,83 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                 >
                   <TableRow sx={{ '& th': { borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' } }}>
                     <TableCell width="44%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colPlayer}</TableCell>
-                    <TableCell width="36%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRating}</TableCell>
-                    <TableCell width="20%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
+                    <TableCell width="32%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRounds || t.colRating || 'Dokončená kola'}</TableCell>
+                    <TableCell width="24%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {sortedRuns.map((run, idx) => {
-                    const badge = getPlayerBadge(run.timeMs);
-                    const badgeStyles =
-                      badge.tier === 'senior'
-                        ? { bg: 'rgba(0, 210, 180, 0.12)', color: '#007A68', border: '1px solid rgba(0, 210, 180, 0.35)' }
-                        : badge.tier === 'mid'
-                        ? { bg: 'rgba(89, 81, 255, 0.1)', color: '#3028A1', border: '1px solid rgba(89, 81, 255, 0.3)' }
-                        : { bg: 'rgba(255, 176, 32, 0.14)', color: '#8A5200', border: '1px solid rgba(255, 176, 32, 0.35)' };
-
-                    return (
-                      <TableRow
-                        key={run.id}
+                  {aggregatedPlayers.map((player, idx) => (
+                    <TableRow
+                      key={player.playerName}
+                      sx={{
+                        '& td': {
+                          borderColor: '#e2e0ed',
+                          color: '#120042',
+                          fontSize: { xs: '0.88rem', sm: '1rem', md: '1.08rem', lg: '1.15rem' },
+                          py: { xs: 1.2, sm: 1.6, md: 2 },
+                          px: { xs: 1.5, sm: 2.5, md: 3, lg: 4 },
+                        },
+                        backgroundColor: '#FFFFFF',
+                        '&:hover': {
+                          backgroundColor: '#fbfaff',
+                        },
+                      }}
+                    >
+                      <TableCell sx={{ fontWeight: 700, color: '#120042' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.2, sm: 2 } }}>
+                          <Typography
+                            component="span"
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: { xs: '0.9rem', sm: '1.02rem', md: '1.14rem' },
+                              color: '#120042',
+                              minWidth: { xs: 20, sm: 28 },
+                              flexShrink: 0,
+                              textAlign: 'right',
+                            }}
+                          >
+                            {idx + 1}
+                          </Typography>
+                          <Typography
+                            component="span"
+                            sx={{
+                              fontWeight: 700,
+                              color: '#120042',
+                              fontSize: 'inherit',
+                            }}
+                          >
+                            {player.playerName}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={`${player.completedCount} / 5`}
+                          size="small"
+                          sx={{
+                            height: { xs: 24, sm: 26, md: 30 },
+                            fontSize: { xs: '0.78rem', sm: '0.86rem', md: '0.92rem' },
+                            fontWeight: 700,
+                            borderRadius: '6px',
+                            bgcolor: player.completedCount === 5 ? 'rgba(0, 210, 180, 0.14)' : 'rgba(89, 81, 255, 0.08)',
+                            color: player.completedCount === 5 ? '#007A68' : '#3028A1',
+                            border: '1px solid',
+                            borderColor: player.completedCount === 5 ? 'rgba(0, 210, 180, 0.35)' : 'rgba(89, 81, 255, 0.25)',
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
                         sx={{
-                          '& td': {
-                            borderColor: 'rgba(89, 81, 255, 0.14)',
-                            color: '#000000',
-                            fontSize: { xs: '0.88rem', sm: '1rem', md: '1.08rem', lg: '1.15rem' },
-                            py: { xs: 1.2, sm: 1.6, md: 2 },
-                            px: { xs: 1.5, sm: 2.5, md: 3, lg: 4 },
-                          },
-                          backgroundColor:
-                            idx === 0
-                              ? 'rgba(0, 210, 180, 0.12)'
-                              : idx === 1
-                              ? 'rgba(89, 81, 255, 0.08)'
-                              : idx === 2
-                              ? 'rgba(255, 176, 32, 0.1)'
-                              : 'transparent',
-                          '&:hover': {
-                            backgroundColor: 'rgba(89, 81, 255, 0.12)',
-                          },
+                          fontFamily: 'ui-monospace, monospace',
+                          color: '#120042',
+                          fontWeight: 800,
+                          fontSize: { xs: '0.92rem', sm: '1.05rem', md: '1.22rem', lg: '1.32rem' },
                         }}
                       >
-                        <TableCell sx={{ fontWeight: 700, color: '#000000' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.8 } }}>
-                            <Typography
-                              component="span"
-                              sx={{
-                                fontWeight: 800,
-                                fontSize: { xs: '0.92rem', sm: '1.05rem', md: '1.16rem' },
-                                color: idx === 0 ? '#007A68' : idx === 1 ? '#3028A1' : idx === 2 ? '#945800' : '#444444',
-                                minWidth: { xs: 32, sm: 42 },
-                                flexShrink: 0,
-                              }}
-                            >
-                              {getRankBadge(idx)}
-                            </Typography>
-                            <Typography
-                              component="span"
-                              sx={{
-                                fontWeight: 700,
-                                color: '#000000',
-                                fontSize: 'inherit',
-                              }}
-                            >
-                              {run.playerTag}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            icon={<span style={{ fontSize: '1rem', marginLeft: '6px' }}>{badge.icon}</span>}
-                            label={
-                              <Box component="span">
-                                <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
-                                  {language === 'cz' ? badge.titleCz : badge.titleEn}
-                                </Box>
-                                <Box component="span" sx={{ display: { xs: 'inline', md: 'none' } }}>
-                                  {badge.tier === 'senior'
-                                    ? (language === 'cz' ? 'Senior Inženýr' : 'Senior Dev')
-                                    : badge.tier === 'mid'
-                                    ? 'Mid-Level'
-                                    : (language === 'cz' ? 'Prompt Inž.' : 'Prompt Eng')}
-                                </Box>
-                              </Box>
-                            }
-                            size="small"
-                            sx={{
-                              height: { xs: 24, sm: 26, md: 30 },
-                              fontSize: { xs: '0.74rem', sm: '0.8rem', md: '0.86rem' },
-                              fontWeight: 700,
-                              borderRadius: '6px',
-                              bgcolor: badgeStyles.bg,
-                              color: badgeStyles.color,
-                              border: badgeStyles.border,
-                              '& .MuiChip-icon': {
-                                margin: 0,
-                              },
-                              '& .MuiChip-label': {
-                                px: { xs: 0.8, sm: 1.2 },
-                              },
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            fontFamily: 'ui-monospace, monospace',
-                            color: '#007A68',
-                            fontWeight: 800,
-                            fontSize: { xs: '0.92rem', sm: '1.05rem', md: '1.22rem', lg: '1.32rem' },
-                          }}
-                        >
-                          {formatTime(run.timeMs)}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                        {formatTime(player.totalTimeMs)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>

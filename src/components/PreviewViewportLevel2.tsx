@@ -78,6 +78,7 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
         transition: 'all 0.3s ease',
         height: '100%',
         minHeight: 0,
+        isolation: 'isolate',
       }}
     >
       {/* Scoped Styles */}
@@ -87,7 +88,7 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
             #${stageId} .meeting-title {
               font-size: 0.88rem;
               font-weight: 700;
-              color: #FFFFFF;
+              color: #120042;
               line-height: 1.4;
               display: block;
               box-sizing: border-box;
@@ -100,7 +101,7 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
             #${stageId} .meeting-title {
               font-size: 0.88rem;
               font-weight: 700;
-              color: #FFFFFF;
+              color: #120042;
               line-height: 1.4;
               display: block;
               box-sizing: border-box;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
 import { ProspectModal } from './ProspectModal';
 import type { translations } from '../utils/i18n';
@@ -17,38 +17,27 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
   userCss = '',
   onDistanceChange,
   isSolved: _isSolved = false,
-  t,
   isTarget = false,
+  t,
 }) => {
   const stageRef = useRef<HTMLDivElement>(null);
-  const targetRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-
-  const [modalDimensions, setModalDimensions] = useState<{ width: number; height: number }>({
-    width: 380,
-    height: 380,
-  });
 
   // Measure alignment on resize or CSS change (only in active challenge mode)
   useEffect(() => {
     if (isTarget) return;
 
     const checkAlignment = () => {
-      if (!targetRef.current || !modalRef.current) return;
+      if (!stageRef.current || !modalRef.current) return;
 
-      const targetRect = targetRef.current.getBoundingClientRect();
+      const stageRect = stageRef.current.getBoundingClientRect();
       const modalRect = modalRef.current.getBoundingClientRect();
 
       // Ensure elements are actually rendered and visible before measuring
-      if (targetRect.width === 0 || modalRect.width === 0) return;
+      if (stageRect.width === 0 || modalRect.width === 0) return;
 
-      // Dynamically sync target ghost dimensions to match modal
-      if (modalRect.height > 100 && Math.abs(modalDimensions.height - modalRect.height) > 4) {
-        setModalDimensions({ width: modalRect.width, height: modalRect.height });
-      }
-
-      const targetCenterX = targetRect.left + targetRect.width / 2;
-      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const targetCenterX = stageRect.left + stageRect.width / 2;
+      const targetCenterY = stageRect.top + stageRect.height / 2;
 
       const modalCenterX = modalRect.left + modalRect.width / 2;
       const modalCenterY = modalRect.top + modalRect.height / 2;
@@ -58,8 +47,8 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
       const dist = Math.round(Math.hypot(dx, dy));
 
       // BOTH horizontal and vertical axes must be centered!
-      const isHorizontallyCentered = dx <= 10;
-      const isVerticallyCentered = dy <= 10;
+      const isHorizontallyCentered = dx <= 12;
+      const isVerticallyCentered = dy <= 12;
       const centered = isHorizontallyCentered && isVerticallyCentered;
 
       let status: AlignmentStatus = 'off';
@@ -89,7 +78,7 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
       clearTimeout(timer2);
       window.removeEventListener('resize', handleResize);
     };
-  }, [userCss, onDistanceChange, modalDimensions.height, isTarget]);
+  }, [userCss, onDistanceChange, isTarget]);
 
   const stageId = isTarget ? 'target-stage-l1' : 'challenge-stage';
 
@@ -184,39 +173,11 @@ export const PreviewViewport: React.FC<PreviewViewportProps> = ({
           flex: 1,
           width: '100%',
           overflow: 'hidden',
-          backgroundImage: `
-            radial-gradient(circle at 50% 50%, rgba(110, 63, 243, 0.08) 0%, transparent 70%),
-            linear-gradient(to right, #141829 1px, transparent 1px),
-            linear-gradient(to bottom, #141829 1px, transparent 1px)
-          `,
-          backgroundSize: '100% 100%, 24px 24px, 24px 24px',
           backgroundColor: '#0A0C16',
         }}
       >
-        {/* Target Ghost Box (The Ground Truth Center) - shown only on active challenge stage */}
-        {!isTarget && (
-          <Box
-            ref={targetRef}
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: modalDimensions.width || 380,
-              maxWidth: '92%',
-              height: modalDimensions.height || 380,
-              borderRadius: 2.5,
-              border: '2px dashed rgba(110, 63, 243, 0.4)',
-              backgroundColor: 'rgba(110, 63, 243, 0.04)',
-              pointerEvents: 'none',
-              zIndex: 1,
-              transition: 'all 0.3s ease',
-            }}
-          />
-        )}
-
         {/* Live Container */}
-        <div className="modal-viewport" style={{ position: 'relative', zIndex: 2 }}>
+        <div className="modal-viewport" style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
           <ProspectModal ref={modalRef} t={t} />
         </div>
       </Box>

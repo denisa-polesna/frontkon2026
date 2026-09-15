@@ -17,13 +17,11 @@ import { Header } from './components/Header';
 import { MainMenu } from './components/MainMenu';
 import { MissionBanner } from './components/MissionBanner';
 import { PreviewViewport, type AlignmentStatus } from './components/PreviewViewport';
-import { CodeEditor } from './components/CodeEditor';
+import { CodeEditor, type CodeEditorLine } from './components/CodeEditor';
 import { PreviewViewportDropdown, type DropdownStatus } from './components/PreviewViewportDropdown';
-import { CodeEditorDropdown } from './components/CodeEditorDropdown';
 import { PreviewViewportSticky, type StickyStatus } from './components/PreviewViewportSticky';
-import { CodeEditorSticky } from './components/CodeEditorSticky';
 import { PreviewViewportLevel2, type OverflowStatus } from './components/PreviewViewportLevel2';
-import { CodeEditorLevel2 } from './components/CodeEditorLevel2';
+import { PreviewViewportList, type ListStatus } from './components/PreviewViewportList';
 import { VictoryModal } from './components/VictoryModal';
 import { FailureModal } from './components/FailureModal';
 import { LeaderboardScreen } from './components/LeaderboardScreen';
@@ -38,30 +36,35 @@ import { submitRemoteRun } from './utils/leaderboardApi';
 import { sound } from './utils/audio';
 import { getStoredLanguage, saveLanguage, translations, type Language } from './utils/i18n';
 
-const DEFAULT_L1_CSS = `/* DevBot-3000 hallucination */
-display: block;
+// Level 1: Dropdown se schovává za header (z-index > 100)
+const DEFAULT_L1_CSS = `position: absolute;
+z-index: 1;`;
+
+// Level 2: Vycentrovat modal (Flexbox / Grid)
+const DEFAULT_L2_CSS = `display: block;
 margin-top: -240px;
 margin-left: 20px;
 float: left;`;
 
-const DEFAULT_L2_CSS = `/* DevBot-3000 hallucination */
-position: sticky;
-z-index: 100;`;
-
-const DEFAULT_L3_CSS = `/* DevBot-3000 hallucination */
-width: 99999px;
+// Level 3: Text Overflow v kalendáři (ellipsis)
+const DEFAULT_L3_CSS = `width: 99999px;
 white-space: nowrap;
 font-size: 8px;
 color: #FF7081;`;
 
-const DEFAULT_L4_CSS = `/* DevBot-3000 hallucination */
-position: absolute;
+// Level 4: Seznam aktivit (column, gap)
+const DEFAULT_L4_CSS = `display: flex;
+flex-direction: row;
+gap: 0px;`;
+
+// Level 5: Sticky CTA lišta (position: sticky; bottom: 0)
+const DEFAULT_L5_CSS = `position: absolute;
 top: 4800px;
 z-index: 2147483647;`;
 
 export function App() {
-  // Navigation: 'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3' | 'level4'
-  const [currentScreen, setCurrentScreen] = useState<'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3' | 'level4'>('menu');
+  // Navigation: 'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3' | 'level4' | 'level5'
+  const [currentScreen, setCurrentScreen] = useState<'menu' | 'leaderboard' | 'level1' | 'level2' | 'level3' | 'level4' | 'level5'>('menu');
 
   // Player Name State (In-Memory Session State only)
   const [playerName, setPlayerName] = useState<string>('');
@@ -111,30 +114,37 @@ export function App() {
     }
   };
 
-  // Level 1 State (Center Modal)
+  // Level 1 State (Dropdown Behind Header)
   const [l1Css, setL1Css] = useState<string>(DEFAULT_L1_CSS);
   const [l1Solved, setL1Solved] = useState<boolean>(false);
-  const [l1Distance, setL1Distance] = useState<number>(350);
-  const [l1AlignmentStatus, setL1AlignmentStatus] = useState<AlignmentStatus>('off');
+  const [, setL1DropdownStatus] = useState<DropdownStatus>('hidden_behind_header');
 
-  // Level 2 State (Dropdown Behind Header)
+  // Level 2 State (Center Modal)
   const [l2Css, setL2Css] = useState<string>(DEFAULT_L2_CSS);
   const [l2Solved, setL2Solved] = useState<boolean>(false);
-  const [, setL2DropdownStatus] = useState<DropdownStatus>('hidden_behind_header');
+  const [l2Distance, setL2Distance] = useState<number>(350);
+  const [l2AlignmentStatus, setL2AlignmentStatus] = useState<AlignmentStatus>('off');
 
   // Level 3 State (Meeting Title Overflow)
   const [l3Css, setL3Css] = useState<string>(DEFAULT_L3_CSS);
   const [l3Solved, setL3Solved] = useState<boolean>(false);
   const [l3Status, setL3Status] = useState<OverflowStatus>('overflowing');
 
-  // Level 4 State (Sticky CTA Button)
+  // Level 4 State (Activity List: column, gap)
   const [l4Css, setL4Css] = useState<string>(DEFAULT_L4_CSS);
   const [l4Solved, setL4Solved] = useState<boolean>(false);
-  const [l4StickyStatus, setL4StickyStatus] = useState<StickyStatus>('off');
+  const [, setL4ListStatus] = useState<ListStatus>('row_crammed');
+
+  // Level 5 State (Sticky CTA Button)
+  const [l5Css, setL5Css] = useState<string>(DEFAULT_L5_CSS);
+  const [l5Solved, setL5Solved] = useState<boolean>(false);
+  const [l5StickyStatus, setL5StickyStatus] = useState<StickyStatus>('off');
 
   // Active level helper
-  const activeLevel: 'level1' | 'level2' | 'level3' | 'level4' =
-    currentScreen === 'level4'
+  const activeLevel: 'level1' | 'level2' | 'level3' | 'level4' | 'level5' =
+    currentScreen === 'level5'
+      ? 'level5'
+      : currentScreen === 'level4'
       ? 'level4'
       : currentScreen === 'level3'
       ? 'level3'
@@ -149,16 +159,67 @@ export function App() {
       ? l2Solved
       : activeLevel === 'level3'
       ? l3Solved
-      : l4Solved;
+      : activeLevel === 'level4'
+      ? l4Solved
+      : l5Solved;
 
   const getActiveUserCss = () => {
     if (activeLevel === 'level1') return l1Css;
     if (activeLevel === 'level2') return l2Css;
     if (activeLevel === 'level3') return l3Css;
-    return l4Css;
+    if (activeLevel === 'level4') return l4Css;
+    return l5Css;
+  };
+
+  const getActiveReadOnlyLines = (): CodeEditorLine[] => {
+    switch (activeLevel) {
+      case 'level1':
+        return [
+          { text: language === 'cz' ? '/* Úkol: Nastav rozbalovací menu tak,' : '/* Task: Adjust dropdown menu so that', isComment: true },
+          { text: language === 'cz' ? '   aby se zobrazovalo nad headerem */' : '   it displays above the header */', isComment: true },
+          { text: '' },
+          { text: '.header {' },
+          { text: 'position: sticky;', indent: 1 },
+          { text: 'top: 0;', indent: 1 },
+          { text: 'z-index: 100;', indent: 1 },
+          { text: '}' },
+          { text: '' },
+          { text: '.dropdown-menu {', isSelector: true },
+        ];
+      case 'level2':
+        return [
+          { text: language === 'cz' ? '/* Úkol: Vycentruj modal' : '/* Task: Center modal dialog', isComment: true },
+          { text: language === 'cz' ? '   na střed obrazovky */' : '   horizontally and vertically */', isComment: true },
+          { text: '' },
+          { text: '.modal-viewport {', isSelector: true },
+        ];
+      case 'level3':
+        return [
+          { text: language === 'cz' ? '/* Úkol: Zkrať text na 1 řádek' : '/* Task: Truncate meeting title to 1 line', isComment: true },
+          { text: language === 'cz' ? '   a přidej trojtečku */' : '   with ellipsis (...) */', isComment: true },
+          { text: '' },
+          { text: '.meeting-title {', isSelector: true },
+        ];
+      case 'level4':
+        return [
+          { text: language === 'cz' ? '/* Úkol: Seřaď aktivity do sloupce' : '/* Task: Stack activities in reverse', isComment: true },
+          { text: language === 'cz' ? '   v obráceném pořadí s 10px mezerami */' : '   column order with 10px gaps */', isComment: true },
+          { text: '' },
+          { text: '.activity-list {', isSelector: true },
+        ];
+      case 'level5':
+      default:
+        return [
+          { text: language === 'cz' ? '/* Úkol: Ukotvi lištu na spodní hranu' : '/* Task: Dock the action bar to bottom', isComment: true },
+          { text: language === 'cz' ? '   při skrolování */' : '   while scrolling */', isComment: true },
+          { text: '' },
+          { text: '.deal-action-bar {', isSelector: true },
+        ];
+    }
   };
 
   const activeUserCss = getActiveUserCss();
+  const activeReadOnlyLines = getActiveReadOnlyLines();
   const activeBestTime = stats.levelBestTimes[activeLevel] || null;
 
   // Timer loop
@@ -188,21 +249,21 @@ export function App() {
     };
   }, [isRunning]);
 
-  // Level 1 alignment check
-  const handleL1DistanceChange = useCallback(
-    (dist: number, centered: boolean, status: AlignmentStatus) => {
-      setL1Distance(dist);
-      setL1AlignmentStatus(status);
-      setL1Solved(centered);
+  // Level 1 (Dropdown Behind Header) check
+  const handleL1DropdownChange = useCallback(
+    (status: DropdownStatus, solved: boolean) => {
+      setL1DropdownStatus(status);
+      setL1Solved(solved);
     },
     []
   );
 
-  // Level 2 (Dropdown Behind Header) check
-  const handleL2DropdownChange = useCallback(
-    (status: DropdownStatus, solved: boolean) => {
-      setL2DropdownStatus(status);
-      setL2Solved(solved);
+  // Level 2 (Center Modal) check
+  const handleL2DistanceChange = useCallback(
+    (dist: number, centered: boolean, status: AlignmentStatus) => {
+      setL2Distance(dist);
+      setL2AlignmentStatus(status);
+      setL2Solved(centered);
     },
     []
   );
@@ -216,11 +277,20 @@ export function App() {
     []
   );
 
-  // Level 4 (Sticky CTA) check
-  const handleL4StickyChange = useCallback(
-    (status: StickyStatus, solved: boolean) => {
-      setL4StickyStatus(status);
+  // Level 4 (Activity List: column, gap) check
+  const handleL4ListChange = useCallback(
+    (status: ListStatus, solved: boolean) => {
+      setL4ListStatus(status);
       setL4Solved(solved);
+    },
+    []
+  );
+
+  // Level 5 (Sticky CTA) check
+  const handleL5StickyChange = useCallback(
+    (status: StickyStatus, solved: boolean) => {
+      setL5StickyStatus(status);
+      setL5Solved(solved);
     },
     []
   );
@@ -234,7 +304,9 @@ export function App() {
         ? l2Solved
         : activeLevel === 'level3'
         ? l3Solved
-        : l4Solved;
+        : activeLevel === 'level4'
+        ? l4Solved
+        : l5Solved;
 
     if (!isLevelStarted) {
       setIsLevelStarted(true);
@@ -251,8 +323,10 @@ export function App() {
       setL2Css(newCss);
     } else if (activeLevel === 'level3') {
       setL3Css(newCss);
-    } else {
+    } else if (activeLevel === 'level4') {
       setL4Css(newCss);
+    } else {
+      setL5Css(newCss);
     }
   };
 
@@ -269,24 +343,28 @@ export function App() {
     if (activeLevel === 'level1') {
       setL1Css(DEFAULT_L1_CSS);
       setL1Solved(false);
-      setL1AlignmentStatus('off');
+      setL1DropdownStatus('hidden_behind_header');
     } else if (activeLevel === 'level2') {
       setL2Css(DEFAULT_L2_CSS);
       setL2Solved(false);
-      setL2DropdownStatus('hidden_behind_header');
+      setL2AlignmentStatus('off');
     } else if (activeLevel === 'level3') {
       setL3Css(DEFAULT_L3_CSS);
       setL3Solved(false);
       setL3Status('overflowing');
-    } else {
+    } else if (activeLevel === 'level4') {
       setL4Css(DEFAULT_L4_CSS);
       setL4Solved(false);
-      setL4StickyStatus('off');
+      setL4ListStatus('row_crammed');
+    } else {
+      setL5Css(DEFAULT_L5_CSS);
+      setL5Solved(false);
+      setL5StickyStatus('off');
     }
   };
 
   // Navigate to Level (shows blurred task until player hits start)
-  const handleSelectLevel = (levelId: 'level1' | 'level2' | 'level3' | 'level4') => {
+  const handleSelectLevel = (levelId: 'level1' | 'level2' | 'level3' | 'level4' | 'level5') => {
     sound.playBlip();
     setCurrentScreen(levelId);
     setElapsedMs(0);
@@ -328,16 +406,19 @@ export function App() {
     // Reset all level states and CSS so player starts completely fresh
     setL1Css(DEFAULT_L1_CSS);
     setL1Solved(false);
-    setL1AlignmentStatus('off');
+    setL1DropdownStatus('hidden_behind_header');
     setL2Css(DEFAULT_L2_CSS);
     setL2Solved(false);
-    setL2DropdownStatus('hidden_behind_header');
+    setL2AlignmentStatus('off');
     setL3Css(DEFAULT_L3_CSS);
     setL3Solved(false);
     setL3Status('overflowing');
     setL4Css(DEFAULT_L4_CSS);
     setL4Solved(false);
-    setL4StickyStatus('off');
+    setL4ListStatus('row_crammed');
+    setL5Css(DEFAULT_L5_CSS);
+    setL5Solved(false);
+    setL5StickyStatus('off');
     handleSelectLevel('level1');
   };
 
@@ -402,7 +483,7 @@ export function App() {
   const activeName = playerName || (language === 'cz' ? 'člověče' : 'human');
   const formatName = (text: string) => text.replace(/{name}/g, activeName);
 
-  // DevBot Dialogue for Level 1 (Never reveals if solution is correct during coding)
+  // DevBot Dialogue for Level 1 (Dropdown Behind Header)
   const getL1Dialogue = (): {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
     message: string;
@@ -412,21 +493,15 @@ export function App() {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (!isLevelStarted || l1Css.trim() === DEFAULT_L1_CSS.trim()) {
-      return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
     }
-    if (l1Css.includes('grid') || l1Css.includes('flex')) {
-      return { mood: 'confused', message: formatName(t.devbotModern), badgeLabel: t.badgeOffended };
+    if (l1Css.includes('z-index') && !l1Css.includes('100')) {
+      return { mood: 'confident', message: formatName(t.devbotL2DropdownFixed), badgeLabel: t.badgeHalfway };
     }
-    if (l1Css.includes('margin') || l1Css.includes('top:') || l1Css.includes('left:')) {
-      return { mood: 'confident', message: formatName(t.devbotMargins), badgeLabel: t.badge10x };
-    }
-    if (l1AlignmentStatus === 'off' && l1Distance > 100) {
-      return { mood: 'confused', message: formatName(t.devbotConfused), badgeLabel: t.badgeSyntax };
-    }
-    return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
+    return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
   };
 
-  // DevBot Dialogue for Level 2 (Dropdown Behind Header)
+  // DevBot Dialogue for Level 2 (Center Modal)
   const getL2Dialogue = (): {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
     message: string;
@@ -436,12 +511,18 @@ export function App() {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (!isLevelStarted || l2Css.trim() === DEFAULT_L2_CSS.trim()) {
-      return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
     }
-    if (l2Css.includes('z-index') && !l2Css.includes('100')) {
-      return { mood: 'confident', message: formatName(t.devbotL2DropdownFixed), badgeLabel: t.badgeHalfway };
+    if (l2Css.includes('grid') || l2Css.includes('flex')) {
+      return { mood: 'confused', message: formatName(t.devbotModern), badgeLabel: t.badgeOffended };
     }
-    return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
+    if (l2Css.includes('margin') || l2Css.includes('top:') || l2Css.includes('left:')) {
+      return { mood: 'confident', message: formatName(t.devbotMargins), badgeLabel: t.badge10x };
+    }
+    if (l2AlignmentStatus === 'off' && l2Distance > 100) {
+      return { mood: 'confused', message: formatName(t.devbotConfused), badgeLabel: t.badgeSyntax };
+    }
+    return { mood: 'confident', message: formatName(t.devbotInitial), badgeLabel: t.badge10x };
   };
 
   // DevBot Dialogue for Level 3 (Meeting Title)
@@ -468,7 +549,7 @@ export function App() {
     return { mood: 'confident', message: formatName(t.devbotL3Initial), badgeLabel: t.badge10x };
   };
 
-  // DevBot Dialogue for Level 4 (Sticky CTA)
+  // DevBot Dialogue for Level 4 (Activity List)
   const getL4Dialogue = (): {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';
     message: string;
@@ -478,25 +559,41 @@ export function App() {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
     if (!isLevelStarted || l4Css.trim() === DEFAULT_L4_CSS.trim()) {
-      return { mood: 'confident', message: formatName(t.devbotL4StickyInitial), badgeLabel: t.badge10x };
+      return { mood: 'confident', message: formatName(t.devbotL4ListInitial), badgeLabel: t.badge10x };
     }
-    if (l4StickyStatus === 'fixed_escaped') {
-      return { mood: 'confident', message: formatName(t.devbotL4StickyFixed), badgeLabel: t.badgeHalfway };
+    return { mood: 'confident', message: formatName(t.devbotL4ListInitial), badgeLabel: t.badge10x };
+  };
+
+  // DevBot Dialogue for Level 5 (Sticky CTA)
+  const getL5Dialogue = (): {
+    mood: 'confident' | 'confused' | 'panicked' | 'defeated';
+    message: string;
+    badgeLabel: string;
+  } => {
+    if (failedVerify) {
+      return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
-    if (l4StickyStatus === 'sticky_no_bottom') {
-      return { mood: 'confident', message: formatName(t.devbotL4StickyNoBottom), badgeLabel: t.badgeHalfway };
+    if (!isLevelStarted || l5Css.trim() === DEFAULT_L5_CSS.trim()) {
+      return { mood: 'confident', message: formatName(t.devbotL5StickyInitial), badgeLabel: t.badge10x };
     }
-    if (l4Css.includes('z-index') || l4Css.includes('fixed')) {
-      return { mood: 'confident', message: formatName(t.devbotL4StickyFixed), badgeLabel: t.badge10x };
+    if (l5StickyStatus === 'fixed_escaped') {
+      return { mood: 'confident', message: formatName(t.devbotL5StickyFixed), badgeLabel: t.badgeHalfway };
     }
-    return { mood: 'confident', message: formatName(t.devbotL4StickyInitial), badgeLabel: t.badge10x };
+    if (l5StickyStatus === 'sticky_no_bottom') {
+      return { mood: 'confident', message: formatName(t.devbotL5StickyNoBottom), badgeLabel: t.badgeHalfway };
+    }
+    if (l5Css.includes('z-index') || l5Css.includes('fixed')) {
+      return { mood: 'confident', message: formatName(t.devbotL5StickyFixed), badgeLabel: t.badge10x };
+    }
+    return { mood: 'confident', message: formatName(t.devbotL5StickyInitial), badgeLabel: t.badge10x };
   };
 
   const getDevBotState = () => {
     if (activeLevel === 'level1') return getL1Dialogue();
     if (activeLevel === 'level2') return getL2Dialogue();
     if (activeLevel === 'level3') return getL3Dialogue();
-    return getL4Dialogue();
+    if (activeLevel === 'level4') return getL4Dialogue();
+    return getL5Dialogue();
   };
 
   const devBotState = getDevBotState();
@@ -509,6 +606,8 @@ export function App() {
       handleSelectLevel('level3');
     } else if (activeLevel === 'level3') {
       handleSelectLevel('level4');
+    } else if (activeLevel === 'level4') {
+      handleSelectLevel('level5');
     } else {
       setCurrentScreen('leaderboard');
     }
@@ -573,15 +672,18 @@ export function App() {
 
           {/* Main Content Area */}
           <Container
-            maxWidth="xl"
+            maxWidth={false}
             sx={{
+              maxWidth: { xs: '100%', xl: '1750px', xxl: '2350px' },
+              width: '100%',
+              mx: 'auto',
               flex: 1,
               minHeight: 0,
-              py: { xs: 1, sm: 1.4 },
-              px: { xs: 1.5, sm: 2.5 },
+              py: { xs: 1, sm: 1.4, xxl: 2 },
+              px: { xs: 1.5, sm: 2.5, xxl: 3.5 },
               display: 'flex',
               flexDirection: 'column',
-              gap: 1.2,
+              gap: { xs: 1.2, xxl: 1.8 },
               overflow: 'hidden',
             }}
           >
@@ -769,7 +871,9 @@ export function App() {
                           ? t.taskOverlayTitleL2
                           : activeLevel === 'level3'
                           ? t.taskOverlayTitleL3
-                          : t.taskOverlayTitleL4}
+                          : activeLevel === 'level4'
+                          ? t.taskOverlayTitleL4
+                          : t.taskOverlayTitleL5}
                       </Typography>
                       <Typography
                         sx={{
@@ -787,7 +891,9 @@ export function App() {
                           ? t.taskOverlayDescL2
                           : activeLevel === 'level3'
                           ? t.taskOverlayDescL3
-                          : t.taskOverlayDescL4}
+                          : activeLevel === 'level4'
+                          ? t.taskOverlayDescL4
+                          : t.taskOverlayDescL5}
                       </Typography>
                     </Box>
 
@@ -838,42 +944,14 @@ export function App() {
                   isolation: 'isolate',
                 }}
               >
-                {activeLevel === 'level1' && (
-                  <CodeEditor
-                    value={l1Css}
-                    onChange={handleCssChange}
-                    isSolved={l1Solved}
-                    onSolveAttempt={handleSolveAttempt}
-                    t={t}
-                  />
-                )}
-                {activeLevel === 'level2' && (
-                  <CodeEditorDropdown
-                    value={l2Css}
-                    onChange={handleCssChange}
-                    isSolved={l2Solved}
-                    onSolveAttempt={handleSolveAttempt}
-                    t={t}
-                  />
-                )}
-                {activeLevel === 'level3' && (
-                  <CodeEditorLevel2
-                    value={l3Css}
-                    onChange={handleCssChange}
-                    isSolved={l3Solved}
-                    onSolveAttempt={handleSolveAttempt}
-                    t={t}
-                  />
-                )}
-                {activeLevel === 'level4' && (
-                  <CodeEditorSticky
-                    value={l4Css}
-                    onChange={handleCssChange}
-                    isSolved={l4Solved}
-                    onSolveAttempt={handleSolveAttempt}
-                    t={t}
-                  />
-                )}
+                <CodeEditor
+                  value={activeUserCss}
+                  onChange={handleCssChange}
+                  onSolveAttempt={handleSolveAttempt}
+                  readOnlyLines={activeReadOnlyLines}
+                  isSolved={isCurrentLevelSolved}
+                  t={t}
+                />
               </Box>
 
               {/* 2. Code Output Column / Slide (Center / Live Preview) */}
@@ -894,17 +972,17 @@ export function App() {
                 }}
               >
                 {activeLevel === 'level1' && (
-                  <PreviewViewport
+                  <PreviewViewportDropdown
                     userCss={l1Css}
-                    onDistanceChange={handleL1DistanceChange}
+                    onStatusChange={handleL1DropdownChange}
                     isSolved={l1Solved}
                     t={t}
                   />
                 )}
                 {activeLevel === 'level2' && (
-                  <PreviewViewportDropdown
+                  <PreviewViewport
                     userCss={l2Css}
-                    onStatusChange={handleL2DropdownChange}
+                    onDistanceChange={handleL2DistanceChange}
                     isSolved={l2Solved}
                     t={t}
                   />
@@ -918,10 +996,18 @@ export function App() {
                   />
                 )}
                 {activeLevel === 'level4' && (
-                  <PreviewViewportSticky
+                  <PreviewViewportList
                     userCss={l4Css}
-                    onStatusChange={handleL4StickyChange}
+                    onStatusChange={handleL4ListChange}
                     isSolved={l4Solved}
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level5' && (
+                  <PreviewViewportSticky
+                    userCss={l5Css}
+                    onStatusChange={handleL5StickyChange}
+                    isSolved={l5Solved}
                     t={t}
                   />
                 )}
@@ -945,13 +1031,13 @@ export function App() {
                 }}
               >
                 {activeLevel === 'level1' && (
-                  <PreviewViewport
+                  <PreviewViewportDropdown
                     isTarget
                     t={t}
                   />
                 )}
                 {activeLevel === 'level2' && (
-                  <PreviewViewportDropdown
+                  <PreviewViewport
                     isTarget
                     t={t}
                   />
@@ -963,6 +1049,12 @@ export function App() {
                   />
                 )}
                 {activeLevel === 'level4' && (
+                  <PreviewViewportList
+                    isTarget
+                    t={t}
+                  />
+                )}
+                {activeLevel === 'level5' && (
                   <PreviewViewportSticky
                     isTarget
                     t={t}

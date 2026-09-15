@@ -14,7 +14,7 @@ import type { Language, translations } from '../utils/i18n';
 
 interface VictoryModalProps {
   open: boolean;
-  levelId: 'level1' | 'level2' | 'level3' | 'level4';
+  levelId: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
   playerName: string;
   timeMs: number;
   charCount: number;
@@ -38,20 +38,21 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   t,
 }) => {
   const getPostMortem = () => {
-    if (levelId === 'level1') {
+    if (levelId === 'level1') return t.postMortemTextL1.replace(/{name}/g, playerName);
+    if (levelId === 'level2') {
       const isFlex = userCss.toLowerCase().includes('flex');
       const isGrid = userCss.toLowerCase().includes('grid');
-      let quote = t.postMortemTextL1;
+      let quote = t.postMortemTextL2;
       if (isFlex) {
-        quote = t.postMortemTextL1Flex;
+        quote = t.postMortemTextL2Flex;
       } else if (isGrid) {
-        quote = t.postMortemTextL1Grid;
+        quote = t.postMortemTextL2Grid;
       }
       return quote.replace(/{name}/g, playerName);
     }
-    if (levelId === 'level2') return t.postMortemTextL2.replace(/{name}/g, playerName);
     if (levelId === 'level3') return t.postMortemTextL3.replace(/{name}/g, playerName);
-    return t.postMortemTextL4.replace(/{name}/g, playerName);
+    if (levelId === 'level4') return t.postMortemTextL4.replace(/{name}/g, playerName);
+    return t.postMortemTextL5.replace(/{name}/g, playerName);
   };
 
   return (
@@ -214,7 +215,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           variant="contained"
           fullWidth
           size="large"
-          endIcon={levelId !== 'level4' ? <ArrowForwardIcon /> : undefined}
+          endIcon={levelId !== 'level5' ? <ArrowForwardIcon /> : undefined}
           onClick={onNextLevel}
           sx={{
             height: 48,
@@ -232,7 +233,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             },
           }}
         >
-          {levelId === 'level4' ? t.finishCampaignBtn : t.nextLevelBtn}
+          {levelId === 'level5' ? t.finishCampaignBtn : t.nextLevelBtn}
         </Button>
       </DialogContent>
     </Dialog>

@@ -15,7 +15,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import type { translations } from '../utils/i18n';
 
 interface JiraTicketBannerProps {
-  levelId: 'level1' | 'level2' | 'level3' | 'level4';
+  levelId: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
   isSolved: boolean;
   t: typeof translations['en'];
 }
@@ -57,12 +57,21 @@ export const JiraTicketBanner: React.FC<JiraTicketBannerProps> = ({
           priorityColor: '#FFB020',
         };
       case 'level4':
-      default:
         return {
           key: t.jiraKeyL4,
           summary: t.jiraSummaryL4,
           desc: t.jiraDescL4,
           ac: t.jiraAcL4,
+          priority: t.jiraPriorityP0,
+          priorityColor: '#FF4C61',
+        };
+      case 'level5':
+      default:
+        return {
+          key: t.jiraKeyL5,
+          summary: t.jiraSummaryL5,
+          desc: t.jiraDescL5,
+          ac: t.jiraAcL5,
           priority: t.jiraPriorityP0,
           priorityColor: '#FF4C61',
         };

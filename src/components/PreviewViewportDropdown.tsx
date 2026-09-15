@@ -28,18 +28,17 @@ export const PreviewViewportDropdown: React.FC<PreviewViewportDropdownProps> = (
     const checkStacking = () => {
       if (!containerRef.current) return;
 
-      const headerEl = containerRef.current.querySelector('.header') as HTMLElement | null;
-      if (!headerEl) return;
+      const dropdownEl = containerRef.current.querySelector('.dropdown-menu') as HTMLElement | null;
+      if (!dropdownEl) return;
 
-      const style = window.getComputedStyle(headerEl);
+      const style = window.getComputedStyle(dropdownEl);
       const zIndexRaw = style.zIndex;
       const parsedZ = parseInt(zIndexRaw, 10);
 
-      // Dropdown menu has z-index: 50
-      // If header z-index is < 50 or 'auto', dropdown renders over the header
-      const isHeaderBelowDropdown = isNaN(parsedZ) || parsedZ < 50;
+      // Header has z-index: 100. Dropdown must have z-index > 100 to display on top!
+      const isDropdownAboveHeader = !isNaN(parsedZ) && parsedZ > 100;
 
-      const solved = isHeaderBelowDropdown;
+      const solved = isDropdownAboveHeader;
       const status: DropdownStatus = solved ? 'solved' : 'hidden_behind_header';
 
       if (onStatusChange) {
@@ -71,19 +70,36 @@ export const PreviewViewportDropdown: React.FC<PreviewViewportDropdownProps> = (
         isolation: 'isolate',
       }}
     >
-      {/* Scoped Styles for Header */}
+      {/* Scoped Styles */}
       <style>
         {isTarget
           ? `
             #${stageId} .header {
               position: sticky;
               top: 0;
-              z-index: 10;
+              z-index: 100;
+              background-color: #FFFFFF;
+            }
+            #${stageId} .dropdown-menu {
+              position: absolute;
+              top: -54px;
+              left: 0;
+              right: 0;
+              z-index: 150;
             }
           `
           : `
             #${stageId} .header {
-              ${userCss || '/* DevBot */ position: sticky; z-index: 100;'}
+              position: sticky;
+              top: 0;
+              z-index: 100;
+              background-color: #FFFFFF;
+            }
+            #${stageId} .dropdown-menu {
+              top: -54px;
+              left: 0;
+              right: 0;
+              ${userCss || 'position: absolute; z-index: 1;'}
             }
           `}
       </style>

@@ -103,34 +103,7 @@ export const DropdownHeaderCard: React.FC<DropdownHeaderCardProps> = () => {
         </div>
 
         {/* Modal Form Content */}
-        <CardContent sx={{ p: { xs: 1.8, sm: 2.2 }, pt: 2, pb: 1, position: 'relative' }}>
-          {/* Account Field */}
-          <Box sx={{ mb: 2 }}>
-            <Typography component="label" sx={{ display: 'block', fontSize: '0.76rem', fontWeight: 600, color: '#120042', mb: 0.6 }}>
-              Název účtu
-            </Typography>
-            <TextField
-              size="small"
-              fullWidth
-              value="Acme Global Corporation"
-              slotProps={{
-                input: {
-                  readOnly: true,
-                  sx: {
-                    height: 38,
-                    fontSize: '0.84rem',
-                    fontWeight: 600,
-                    color: '#120042',
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '6px',
-                    border: '1.5px solid #d4d2e3',
-                    '& fieldset': { border: 'none' },
-                  },
-                },
-              }}
-            />
-          </Box>
-
+        <CardContent sx={{ p: { xs: 1.8, sm: 2.2 }, pt: 2, pb: 1, position: 'static' }}>
           {/* Stage Dropdown Field with Open Menu overlapping the header */}
           <Box sx={{ mb: 2, position: 'relative' }}>
             <Typography component="label" sx={{ display: 'block', fontSize: '0.76rem', fontWeight: 600, color: '#120042', mb: 0.6 }}>
@@ -164,7 +137,7 @@ export const DropdownHeaderCard: React.FC<DropdownHeaderCardProps> = () => {
                 className="dropdown-menu"
                 sx={{
                   position: 'absolute',
-                  top: -46,
+                  top: -54,
                   left: 0,
                   right: 0,
                   backgroundColor: '#FFFFFF',
@@ -181,7 +154,7 @@ export const DropdownHeaderCard: React.FC<DropdownHeaderCardProps> = () => {
                 <Box
                   sx={{
                     px: 1.2,
-                    py: 0.6,
+                    py: 0.65,
                     borderRadius: '5px',
                     backgroundColor: '#5951ff',
                     color: '#FFFFFF',
@@ -239,6 +212,33 @@ export const DropdownHeaderCard: React.FC<DropdownHeaderCardProps> = () => {
                 </Box>
               </Box>
             </Box>
+          </Box>
+
+          {/* Account Field */}
+          <Box sx={{ mb: 2 }}>
+            <Typography component="label" sx={{ display: 'block', fontSize: '0.76rem', fontWeight: 600, color: '#120042', mb: 0.6 }}>
+              Název účtu
+            </Typography>
+            <TextField
+              size="small"
+              fullWidth
+              value="Acme Global Corporation"
+              slotProps={{
+                input: {
+                  readOnly: true,
+                  sx: {
+                    height: 38,
+                    fontSize: '0.84rem',
+                    fontWeight: 600,
+                    color: '#120042',
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '6px',
+                    border: '1.5px solid #d4d2e3',
+                    '& fieldset': { border: 'none' },
+                  },
+                },
+              }}
+            />
           </Box>
         </CardContent>
 

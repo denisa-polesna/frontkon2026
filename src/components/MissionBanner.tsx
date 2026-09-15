@@ -5,7 +5,7 @@ import { sound } from '../utils/audio';
 import type { translations } from '../utils/i18n';
 
 interface MissionBannerProps {
-  levelId: 'level1' | 'level2' | 'level3' | 'level4';
+  levelId: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
   isSolved: boolean;
   devBot: {
     mood: 'confident' | 'confused' | 'panicked' | 'defeated';

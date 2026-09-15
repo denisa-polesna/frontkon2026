@@ -20,7 +20,7 @@ interface HeaderProps {
   isRunning: boolean;
   onReset?: () => void;
   onBackToMenu?: () => void;
-  currentLevel: 'level1' | 'level2' | 'level3' | 'level4';
+  currentLevel: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
   soundEnabled?: boolean;
   onToggleSound?: () => void;
   language: Language;

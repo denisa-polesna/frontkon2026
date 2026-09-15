@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   Card,
+  CardHeader,
   Typography,
   Box,
   Chip,
   Button,
+  Avatar,
 } from '@mui/material';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
@@ -12,6 +14,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
 import type { translations } from '../utils/i18n';
 
 interface DealTimelineCardProps {
@@ -29,12 +32,12 @@ export const DealTimelineCard: React.FC<DealTimelineCardProps> = ({
     <Card
       id={id}
       sx={{
-        width: { xs: '100%', sm: 420 },
+        width: { xs: 330, sm: 380, xxl: 480 },
         maxWidth: '96%',
-        backgroundColor: '#161A2D',
-        borderRadius: 2.5,
-        border: '1px solid #282F4E',
-        boxShadow: '0 20px 45px rgba(0, 0, 0, 0.65), 0 0 20px rgba(110, 63, 243, 0.15)',
+        backgroundColor: '#FFFFFF',
+        borderRadius: '16px',
+        border: '1px solid rgba(89, 81, 255, 0.25)',
+        boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 16px rgba(0, 0, 0, 0.08)',
         display: 'flex',
         flexDirection: 'column',
         height: { xs: 290, sm: 380, md: 440 },
@@ -44,51 +47,66 @@ export const DealTimelineCard: React.FC<DealTimelineCardProps> = ({
       }}
     >
       {/* Top Fixed Deal Header */}
-      <Box
-        sx={{
-          p: '14px 18px',
-          borderBottom: '1px solid #232842',
-          backgroundColor: '#121526',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexShrink: 0,
-        }}
-      >
-        <Box>
+      <CardHeader
+        avatar={
+          <Avatar
+            sx={{
+              bgcolor: '#5951ff',
+              color: '#FFFFFF',
+              width: 32,
+              height: 32,
+              borderRadius: '6px',
+            }}
+          >
+            <HandshakeIcon sx={{ fontSize: 18 }} />
+          </Avatar>
+        }
+        action={
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              p: 0.5,
+              color: '#666666',
+              backgroundColor: '#f5f4ff',
+              borderRadius: '6px',
+            }}
+          >
+            <CloseIcon sx={{ fontSize: 16 }} />
+          </Box>
+        }
+        title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#FFFFFF', fontSize: '0.94rem' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#120042', fontSize: '0.94rem', lineHeight: 1.2 }}>
               Acme Global Corp
             </Typography>
             <Chip
-              label="$450,000 ARR"
+              label="$450k ARR"
               size="small"
               sx={{
                 height: 20,
                 fontSize: '0.65rem',
                 fontWeight: 800,
                 backgroundColor: 'rgba(0, 210, 180, 0.15)',
-                color: '#00D2B4',
+                color: '#007A68',
+                borderRadius: '4px',
               }}
             />
           </Box>
-          <Typography variant="caption" sx={{ color: '#8892B0', fontSize: '0.72rem' }}>
-            Stage: Negotiation &bull; Owner: Sarah Miller
+        }
+        subheader={
+          <Typography variant="caption" sx={{ color: '#767484', fontSize: '0.72rem' }}>
+            Fáze: Vyjednávání &bull; Vlastník: Sarah Miller
           </Typography>
-        </Box>
-
-        <Chip
-          label="Closing Q4"
-          size="small"
-          sx={{
-            height: 20,
-            fontSize: '0.65rem',
-            fontWeight: 700,
-            backgroundColor: 'rgba(110, 63, 243, 0.2)',
-            color: '#C4B5FD',
-          }}
-        />
-      </Box>
+        }
+        sx={{
+          p: { xs: 1.8, sm: 2.2 },
+          pb: 1.6,
+          backgroundColor: '#FFFFFF',
+          borderBottom: '1px solid #e2e0ed',
+          flexShrink: 0,
+        }}
+      />
 
       {/* Scrollable Deal Activities Container */}
       <Box
@@ -96,82 +114,83 @@ export const DealTimelineCard: React.FC<DealTimelineCardProps> = ({
         sx={{
           flex: 1,
           overflowY: 'auto',
-          p: 2,
+          p: { xs: 1.5, sm: 2 },
           display: 'flex',
           flexDirection: 'column',
-          gap: 1.5,
+          gap: 1.2,
           position: 'relative',
+          backgroundColor: '#FFFFFF',
         }}
       >
         {/* Activity 1 */}
-        <Box sx={{ p: 1.5, backgroundColor: '#111422', borderRadius: 2, border: '1px solid #212640' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#00D2B4', mb: 0.5 }}>
-            <PhoneInTalkIcon sx={{ fontSize: 16 }} />
-            <Typography variant="caption" sx={{ fontWeight: 700 }}>
-              Kaia AI Call Recording &bull; 42 mins
+        <Box sx={{ p: 1.2, backgroundColor: '#fbfaff', borderRadius: '8px', border: '1.5px solid #e2e0ed' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, color: '#007A68', mb: 0.4 }}>
+            <PhoneInTalkIcon sx={{ fontSize: 15 }} />
+            <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.76rem' }}>
+              Kaia AI záznam hovoru &bull; 42 min
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ fontSize: '0.78rem', color: '#CCD2E6' }}>
-            VP of Procurement approved licensing terms. Next step: Sign contract before Friday cutoff.
+          <Typography variant="body2" sx={{ fontSize: '0.76rem', color: '#4B4860', lineHeight: 1.35 }}>
+            VP schválil licenční podmínky. Další krok: Podepsat smlouvu do páteční uzávěrky.
           </Typography>
         </Box>
 
         {/* Activity 2 */}
-        <Box sx={{ p: 1.5, backgroundColor: '#111422', borderRadius: 2, border: '1px solid #212640' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#C4B5FD', mb: 0.5 }}>
-            <EmailIcon sx={{ fontSize: 16 }} />
-            <Typography variant="caption" sx={{ fontWeight: 700 }}>
-              Email Sequence &bull; Step 4 delivered
+        <Box sx={{ p: 1.2, backgroundColor: '#fbfaff', borderRadius: '8px', border: '1.5px solid #e2e0ed' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, color: '#5951ff', mb: 0.4 }}>
+            <EmailIcon sx={{ fontSize: 15 }} />
+            <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.76rem' }}>
+              Emailová sekvence &bull; Krok 4 doručen
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ fontSize: '0.78rem', color: '#CCD2E6' }}>
-            &ldquo;Security whitepaper and SOC2 Type II compliance reports verified by architecture council.&rdquo;
+          <Typography variant="body2" sx={{ fontSize: '0.76rem', color: '#4B4860', lineHeight: 1.35 }}>
+            Bezpečnostní dokumentace a SOC2 Type II certifikace byly ověřeny architektonickou radou.
           </Typography>
         </Box>
 
         {/* Activity 3 */}
-        <Box sx={{ p: 1.5, backgroundColor: '#111422', borderRadius: 2, border: '1px solid #212640' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#00D2B4', mb: 0.5 }}>
-            <VerifiedUserIcon sx={{ fontSize: 16 }} />
-            <Typography variant="caption" sx={{ fontWeight: 700 }}>
-              InfoSec Approval Complete
+        <Box sx={{ p: 1.2, backgroundColor: '#fbfaff', borderRadius: '8px', border: '1.5px solid #e2e0ed' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, color: '#007A68', mb: 0.4 }}>
+            <VerifiedUserIcon sx={{ fontSize: 15 }} />
+            <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.76rem' }}>
+              Bezpečnostní prověrka dokončena
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ fontSize: '0.78rem', color: '#CCD2E6' }}>
-            Vendor onboarding questionnaire approved with zero pending security findings.
+          <Typography variant="body2" sx={{ fontSize: '0.76rem', color: '#4B4860', lineHeight: 1.35 }}>
+            Dotazník dodavatele schválen s nulovými bezpečnostními nálezy.
           </Typography>
         </Box>
 
         {/* Activity 4 */}
-        <Box sx={{ p: 1.5, backgroundColor: '#111422', borderRadius: 2, border: '1px solid #212640' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#FFB020', mb: 0.5 }}>
-            <RequestQuoteIcon sx={{ fontSize: 16 }} />
-            <Typography variant="caption" sx={{ fontWeight: 700 }}>
-              Multi-Year Enterprise Proposal Sent
+        <Box sx={{ p: 1.2, backgroundColor: '#fbfaff', borderRadius: '8px', border: '1.5px solid #e2e0ed' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, color: '#FFB020', mb: 0.4 }}>
+            <RequestQuoteIcon sx={{ fontSize: 15 }} />
+            <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.76rem' }}>
+              Odeslán víceletý enterprise návrh
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ fontSize: '0.78rem', color: '#CCD2E6' }}>
-            Standard 3-year term agreement with annual invoicing and dedicated customer success architect.
+          <Typography variant="body2" sx={{ fontSize: '0.76rem', color: '#4B4860', lineHeight: 1.35 }}>
+            Standardní 3letá smlouva s roční fakturací a dedikovaným Customer Success architektem.
           </Typography>
         </Box>
 
         {/* Activity 5 */}
-        <Box sx={{ p: 1.5, backgroundColor: '#111422', borderRadius: 2, border: '1px solid #212640' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#00D2B4', mb: 0.5 }}>
-            <CheckCircleIcon sx={{ fontSize: 16 }} />
-            <Typography variant="caption" sx={{ fontWeight: 700 }}>
-              Legal Redlines Accepted
+        <Box sx={{ p: 1.2, backgroundColor: '#fbfaff', borderRadius: '8px', border: '1.5px solid #e2e0ed' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, color: '#007A68', mb: 0.4 }}>
+            <CheckCircleIcon sx={{ fontSize: 15 }} />
+            <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.76rem' }}>
+              Právní připomínky akceptovány
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ fontSize: '0.78rem', color: '#CCD2E6' }}>
-            Indemnification mutual cap agreed by both legal teams. Ready for executive sign-off!
+          <Typography variant="body2" sx={{ fontSize: '0.76rem', color: '#4B4860', lineHeight: 1.35 }}>
+            Vzájemný limit odpovědnosti odsouhlasen. Připraveno pro exekutivní podpis!
           </Typography>
         </Box>
 
-        {/* Scroll hint spacer so player can scroll */}
-        <Box sx={{ py: 2, textAlign: 'center' }}>
-          <Typography variant="caption" sx={{ color: '#565F80', fontStyle: 'italic' }}>
-            {t.scrollHint || 'Scroll up and down to test sticky docking...'}
+        {/* Scroll hint */}
+        <Box sx={{ py: 1.5, textAlign: 'center' }}>
+          <Typography variant="caption" sx={{ color: '#767484', fontStyle: 'italic', fontSize: '0.72rem' }}>
+            {t.scrollHint || 'Posunem vyzkoušej přišpendlení lišty...'}
           </Typography>
         </Box>
 
@@ -186,35 +205,38 @@ export const DealTimelineCard: React.FC<DealTimelineCardProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              p: 1.5,
-              borderRadius: 2,
-              backgroundColor: '#0F1325',
-              border: '1.5px solid #6E3FF3',
-              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.8), 0 0 16px rgba(110, 63, 243, 0.3)',
+              p: 1.4,
+              borderRadius: '10px',
+              backgroundColor: '#FFFFFF',
+              border: '1.5px solid #5951ff',
+              boxShadow: '0 8px 24px rgba(89, 81, 255, 0.25)',
             }}
           >
             <Box>
-              <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#FFF', fontSize: '0.82rem' }}>
-                {t.dealReadyTitle || 'Deal Ready to Close'}
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#120042', fontSize: '0.82rem' }}>
+                {t.dealReadyTitle || 'Dohoda připravena k podpisu'}
               </Typography>
-              <Typography variant="caption" sx={{ color: '#8892B0', fontSize: '0.68rem' }}>
-                All procurement approvals met
+              <Typography variant="caption" sx={{ color: '#767484', fontSize: '0.68rem' }}>
+                Všechna schválení získána
               </Typography>
             </Box>
 
             <Button
               variant="contained"
               size="small"
-              startIcon={<HandshakeIcon />}
+              startIcon={<HandshakeIcon sx={{ fontSize: 16 }} />}
               sx={{
-                backgroundColor: '#00D2B4',
-                color: '#08141B',
-                fontWeight: 800,
+                backgroundColor: '#5951ff',
+                color: '#FFFFFF',
+                fontWeight: 700,
                 fontSize: '0.76rem',
-                '&:hover': { backgroundColor: '#33DBC2' },
+                borderRadius: '6px',
+                boxShadow: 'none',
+                textTransform: 'none',
+                '&:hover': { backgroundColor: '#3028a1', boxShadow: 'none' },
               }}
             >
-              {t.signDealBtn || 'Sign Deal'}
+              {t.signDealBtn || 'Podepsat'}
             </Button>
           </Box>
         </div>

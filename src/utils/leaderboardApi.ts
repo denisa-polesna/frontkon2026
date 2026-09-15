@@ -25,7 +25,7 @@ export async function fetchRemoteRuns(): Promise<GameRun[] | null> {
 
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/leaderboard?select=*&order=time_ms.asc&limit=50`,
+      `${SUPABASE_URL}/rest/v1/leaderboard?select=*&order=created_at.desc&limit=1000`,
       {
         headers: {
           apikey: SUPABASE_KEY,
