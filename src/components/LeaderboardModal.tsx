@@ -20,7 +20,7 @@ import {
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CloudDoneOutlinedIcon from '@mui/icons-material/CloudDoneOutlined';
-import { type GameRun, formatTime } from '../utils/storage';
+import { type GameRun, formatDuration } from '../utils/storage';
 import { fetchRemoteRuns, clearRemoteRuns, isSupabaseConfigured } from '../utils/leaderboardApi';
 import type { translations } from '../utils/i18n';
 
@@ -215,7 +215,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                       />
                     </TableCell>
                     <TableCell sx={{ fontFamily: 'ui-monospace, monospace', color: '#00D2B4', fontWeight: 700 }}>
-                      {formatTime(run.timeMs)}
+                      {formatDuration(run.timeMs, 'cz')}
                     </TableCell>
                     <TableCell sx={{ fontFamily: 'ui-monospace, monospace', color: '#8E95B2' }}>
                       {run.charCount}c

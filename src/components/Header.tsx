@@ -9,7 +9,7 @@ import {
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { OutreachLogo } from './OutreachLogo';
-import { formatTime } from '../utils/storage';
+import { formatDuration } from '../utils/storage';
 import type { Language, translations } from '../utils/i18n';
 
 interface HeaderProps {
@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
             letterSpacing: '0.04em',
           }}
         >
-          {formatTime(elapsedMs)}
+          {formatDuration(elapsedMs, language)}
         </Typography>
       </Box>
 
@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
               letterSpacing: '0.04em',
             }}
           >
-            {formatTime(elapsedMs)}
+            {formatDuration(elapsedMs, language)}
           </Typography>
         </Box>
 

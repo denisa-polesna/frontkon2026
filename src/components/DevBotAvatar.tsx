@@ -128,7 +128,7 @@ export const DevBotAvatar: React.FC<DevBotAvatarProps> = ({ mood, message, badge
                 letterSpacing: '0.02em',
               }}
             >
-              DevBot-3000 (Junior AI)
+              FailBot-404 (Junior AI)
             </Typography>
 
             <Box

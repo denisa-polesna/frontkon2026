@@ -125,6 +125,56 @@ export async function isPlayerNameTaken(name: string): Promise<boolean> {
   }
 }
 
+export interface BoothRecord {
+  levelId: string;
+  playerName: string;
+  timeMs: number;
+  charCount?: number;
+}
+
+export async function fetchBoothRecords(): Promise<Record<string, BoothRecord>> {
+  if (!isSupabaseConfigured || !SUPABASE_URL || !SUPABASE_KEY) {
+    return {};
+  }
+
+  const records: Record<string, BoothRecord> = {};
+
+  try {
+    // Fast query directly on existing leaderboard table ordered by time_ms
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/leaderboard?select=level_id,player_name,player_tag,time_ms,char_count&time_ms=gt.0&order=time_ms.asc&limit=100`,
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (res.ok) {
+      const rows = await res.json();
+      if (Array.isArray(rows)) {
+        for (const row of rows) {
+          const lid = row.level_id;
+          if (lid && lid !== 'uncompleted' && !records[lid] && row.time_ms > 0) {
+            records[lid] = {
+              levelId: lid,
+              playerName: row.player_name || row.player_tag || 'Senior Dev',
+              timeMs: row.time_ms,
+              charCount: row.char_count,
+            };
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Network error fetching booth records from Supabase:', err);
+  }
+
+  return records;
+}
+
 export async function clearRemoteRuns(): Promise<boolean> {
   if (!isSupabaseConfigured || !SUPABASE_URL || !SUPABASE_KEY) {
     return false;

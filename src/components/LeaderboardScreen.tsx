@@ -18,7 +18,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { OutreachLogo } from './OutreachLogo';
-import { type GameRun, formatTime } from '../utils/storage';
+import { type GameRun, formatDuration } from '../utils/storage';
 import { fetchRemoteRuns, isSupabaseConfigured } from '../utils/leaderboardApi';
 import type { Language, translations } from '../utils/i18n';
 
@@ -355,7 +355,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                           fontSize: { xs: '0.92rem', sm: '1.05rem', md: '1.22rem', lg: '1.32rem' },
                         }}
                       >
-                        {formatTime(player.totalTimeMs)}
+                        {formatDuration(player.totalTimeMs, language)}
                       </TableCell>
                     </TableRow>
                   ))}

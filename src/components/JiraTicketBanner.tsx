@@ -190,7 +190,7 @@ export const JiraTicketBanner: React.FC<JiraTicketBannerProps> = ({
                 {t.jiraReporterLabel}
               </Typography>
               <Typography variant="caption" sx={{ color: '#FF7081', fontWeight: 700, fontSize: '0.74rem' }}>
-                🤖 DevBot-3000 (Junior AI)
+                FailBot-404 (Junior AI)
               </Typography>
             </Box>
 

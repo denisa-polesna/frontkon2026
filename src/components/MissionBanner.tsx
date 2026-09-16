@@ -92,7 +92,7 @@ export const MissionBanner: React.FC<MissionBannerProps> = ({
             mb: 0.1,
           }}
         >
-          DevBot-3000
+          FailBot-404
         </Typography>
         <Typography
           variant="body2"

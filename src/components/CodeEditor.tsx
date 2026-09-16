@@ -302,9 +302,9 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
               backgroundColor: 'transparent',
               textTransform: 'none',
               '&:hover': {
-                borderColor: '#FF5F56',
-                color: '#FF5F56',
-                backgroundColor: 'rgba(255, 95, 86, 0.08)',
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                color: '#FFFFFF',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
               },
             }}
           >

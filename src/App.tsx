@@ -24,6 +24,7 @@ import { PreviewViewportLevel2, type OverflowStatus } from './components/Preview
 import { PreviewViewportList, type ListStatus } from './components/PreviewViewportList';
 import { VictoryModal } from './components/VictoryModal';
 import { FailureModal } from './components/FailureModal';
+import { ExitConfirmModal } from './components/ExitConfirmModal';
 import { LeaderboardScreen } from './components/LeaderboardScreen';
 import { NameRegistrationModal } from './components/NameRegistrationModal';
 import {
@@ -32,7 +33,11 @@ import {
   clearStats,
   type GameStats,
 } from './utils/storage';
-import { submitRemoteRun } from './utils/leaderboardApi';
+import {
+  submitRemoteRun,
+  fetchBoothRecords,
+  type BoothRecord,
+} from './utils/leaderboardApi';
 import { sound } from './utils/audio';
 import { getStoredLanguage, saveLanguage, translations, type Language } from './utils/i18n';
 
@@ -84,10 +89,12 @@ export function App() {
 
   // Global Stats & Modals
   const [stats, setStats] = useState<GameStats>(() => getStoredStats());
+  const [boothRecords, setBoothRecords] = useState<Record<string, BoothRecord>>({});
   const [showVictory, setShowVictory] = useState<boolean>(false);
   const [showFailureModal, setShowFailureModal] = useState<boolean>(false);
+  const [showExitConfirm, setShowExitConfirm] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
-  const [isNewBest, setIsNewBest] = useState<boolean>(false);
+  const [isBoothRecord, setIsBoothRecord] = useState<boolean>(false);
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
   const [isLevelStarted, setIsLevelStarted] = useState<boolean>(false);
 
@@ -183,8 +190,27 @@ export function App() {
     switch (activeLevel) {
       case 'level1':
         return [
-          { text: language === 'cz' ? '/* Úkol: Nastav rozbalovací menu tak,' : '/* Task: Adjust dropdown menu so that', isComment: true },
-          { text: language === 'cz' ? '   aby se zobrazovalo nad headerem */' : '   it displays above the header */', isComment: true },
+          {
+            text:
+              language === 'cz'
+                ? '/* Úkol: Header má nastavený z-index: 100.'
+                : '/* Task: The sticky header has z-index: 100.',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   Nastav rozbalovací menu tak,'
+                : '   Adjust the dropdown menu so that',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   aby se zobrazovalo nad headerem */'
+                : '   it displays cleanly above the header */',
+            isComment: true,
+          },
           { text: '' },
           { text: '.header {' },
           { text: 'position: sticky;', indent: 1 },
@@ -196,30 +222,113 @@ export function App() {
         ];
       case 'level2':
         return [
-          { text: language === 'cz' ? '/* Úkol: Vycentruj modal' : '/* Task: Center modal dialog', isComment: true },
-          { text: language === 'cz' ? '   na střed obrazovky */' : '   horizontally and vertically */', isComment: true },
+          {
+            text:
+              language === 'cz'
+                ? '/* Úkol: Vycentruj vyskakovací okno'
+                : '/* Task: Center the prospect modal dialog',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   na přesný střed obrazovky'
+                : '   horizontally and vertically',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   (horizontálně i vertikálně) */'
+                : '   on the screen */',
+            isComment: true,
+          },
           { text: '' },
           { text: '.modal-viewport {', isSelector: true },
         ];
       case 'level3':
         return [
-          { text: language === 'cz' ? '/* Úkol: Zkrať text na 1 řádek' : '/* Task: Truncate meeting title to 1 line', isComment: true },
-          { text: language === 'cz' ? '   a přidej trojtečku */' : '   with ellipsis (...) */', isComment: true },
+          {
+            text:
+              language === 'cz'
+                ? '/* Úkol: Zkrať název schůzky na 1 řádek'
+                : '/* Task: Keep meeting title on 1 line',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   a zakonči ho trojtečkou (...),'
+                : '   and truncate it with an ellipsis (...)',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   aby neroztahoval kalendářní kartu */'
+                : '   so it doesn’t break the calendar card */',
+            isComment: true,
+          },
           { text: '' },
           { text: '.meeting-title {', isSelector: true },
         ];
       case 'level4':
         return [
-          { text: language === 'cz' ? '/* Úkol: Seřaď aktivity do sloupce' : '/* Task: Stack activities in reverse', isComment: true },
-          { text: language === 'cz' ? '   v obráceném pořadí s 10px mezerami */' : '   column order with 10px gaps */', isComment: true },
+          {
+            text:
+              language === 'cz'
+                ? '/* Úkol: Seřaď karty aktivit do sloupce'
+                : '/* Task: Stack the activity cards into a column',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   v obráceném pořadí'
+                : '   in reverse order',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   s 10px mezerami */'
+                : '   with 10px gaps */',
+            isComment: true,
+          },
           { text: '' },
           { text: '.activity-list {', isSelector: true },
         ];
       case 'level5':
       default:
         return [
-          { text: language === 'cz' ? '/* Úkol: Přichyť tooltip k tlačítku' : '/* Task: Anchor tooltip to button', isComment: true },
-          { text: language === 'cz' ? '   pomocí relative a absolute */' : '   using relative and absolute */', isComment: true },
+          {
+            text:
+              language === 'cz'
+                ? '/* Úkol: FailBot nastavil position: absolute na .tooltip,'
+                : '/* Task: FailBot set position: absolute on .tooltip,',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   ale zapomněl na rodičovský kontejner.'
+                : '   but forgot the parent container.',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   Uprav obě třídy tak, aby byl tooltip'
+                : '   Style both classes so the tooltip',
+            isComment: true,
+          },
+          {
+            text:
+              language === 'cz'
+                ? '   ukotvený k tlačítku */'
+                : '   anchors to the button */',
+            isComment: true,
+          },
           { text: '' },
         ];
     }
@@ -227,7 +336,31 @@ export function App() {
 
   const activeUserCss = getActiveUserCss();
   const activeReadOnlyLines = getActiveReadOnlyLines();
-  const activeBestTime = stats.levelBestTimes[activeLevel] || null;
+  const activeBoothRecord = boothRecords[activeLevel] || null;
+
+  const currentCleanName = (playerName || '').trim();
+  const completedRoundsCount = currentCleanName
+    ? new Set(
+        stats.history
+          .filter(
+            (r) => (r.playerTag || '').trim() === currentCleanName && r.levelId !== 'uncompleted' && r.timeMs > 0
+          )
+          .map((r) => r.levelId)
+      ).size
+    : 0;
+
+  // Load booth records on mount
+  useEffect(() => {
+    let cancelled = false;
+    fetchBoothRecords().then((records) => {
+      if (!cancelled && records) {
+        setBoothRecords(records);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Timer loop
   useEffect(() => {
@@ -435,17 +568,34 @@ export function App() {
         colors: ['#00D2B4', '#5951ff', '#FFB020', '#FFFFFF'],
       });
 
-      const currentBest = stats.levelBestTimes[activeLevel] || null;
-      setIsNewBest(currentBest === null || elapsedMs < currentBest);
+      const currentBoothTime = activeBoothRecord?.timeMs ?? null;
+
+      // Only a booth record if it actually beats the fastest time from Supabase for this round
+      const brokeBoothRecord = currentBoothTime === null ? true : elapsedMs < currentBoothTime;
+      setIsBoothRecord(brokeBoothRecord);
 
       // Auto-save to leaderboard immediately!
       const charCount = activeUserCss.trim().length;
-      const updated = saveRun(elapsedMs, charCount, playerName || 'Senior Dev', activeLevel);
+      const finalPlayerTag = playerName || 'Senior Dev';
+
+      if (brokeBoothRecord) {
+        setBoothRecords((prev) => ({
+          ...prev,
+          [activeLevel]: {
+            levelId: activeLevel,
+            playerName: finalPlayerTag,
+            timeMs: elapsedMs,
+            charCount,
+          },
+        }));
+      }
+
+      const updated = saveRun(elapsedMs, charCount, finalPlayerTag, activeLevel);
       setStats(updated);
       submitRemoteRun({
         timeMs: elapsedMs,
         charCount,
-        playerTag: playerName || 'Senior Dev',
+        playerTag: finalPlayerTag,
         levelId: activeLevel,
       });
 
@@ -464,11 +614,24 @@ export function App() {
     const fresh = clearStats();
     setStats(fresh);
     setPlayerName('');
+    setBoothRecords({});
   };
 
-  const handleExitGame = () => {
+  const handleRequestExit = () => {
+    sound.playBlip();
+    setShowExitConfirm(true);
+    // Do not stop timer here so players cannot pause to cheat
+  };
+
+  const handleCancelExit = () => {
+    sound.playBlip();
+    setShowExitConfirm(false);
+  };
+
+  const handleConfirmExit = () => {
     sound.playBlip();
     setIsRunning(false);
+    setShowExitConfirm(false);
 
     // Check if player has completed any levels in this campaign
     const currentName = (playerName || '').trim();
@@ -516,7 +679,13 @@ export function App() {
     if (!isLevelStarted || l1Css.trim() === DEFAULT_L1_CSS.trim()) {
       return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
     }
-    if (l1Css.includes('z-index') && !l1Css.includes('100')) {
+    const match = l1Css.match(/z-index\s*:\s*(-?\d+)/i);
+    const zVal = match ? parseInt(match[1], 10) : null;
+
+    if (l1Solved || (zVal !== null && zVal > 100)) {
+      return { mood: 'panicked', message: formatName(t.devbotL2DropdownDefeated), badgeLabel: t.badgeSweating };
+    }
+    if (zVal !== null && zVal <= 100) {
       return { mood: 'confident', message: formatName(t.devbotL2DropdownFixed), badgeLabel: t.badgeHalfway };
     }
     return { mood: 'confident', message: formatName(t.devbotL2DropdownInitial), badgeLabel: t.badge10x };
@@ -676,7 +845,6 @@ export function App() {
           {/* Game Header */}
           <Header
             elapsedMs={elapsedMs}
-            bestTimeMs={activeBestTime}
             isRunning={isRunning}
             onReset={handleResetLevel}
             currentLevel={activeLevel}
@@ -965,7 +1133,7 @@ export function App() {
                   value={activeUserCss}
                   onChange={handleCssChange}
                   onSolveAttempt={handleSolveAttempt}
-                  onExit={handleExitGame}
+                  onExit={handleRequestExit}
                   readOnlyLines={activeReadOnlyLines}
                   isSolved={isCurrentLevelSolved}
                   hideClosingBrace={activeLevel === 'level5'}
@@ -1091,7 +1259,7 @@ export function App() {
             timeMs={elapsedMs}
             charCount={activeUserCss.trim().length}
             userCss={activeUserCss}
-            isNewBest={isNewBest}
+            isBoothRecord={isBoothRecord}
             onNextLevel={handleNextLevelProgression}
             language={language}
             t={t}
@@ -1102,6 +1270,16 @@ export function App() {
             open={showFailureModal}
             onClose={() => setShowFailureModal(false)}
             playerName={playerName}
+            t={t}
+          />
+
+          {/* Exit Confirmation Modal */}
+          <ExitConfirmModal
+            open={showExitConfirm}
+            onCancel={handleCancelExit}
+            onConfirmQuit={handleConfirmExit}
+            playerName={playerName || 'Senior Dev'}
+            completedRoundsCount={completedRoundsCount}
             t={t}
           />
         </Box>

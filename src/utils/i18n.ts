@@ -25,13 +25,13 @@ export const translations = {
 
     // Player Name Registration Modal
     nameModalTitle: 'FrontKon Player Registration',
-    nameModalSubtitle: 'Enter your name or handle. DevBot-3000 will challenge and roast you by name!',
+    nameModalSubtitle: 'Enter your name or handle. FailBot-404 will challenge and roast you by name!',
     nameInputLabel: 'Your Name or Handle',
     nameInputPlaceholder: 'e.g. Sarah the CSS Guru',
     nameRequiredError: 'Please enter your name',
     nameTakenError: 'This name is already taken on the leaderboard. Please choose another one.',
     nameCheckingText: 'Checking availability...',
-    nameSubmitBtn: "LET'S GO",
+    nameSubmitBtn: "Let's Go",
 
     // Jira Ticket Common
     jiraIssueType: 'Bug',
@@ -53,26 +53,26 @@ export const translations = {
 
     jiraKeyL2: 'OUT-404',
     jiraSummaryL2: '[PROD HOTFIX] Create Prospect modal rendered outside viewport',
-    jiraDescL2: 'VP of Sales reported the Create Prospect modal is positioned at top: 50%, left: 50% with -340px negative margins. It is partially invisible on all standard laptops. DevBot claims it looked fine on its 4K smart fridge.',
+    jiraDescL2: 'VP of Sales reported the Create Prospect modal is positioned at top: 50%, left: 50% with -340px negative margins. It is partially invisible on all standard laptops. FailBot claims it looked fine on its 4K smart fridge.',
     jiraAcL2: 'Modal must be cleanly centered on both horizontal and vertical axes within .modal-viewport.',
 
     jiraKeyL3: 'OUT-405',
     jiraSummaryL3: '[UI BREAK] 250-character meeting title explodes through calendar card',
-    jiraDescL3: 'Enterprise prospect scheduled a demo with a 250-char title. DevBot set width: 99999px and font-size: 8px so it "does not cut off". Entire calendar board is blown out horizontally.',
+    jiraDescL3: 'Enterprise prospect scheduled a demo with a 250-char title. FailBot set width: 99999px and font-size: 8px so it "does not cut off". Entire calendar board is blown out horizontally.',
     jiraAcL3: 'Title must stay on a single line and truncate cleanly with an ellipsis (...) inside .meeting-title.',
 
     jiraKeyL4: 'OUT-409',
     jiraSummaryL4: '[UI BREAK] Activity feed items squished horizontally without spacing',
-    jiraDescL4: 'DevBot set display: flex without column direction or gaps. All 4 activity cards are crammed onto a single overflowing row.',
+    jiraDescL4: 'FailBot set display: flex without column direction or gaps. All 4 activity cards are crammed onto a single overflowing row.',
     jiraAcL4: 'Activity items must be neatly stacked in column-reverse with 10px gaps inside .activity-list.',
 
     jiraKeyL5: 'OUT-410',
     jiraSummaryL5: '[UI BUG] AI tooltip escapes button and floats at top of card',
-    jiraDescL5: 'DevBot set position: absolute on .tooltip, but forgot position: relative on .tooltip-container. The tooltip breaks out and aligns relative to the outer card instead of the button.',
+    jiraDescL5: 'FailBot set position: absolute on .tooltip, but forgot position: relative on .tooltip-container. The tooltip breaks out and aligns relative to the outer card instead of the button.',
     jiraAcL5: 'Anchor the tooltip directly above the AI button using relative and absolute positioning across both classes.',
 
     // Main Menu
-    menuSubtitle: 'DevBot-3000 pushed directly to production at 4:59 PM on Friday. Can you fix the AI Junior’s broken CSS before prod explodes?',
+    menuSubtitle: 'FailBot-404 pushed directly to production at 4:59 PM on Friday. Can you fix the AI Junior’s broken CSS before prod explodes?',
     menuDevbotTaunt: 'Welcome to the Outreach booth! I wrote 40,000 lines of negative margins, 2147483647 z-indices, and 99999px widths. Think you are smarter than a 400B parameter neural net?',
     badgesHeader: 'Conference Badges to Earn:',
     seniorBadgeTitle: 'Unreplaceable Senior Engineer',
@@ -84,18 +84,18 @@ export const translations = {
     l1Title: 'Dropdown Hidden Behind Header',
     l1Desc: 'The sticky header has z-index: 100. Position the dropdown menu so that it appears above the header!',
     l2Title: 'The Misplaced Modal',
-    l2Desc: 'DevBot used 2007-era negative margins to position the Create Prospect modal. Center it cleanly with modern layout rules!',
+    l2Desc: 'FailBot used 2007-era negative margins to position the Create Prospect modal. Center it cleanly with modern layout rules!',
     l3Title: 'The Infinite Meeting Title',
     l3Desc: 'A 250-character calendar title explodes through card borders. Truncate it cleanly with an ellipsis!',
     l4Title: 'The Broken Activity List',
     l4Desc: 'Arrange the activity items into column-reverse with 10px gaps!',
     l5Title: 'The Escaped Tooltip',
-    l5Desc: 'DevBot set position: absolute on .tooltip, but forgot position: relative on the container. Anchor the tooltip to the button!',
+    l5Desc: 'FailBot set position: absolute on .tooltip, but forgot position: relative on the container. Anchor the tooltip to the button!',
     startLevelBtn: 'Play Level',
     playAgainLevelBtn: 'Replay Level',
     lockedBtn: 'Locked',
-    startCampaignBtn: 'START CHALLENGE',
-    startLevelTimerBtn: 'START TIMER & CODE',
+    startCampaignBtn: 'Start Challenge',
+    startLevelTimerBtn: 'Start Timer & Code',
     readyPrompt: 'Read the Jira ticket above, then click start to begin the speedrun!',
     taskOverlayTitleL1: 'Task 1: Dropdown Hidden Behind Header',
     taskOverlayDescL1: 'The sticky header has z-index: 100. Adjust the dropdown menu so that it displays cleanly above the header.',
@@ -106,12 +106,12 @@ export const translations = {
     taskOverlayTitleL4: 'Task 4: Arrange Activity List',
     taskOverlayDescL4: 'Stack the activity cards into a column in reverse order with 10px gaps.',
     taskOverlayTitleL5: 'Task 5: Anchor Tooltip to Button',
-    taskOverlayDescL5: 'DevBot set position: absolute on .tooltip, but forgot the parent container. Style both classes so the tooltip anchors to the button.',
-    editorTaskCommentL1: '/* Task: Adjust the dropdown menu so that it displays above the header */',
-    editorTaskCommentL2: '/* Task: Center modal dialog horizontally and vertically */',
-    editorTaskCommentL3: '/* Task: Truncate text to 1 line with ellipsis */',
-    editorTaskCommentL4: '/* Task: Stack activities in a column with gaps */',
-    editorTaskCommentL5: '/* Task: Anchor tooltip to button using relative and absolute */',
+    taskOverlayDescL5: 'FailBot set position: absolute on .tooltip, but forgot the parent container. Style both classes so the tooltip anchors to the button.',
+    editorTaskCommentL1: '/* Task: The sticky header has z-index: 100. Adjust the dropdown menu so that it displays cleanly above the header */',
+    editorTaskCommentL2: '/* Task: Center the prospect modal dialog horizontally and vertically on the screen */',
+    editorTaskCommentL3: '/* Task: Keep the meeting title on a single line and cleanly truncate it with an ellipsis (...) so it doesn’t break the calendar card */',
+    editorTaskCommentL4: '/* Task: Stack the activity cards into a column in reverse order with 10px gaps */',
+    editorTaskCommentL5: '/* Task: FailBot set position: absolute on .tooltip, but forgot the parent container. Style both classes so the tooltip anchors to the button */',
     roadmapHeader: 'Challenge Roadmap (3 Levels in Sequence):',
     stepLabel: 'Step {step}',
     leaderboardTitleMenu: 'FrontKon Booth Leaderboard',
@@ -166,7 +166,7 @@ export const translations = {
     // Code Editor Common
     needsReview: 'Needs Review',
     branchLabel: 'Branch:',
-    devbotHallucination: "❌ DevBot-3000's Hallucination:",
+    devbotHallucination: "❌ FailBot-404's Hallucination:",
     devbotExcuse: '“Measured on my 8K smart toaster”',
     seniorEditorTitle: 'Your Clean Modern CSS Fix',
     golfCount: 'Golf: {chars} chars',
@@ -185,6 +185,14 @@ export const translations = {
     failedModalBtn: 'Back to Code',
     verifyFailedBadge: 'CI/CD FAILED ❌',
     verifyFailedDevbot: 'Nice try, {name}! Your solution failed tests! Did you even read the task requirements?',
+
+    // Exit Confirmation Modal
+    exitConfirmTitle: 'Do you really want to quit?',
+    exitConfirmDevbot: '“Giving up already, {name}?! I expected more resistance from a Senior Developer! Clearly my negative margins and z-indices broke your spirit. AI 1 : Human 0!”',
+    exitConfirmLeaderboardInfo: 'Only successfully completed rounds will be counted in the leaderboard.',
+    exitConfirmNoRoundsInfo: 'You have not completed any rounds yet — your run will not appear on the leaderboard.',
+    exitConfirmStayBtn: 'Stay & keep fighting',
+    exitConfirmQuitBtn: 'Give up & exit',
 
     // Code Editor L1
     taskCommentL1: '/* Task: Center the modal in the viewport */',
@@ -222,8 +230,8 @@ export const translations = {
 
     // DevBot L2 (Dropdown) Dialogue
     devbotL2DropdownInitial: 'Header must always be on top, {name}! That is why I gave it z-index: 100. Who cares about some silly dropdowns?!',
-    devbotL2DropdownFixed: 'Oh, you lowered the z-index, {name}? Good luck keeping your header above the content!',
-    devbotL2DropdownDefeated: 'NOOO! You put the header below the dropdown menu?! My stacking context fortress is ruined, {name}!',
+    devbotL2DropdownFixed: 'A z-index of 100 or less won’t help you, {name}! My header has z-index: 100, so your menu is still hidden!',
+    devbotL2DropdownDefeated: 'NOOO! You set z-index higher than 100?! My stacking context fortress is ruined, {name}!',
 
     // DevBot L3 Dialogue
     devbotL3Initial: 'Titles contain critical revenue intelligence, {name}! Cutting off text is literally destroying pipeline value!',
@@ -251,7 +259,7 @@ export const translations = {
     timeTakenLabel: 'TIME TAKEN',
     cssGolfLabel: 'CSS GOLF',
     savedAutoBadge: 'Auto-saved to Leaderboard as "{name}" ✓',
-    postMortemHeader: '🤖 DevBot-3000 Post-Mortem:',
+    postMortemHeader: 'FailBot-404 Post-Mortem:',
     postMortemTextL1: '“Fine, {name}! You set the dropdown z-index higher than 100. My z-index fortress has fallen.”',
     postMortemTextL2: '“Fine, {name}! Maybe modern CSS IS better than 14 hardcoded negative margins.”',
     postMortemTextL2Grid: '“Fine, {name}! Maybe CSS Grid IS better than 14 hardcoded negative margins.”',
@@ -300,13 +308,13 @@ export const translations = {
 
     // Player Name Registration Modal
     nameModalTitle: 'Registrace hráče FrontKon',
-    nameModalSubtitle: 'Zadej své jméno nebo přezdívku do žebříčku. DevBot-3000 tě vyzve a bude tě oslovovat přímo tvým jménem!',
+    nameModalSubtitle: 'Zadej své jméno nebo přezdívku do žebříčku. FailBot-404 tě vyzve a bude tě oslovovat přímo tvým jménem!',
     nameInputLabel: 'Tvé jméno nebo přezdívka',
     nameInputPlaceholder: 'např. Sarah CSS Guru',
     nameRequiredError: 'Zadej prosím své jméno',
     nameTakenError: 'Toto jméno už někdo použil v žebříčku. Zvol si prosím jiné.',
     nameCheckingText: 'Ověřuji dostupnost...',
-    nameSubmitBtn: 'JDEME NA TO',
+    nameSubmitBtn: 'Jdeme na to',
 
     // Jira Ticket Common
     jiraIssueType: 'Bug',
@@ -328,26 +336,26 @@ export const translations = {
 
     jiraKeyL2: 'OUT-404',
     jiraSummaryL2: '[PROD HOTFIX] Create Prospect modal se vykresluje mimo obrazovku',
-    jiraDescL2: 'VP Sales hlásí, že Create Prospect modal je odsunutý pomocí -340px záporných marginů mimo obrazovku. DevBot tvrdí, že na jeho 4K chytré lednici to vypadalo bez chyby.',
+    jiraDescL2: 'VP Sales hlásí, že Create Prospect modal je odsunutý pomocí -340px záporných marginů mimo obrazovku. FailBot tvrdí, že na jeho 4K chytré lednici to vypadalo bez chyby.',
     jiraAcL2: 'Modal musí být čistě vycentrován na horizontální I vertikální ose uvnitř .modal-viewport.',
 
     jiraKeyL3: 'OUT-405',
     jiraSummaryL3: '[UI BREAK] 250-znakový název schůzky proráží okraje karty kalendáře',
-    jiraDescL3: 'Klient naplánoval schůzku s 250-znakovým názvem. DevBot nastavil width: 99999px a font: 8px, aby se text "neořízl". Celá tabule kalendáře přetéká do nekonečna.',
+    jiraDescL3: 'Klient naplánoval schůzku s 250-znakovým názvem. FailBot nastavil width: 99999px a font: 8px, aby se text "neořízl". Celá tabule kalendáře přetéká do nekonečna.',
     jiraAcL3: 'Název musí zůstat na jednom řádku a přetékající text musí být čistě zakončen třemi tečkami (...) uvnitř .meeting-title.',
 
     jiraKeyL4: 'OUT-409',
     jiraSummaryL4: '[UI BREAK] Seznam aktivit je nahuštěný vodorovně bez mezer',
-    jiraDescL4: 'DevBot nastavil display: flex bez směru column a bez mezer. Všechny 4 karty aktivit jsou nahuštěné v jednom přetékajícím řádku.',
+    jiraDescL4: 'FailBot nastavil display: flex bez směru column a bez mezer. Všechny 4 karty aktivit jsou nahuštěné v jednom přetékajícím řádku.',
     jiraAcL4: 'Položky aktivit musí být seřazené do sloupce v obráceném pořadí s 10px mezerami uvnitř .activity-list.',
 
     jiraKeyL5: 'OUT-410',
     jiraSummaryL5: '[UI BUG] AI tooltip utíká z tlačítka a plave nahoře na kartě',
-    jiraDescL5: 'DevBot přidal position: absolute na .tooltip, ale zapomněl position: relative na .tooltip-container. Tooltip tak uletěl z tlačítka a zarovnává se vůči celé kartě.',
+    jiraDescL5: 'FailBot přidal position: absolute na .tooltip, ale zapomněl position: relative na .tooltip-container. Tooltip tak uletěl z tlačítka a zarovnává se vůči celé kartě.',
     jiraAcL5: 'Přichyť tooltip přímo nad AI tlačítko pomocí relative a absolute pozicování na obou třídách.',
 
     // Main Menu
-    menuSubtitle: 'DevBot-3000 poslal kód přímo do produkce v pátek v 16:59. Zvládneš opravit rozbité CSS AI juniora dřív, než produkce vybuchne?',
+    menuSubtitle: 'FailBot-404 poslal kód přímo do produkce v pátek v 16:59. Zvládneš opravit rozbité CSS AI juniora dřív, než produkce vybuchne?',
     menuDevbotTaunt: 'Vítej na stánku Outreach! Přepsal jsem všechno CSS do 40 000 řádků záporných marginů, z-indexu 2147483647 a šířek 99999px. Myslíš, že jsi chytřejší než 400-miliardový model?',
     badgesHeader: 'Konferenční odznaky k získání:',
     seniorBadgeTitle: 'Nenahraditelný Senior Inženýr',
@@ -359,18 +367,18 @@ export const translations = {
     l1Title: 'Dropdown se schovává za header',
     l1Desc: 'Header má nastavený z-index: 100. Nastav rozbalovací menu tak, aby se zobrazovalo nad headerem!',
     l2Title: 'Ztracený modal',
-    l2Desc: 'DevBot použil prehistorické záporné marginy z roku 2007. Vycentruj modal pomocí moderních layoutů!',
+    l2Desc: 'FailBot použil prehistorické záporné marginy z roku 2007. Vycentruj modal pomocí moderních layoutů!',
     l3Title: 'Nekonečný název schůzky',
     l3Desc: '250 znaků dlouhý název schůzky proráží okraje karty. Zkrať ho elegantně třemi tečkami (ellipsis)!',
     l4Title: 'Rozbitý seznam aktivit',
     l4Desc: 'Seřaď aktivity do sloupce v obráceném pořadí s 10px mezerami!',
     l5Title: 'Ztracený tooltip',
-    l5Desc: 'DevBot nastavil position: absolute na .tooltip, ale zapomněl position: relative na kontejner. Přichyť tooltip k tlačítku!',
+    l5Desc: 'FailBot nastavil position: absolute na .tooltip, ale zapomněl position: relative na kontejner. Přichyť tooltip k tlačítku!',
     startLevelBtn: 'Hrát level',
     playAgainLevelBtn: 'Replay Level',
     lockedBtn: 'Zamčeno',
-    startCampaignBtn: 'ZAČÍT VÝZVU',
-    startLevelTimerBtn: 'SPUSTIT ČAS A KÓDOVAT',
+    startCampaignBtn: 'Začít výzvu',
+    startLevelTimerBtn: 'Spustit čas a kódovat',
     readyPrompt: 'Přečti si Jira ticket nahoře a klikni pro spuštění speedrunu!',
     taskOverlayTitleL1: 'Úkol 1: Dropdown se schovává za header',
     taskOverlayDescL1: 'Header má nastavený z-index: 100. Nastav rozbalovací menu tak, aby se zobrazovalo nad headerem.',
@@ -381,12 +389,12 @@ export const translations = {
     taskOverlayTitleL4: 'Úkol 4: Seřadit seznam aktivit',
     taskOverlayDescL4: 'Seřaď karty aktivit do sloupce v obráceném pořadí s 10px mezerami.',
     taskOverlayTitleL5: 'Úkol 5: Připojit tooltip k tlačítku',
-    taskOverlayDescL5: 'DevBot nastavil position: absolute na .tooltip, ale zapomněl na rodičovský kontejner. Uprav obě třídy tak, aby byl tooltip ukotvený k tlačítku.',
-    editorTaskCommentL1: '/* Úkol: Nastav rozbalovací menu tak, aby se zobrazovalo nad headerem */',
-    editorTaskCommentL2: '/* Úkol: Vycentruj modal na střed obrazovky */',
-    editorTaskCommentL3: '/* Úkol: Zkrať text na 1 řádek a přidej trojtečku */',
-    editorTaskCommentL4: '/* Úkol: Seřaď aktivity do sloupce pod sebe s mezerami */',
-    editorTaskCommentL5: '/* Úkol: Přichyť tooltip k tlačítku pomocí relative a absolute */',
+    taskOverlayDescL5: 'FailBot nastavil position: absolute na .tooltip, ale zapomněl na rodičovský kontejner. Uprav obě třídy tak, aby byl tooltip ukotvený k tlačítku.',
+    editorTaskCommentL1: '/* Úkol: Header má nastavený z-index: 100. Nastav rozbalovací menu tak, aby se zobrazovalo nad headerem */',
+    editorTaskCommentL2: '/* Úkol: Vycentruj vyskakovací okno na přesný střed obrazovky (horizontálně i vertikálně) */',
+    editorTaskCommentL3: '/* Úkol: Zkrať název schůzky na jeden řádek a zakonči ho trojtečkou (...), aby neroztahoval kalendářní kartu */',
+    editorTaskCommentL4: '/* Úkol: Seřaď karty aktivit do sloupce v obráceném pořadí s 10px mezerami */',
+    editorTaskCommentL5: '/* Úkol: FailBot nastavil position: absolute na .tooltip, ale zapomněl na rodičovský kontejner. Uprav obě třídy tak, aby byl tooltip ukotvený k tlačítku */',
     roadmapHeader: 'Průběh výzvy (3 úrovně za sebou):',
     stepLabel: 'Krok {step}',
     leaderboardTitleMenu: 'Žebříček stánku FrontKon',
@@ -441,7 +449,7 @@ export const translations = {
     // Code Editor Common
     needsReview: 'Čeká na review',
     branchLabel: 'Větev:',
-    devbotHallucination: '❌ Halucinace DevBota-3000:',
+    devbotHallucination: '❌ Halucinace FailBota-404:',
     devbotExcuse: '„Změřeno pravítkem na mé 8K chytré lednici“',
     seniorEditorTitle: 'Tvoje čistá moderní CSS oprava',
     golfCount: 'Golf: {chars} znaků',
@@ -460,6 +468,14 @@ export const translations = {
     failedModalBtn: 'Zpět ke kódu',
     verifyFailedBadge: 'CI/CD SELHALO ❌',
     verifyFailedDevbot: 'Dobrý pokus, {name}! Tvoje řešení neprošlo testy! Přečetl sis vůbec zadání úkolu?',
+
+    // Exit Confirmation Modal
+    exitConfirmTitle: 'Opravdu chceš odejít?',
+    exitConfirmDevbot: '„Cože, {name}? Už to vzdáváš?! Čekal jsem od Senior Developera větší odpor! Moje záporné marginy a z-indexy tě definitivně položily. AI 1 : Člověk 0!“',
+    exitConfirmLeaderboardInfo: 'Do žebříčku se započítají pouze úspěšně dokončená kola.',
+    exitConfirmNoRoundsInfo: 'Zatím nemáš dokončené žádné kolo — v žebříčku se neobjevíš.',
+    exitConfirmStayBtn: 'Zůstat a bojovat',
+    exitConfirmQuitBtn: 'Vzdát to a odejít',
 
     // Code Editor L1
     taskCommentL1: '/* Úkol: Vycentruj modal na střed obrazovky */',
@@ -497,8 +513,8 @@ export const translations = {
 
     // DevBot L2 (Dropdown) Dialogue
     devbotL2DropdownInitial: 'Header musí být vždycky nahoře, {name}! Proto jsem mu dal z-index: 100. Koho zajímají nějaké dropdowny?!',
-    devbotL2DropdownFixed: 'Aha, ty jsi snížil z-index, {name}? Hodně štěstí s udržením headeru nad obsahem!',
-    devbotL2DropdownDefeated: 'NÉÉÉ! Ty jsi dal header pod rozbalovací menu?! Moje pevnost z-indexu je zničená, {name}!',
+    devbotL2DropdownFixed: 'Z-index 100 nebo méně ti nepomůže, {name}! Můj header má 100, takže menu je pořád schované!',
+    devbotL2DropdownDefeated: 'NÉÉÉ! Ty jsi dal z-index nad 100?! Moje pevnost z-indexu je zničená, {name}!',
 
     // DevBot L3 Dialogue
     devbotL3Initial: 'Názvy schůzek obsahují klíčové informace, {name}! Ořezávat text znamená doslova ničit pipeline!',
@@ -526,7 +542,7 @@ export const translations = {
     timeTakenLabel: 'ČAS',
     cssGolfLabel: 'CSS GOLF',
     savedAutoBadge: 'Automaticky uloženo do žebříčku jako „{name}“ ✓',
-    postMortemHeader: '🤖 DevBot-3000 Post-Mortem:',
+    postMortemHeader: 'FailBot-404 Post-Mortem:',
     postMortemTextL1: '„No dobře, {name}! Nastavil jsi z-index dropdownu nad 100. Moje pevnost z-indexu padla.“',
     postMortemTextL2: '„No dobře, {name}! Možná je moderní CSS lepší než 14 natvrdo zapsaných záporných marginů.“',
     postMortemTextL2Grid: '„No dobře, {name}! Možná je CSS Grid lepší než 14 natvrdo zapsaných záporných marginů.“',

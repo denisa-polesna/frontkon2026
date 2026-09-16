@@ -98,6 +98,26 @@ export function formatTime(ms: number | null): string {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+export function formatDuration(ms: number | null, language: 'en' | 'cz' = 'cz'): string {
+  if (ms === null || ms === undefined || ms < 0) return '--';
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const minUnit = language === 'cz' ? 'min' : 'min';
+  const secUnit = language === 'cz' ? 's' : 's';
+  const hourUnit = language === 'cz' ? 'h' : 'h';
+
+  if (hours > 0) {
+    return `${hours} ${hourUnit} ${minutes} ${minUnit} ${seconds.toString().padStart(2, '0')} ${secUnit}`;
+  }
+  if (minutes > 0) {
+    return `${minutes} ${minUnit} ${seconds.toString().padStart(2, '0')} ${secUnit}`;
+  }
+  return `${seconds} ${secUnit}`;
+}
+
 export type PlayerTier = 'senior' | 'mid' | 'prompt_engineer';
 
 export function getPlayerBadge(timeMs: number): {

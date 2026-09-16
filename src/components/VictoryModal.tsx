@@ -7,9 +7,8 @@ import {
   Box,
   Chip,
 } from '@mui/material';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { formatTime } from '../utils/storage';
+import { formatDuration } from '../utils/storage';
+import { FailBotSpeechCard } from './FailBotSpeechCard';
 import type { Language, translations } from '../utils/i18n';
 
 interface VictoryModalProps {
@@ -19,7 +18,7 @@ interface VictoryModalProps {
   timeMs: number;
   charCount: number;
   userCss?: string;
-  isNewBest: boolean;
+  isBoothRecord?: boolean;
   onNextLevel: () => void;
   language: Language;
   t: typeof translations['en'];
@@ -32,9 +31,9 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   timeMs,
   charCount: _charCount,
   userCss = '',
-  isNewBest,
+  isBoothRecord = false,
   onNextLevel,
-  language: _language,
+  language,
   t,
 }) => {
   const getPostMortem = () => {
@@ -98,7 +97,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         </Typography>
 
         {/* Record Chip */}
-        {isNewBest && (
+        {isBoothRecord && (
           <Chip
             label={t.newRecordBadge}
             size="small"
@@ -112,98 +111,50 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           />
         )}
 
-        {/* DevBot Defeated Post-Mortem Card */}
-        <Box
-          sx={{
-            backgroundColor: '#fbfaff',
-            border: '1px solid rgba(89, 81, 255, 0.25)',
-            borderRadius: '10px',
-            p: { xs: 1.6, sm: 2 },
-            textAlign: 'left',
-            width: '100%',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 1.4,
-          }}
-        >
-          {/* DevBot Avatar with glowing green notification dot */}
-          <Box sx={{ position: 'relative', flexShrink: 0, mt: 0.2 }}>
-            <Box
-              sx={{
-                width: 34,
-                height: 34,
-                borderRadius: '8px',
-                backgroundColor: '#5951ff',
-                color: '#FFFFFF',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(89, 81, 255, 0.35)',
-              }}
-            >
-              <SmartToyIcon sx={{ color: '#FFFFFF', fontSize: 20 }} />
-            </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: -2,
-                right: -2,
-                width: 10,
-                height: 10,
-                borderRadius: '50%',
-                backgroundColor: '#00D2B4',
-                boxShadow: '0 0 8px #00D2B4, 0 0 12px rgba(0, 210, 180, 0.7)',
-                animation: 'botGreenPulse 2s infinite ease-in-out',
-                '@keyframes botGreenPulse': {
-                  '0%': { transform: 'scale(1)', boxShadow: '0 0 6px #00D2B4' },
-                  '50%': { transform: 'scale(1.2)', boxShadow: '0 0 12px #00D2B4, 0 0 16px rgba(0, 210, 180, 0.8)' },
-                  '100%': { transform: 'scale(1)', boxShadow: '0 0 6px #00D2B4' },
-                },
-              }}
-            />
-          </Box>
-
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography
-              variant="subtitle2"
-              sx={{
-                fontWeight: 800,
-                color: '#120042',
-                fontSize: '0.85rem',
-                mb: 0.3,
-              }}
-            >
-              DevBot-3000
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: '#222222',
-                fontStyle: 'italic',
-                fontSize: { xs: '0.82rem', sm: '0.88rem' },
-                lineHeight: 1.45,
-              }}
-            >
-              {getPostMortem()}
-            </Typography>
-          </Box>
-        </Box>
+        {/* FailBot Defeated Post-Mortem Card */}
+        <FailBotSpeechCard
+          message={getPostMortem()}
+          name="FailBot-404"
+        />
 
         {/* Single Stats Box: Time */}
         <Box
           sx={{
             backgroundColor: '#fbfaff',
-            py: 1.2,
+            py: 1.4,
             px: 3,
             borderRadius: '10px',
             border: '1px solid #e2e0ed',
             textAlign: 'center',
             width: '100%',
-            maxWidth: 200,
+            maxWidth: 220,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 0.3,
           }}
         >
-          <Typography variant="h5" sx={{ fontFamily: 'monospace', fontWeight: 800, color: '#120042', m: 0 }}>
-            {formatTime(timeMs)}
+          <Typography
+            sx={{
+              fontSize: '0.72rem',
+              fontWeight: 800,
+              color: '#6A7292',
+              letterSpacing: '0.06em',
+            }}
+          >
+            {t.timeTakenLabel || 'ČAS'}
+          </Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: 'ui-monospace, monospace',
+              fontWeight: 800,
+              color: '#120042',
+              fontSize: { xs: '1.45rem', sm: '1.7rem' },
+              m: 0,
+            }}
+          >
+            {formatDuration(timeMs, language)}
           </Typography>
         </Box>
 
@@ -212,7 +163,6 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           variant="contained"
           fullWidth
           size="large"
-          endIcon={levelId !== 'level5' ? <ArrowForwardIcon /> : undefined}
           onClick={onNextLevel}
           sx={{
             height: 48,
