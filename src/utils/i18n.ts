@@ -68,7 +68,7 @@ export const translations = {
 
     jiraKeyL5: 'OUT-410',
     jiraSummaryL5: '[UI BUG] AI tooltip escapes button and floats at top of card',
-    jiraDescL5: 'FailBot set position: absolute on .tooltip, but forgot position: relative on .tooltip-container. The tooltip breaks out and aligns relative to the outer card instead of the button.',
+    jiraDescL5: 'FailBot set position: relative on .tooltip instead of .button. The tooltip breaks layout and is not anchored to the button.',
     jiraAcL5: 'Anchor the tooltip directly above the AI button using relative and absolute positioning across both classes.',
 
     // Main Menu
@@ -90,7 +90,7 @@ export const translations = {
     l4Title: 'The Broken Activity List',
     l4Desc: 'Arrange the activity items into column-reverse with 10px gaps!',
     l5Title: 'The Escaped Tooltip',
-    l5Desc: 'FailBot set position: absolute on .tooltip, but forgot position: relative on the container. Anchor the tooltip to the button!',
+    l5Desc: 'FailBot set position: relative on .tooltip, but forgot position: relative on .button. Align the tooltip to the button!',
     startLevelBtn: 'Play Level',
     playAgainLevelBtn: 'Replay Level',
     lockedBtn: 'Locked',
@@ -106,12 +106,12 @@ export const translations = {
     taskOverlayTitleL4: 'Task 4: Arrange Activity List',
     taskOverlayDescL4: 'Stack the activity cards into a column in reverse order with 10px gaps.',
     taskOverlayTitleL5: 'Task 5: Anchor Tooltip to Button',
-    taskOverlayDescL5: 'FailBot set position: absolute on .tooltip, but forgot the parent container. Style both classes so the tooltip anchors to the button.',
+    taskOverlayDescL5: 'FailBot set position: relative on .tooltip, but forgot position: relative on .button. Align the tooltip above the button.',
     editorTaskCommentL1: '/* Task: The sticky header has z-index: 100. Adjust the dropdown menu so that it displays cleanly above the header */',
     editorTaskCommentL2: '/* Task: Center the prospect modal dialog horizontally and vertically on the screen */',
     editorTaskCommentL3: '/* Task: Keep the meeting title on a single line and cleanly truncate it with an ellipsis (...) so it doesn’t break the calendar card */',
     editorTaskCommentL4: '/* Task: Stack the activity cards into a column in reverse order with 10px gaps */',
-    editorTaskCommentL5: '/* Task: FailBot set position: absolute on .tooltip, but forgot the parent container. Style both classes so the tooltip anchors to the button */',
+    editorTaskCommentL5: '/* Task: FailBot set position: relative on .tooltip instead of .button. Align the tooltip above the button */',
     roadmapHeader: 'Challenge Roadmap (3 Levels in Sequence):',
     stepLabel: 'Step {step}',
     leaderboardTitleMenu: 'FrontKon Booth Leaderboard',
@@ -243,10 +243,10 @@ export const translations = {
     devbotL4ListInitial: 'A horizontal activity train saves vertical space, {name}! Who needs gaps between cards anyway?!',
 
     // DevBot L5 (Tooltip) Dialogue
-    devbotL5TooltipInitial: 'My tooltip has position: absolute! What else could it possibly need, {name}?!',
-    devbotL5TooltipNoRelative: 'Without relative positioning on the container, my tooltip is exploring outer space, {name}!',
+    devbotL5TooltipInitial: 'My tooltip has position: relative! What else could it possibly need, {name}?!',
+    devbotL5TooltipNoRelative: 'Without relative positioning on .button, my tooltip is exploring outer space, {name}!',
     devbotL5TooltipNoAbsolute: 'Where did the absolute position go, {name}?! Now the layout is completely shifted!',
-    devbotL5TooltipDefeated: 'Position relative on the container AND absolute on the tooltip?! Inconceivable, {name}!',
+    devbotL5TooltipDefeated: 'Position relative on .button AND absolute on the tooltip?! Inconceivable, {name}!',
 
     // Victory Modal
     victoryTitleL1: 'PR #408 REJECTED & FIXED! 🎉',
@@ -254,7 +254,7 @@ export const translations = {
     victoryTitleL3: 'PR #405 REJECTED & FIXED! 🎉',
     victoryTitleL4: 'PR #409 REJECTED & FIXED! 🎉',
     victoryTitleL5: 'PR #410 REJECTED & FIXED! 🎉',
-    victorySubtitle: 'You outsmarted the AI Junior.',
+    victorySubtitle: 'You outsmarted FailBot-404.',
     newRecordBadge: 'NEW BOOTH RECORD! 🏆',
     timeTakenLabel: 'TIME TAKEN',
     cssGolfLabel: 'CSS GOLF',
@@ -266,7 +266,7 @@ export const translations = {
     postMortemTextL2Flex: '“Fine, {name}! Maybe Flexbox IS better than 14 hardcoded negative margins.”',
     postMortemTextL3: '“Fine! Three little CSS properties beat my 99999px width. Enjoy your job security for now, {name}.”',
     postMortemTextL4: '“Fine, {name}! A vertical column with gaps is obviously cleaner than my horizontal activity train.”',
-    postMortemTextL5: '“Fine! Position relative on the container and absolute on the tooltip anchored it right where it belongs. You conquered all 5 challenges, {name}!”',
+    postMortemTextL5: '“Fine! Position relative on .button and absolute on the tooltip anchored it right where it belongs. You conquered all 5 challenges, {name}!”',
     nextLevelBtn: 'Next Task',
     finishCampaignBtn: 'View Leaderboard',
 
@@ -351,7 +351,7 @@ export const translations = {
 
     jiraKeyL5: 'OUT-410',
     jiraSummaryL5: '[UI BUG] AI tooltip utíká z tlačítka a plave nahoře na kartě',
-    jiraDescL5: 'FailBot přidal position: absolute na .tooltip, ale zapomněl position: relative na .tooltip-container. Tooltip tak uletěl z tlačítka a zarovnává se vůči celé kartě.',
+    jiraDescL5: 'FailBot nastavil position: relative na .tooltip místo na .button. Tooltip tak nesedí nad tlačítkem a rozbíjí layout.',
     jiraAcL5: 'Přichyť tooltip přímo nad AI tlačítko pomocí relative a absolute pozicování na obou třídách.',
 
     // Main Menu
@@ -373,7 +373,7 @@ export const translations = {
     l4Title: 'Rozbitý seznam aktivit',
     l4Desc: 'Seřaď aktivity do sloupce v obráceném pořadí s 10px mezerami!',
     l5Title: 'Ztracený tooltip',
-    l5Desc: 'FailBot nastavil position: absolute na .tooltip, ale zapomněl position: relative na kontejner. Přichyť tooltip k tlačítku!',
+    l5Desc: 'FailBot nastavil position: relative na .tooltip, ale zapomněl position: relative na .button. Zarovnej tooltip nad tlačítko!',
     startLevelBtn: 'Hrát level',
     playAgainLevelBtn: 'Replay Level',
     lockedBtn: 'Zamčeno',
@@ -389,12 +389,12 @@ export const translations = {
     taskOverlayTitleL4: 'Úkol 4: Seřadit seznam aktivit',
     taskOverlayDescL4: 'Seřaď karty aktivit do sloupce v obráceném pořadí s 10px mezerami.',
     taskOverlayTitleL5: 'Úkol 5: Připojit tooltip k tlačítku',
-    taskOverlayDescL5: 'FailBot nastavil position: absolute na .tooltip, ale zapomněl na rodičovský kontejner. Uprav obě třídy tak, aby byl tooltip ukotvený k tlačítku.',
+    taskOverlayDescL5: 'FailBot nastavil position: relative na .tooltip, ale zapomněl na position: relative na .button. Zarovnej tooltip nad tlačítko.',
     editorTaskCommentL1: '/* Úkol: Header má nastavený z-index: 100. Nastav rozbalovací menu tak, aby se zobrazovalo nad headerem */',
     editorTaskCommentL2: '/* Úkol: Vycentruj vyskakovací okno na přesný střed obrazovky (horizontálně i vertikálně) */',
     editorTaskCommentL3: '/* Úkol: Zkrať název schůzky na jeden řádek a zakonči ho trojtečkou (...), aby neroztahoval kalendářní kartu */',
     editorTaskCommentL4: '/* Úkol: Seřaď karty aktivit do sloupce v obráceném pořadí s 10px mezerami */',
-    editorTaskCommentL5: '/* Úkol: FailBot nastavil position: absolute na .tooltip, ale zapomněl na rodičovský kontejner. Uprav obě třídy tak, aby byl tooltip ukotvený k tlačítku */',
+    editorTaskCommentL5: '/* Úkol: FailBot nastavil position: relative na .tooltip místo na .button. Zarovnej tooltip nad tlačítko */',
     roadmapHeader: 'Průběh výzvy (3 úrovně za sebou):',
     stepLabel: 'Krok {step}',
     leaderboardTitleMenu: 'Žebříček stánku FrontKon',
@@ -526,10 +526,10 @@ export const translations = {
     devbotL4ListInitial: 'Vodorovný vláček aktivit šetří vertikální místo, {name}! Kdo vůbec potřebuje mezery mezi kartami?!',
 
     // DevBot L5 (Tooltip) Dialogue
-    devbotL5TooltipInitial: 'Můj tooltip má position: absolute! Co víc by ještě mohl potřebovat, {name}?!',
-    devbotL5TooltipNoRelative: 'Bez position: relative na kontejneru můj tooltip objevuje krásy vesmíru, {name}!',
+    devbotL5TooltipInitial: 'Můj tooltip má přece position: relative! Co víc by ještě mohl potřebovat, {name}?!',
+    devbotL5TooltipNoRelative: 'Bez position: relative na .button můj tooltip objevuje krásy vesmíru, {name}!',
     devbotL5TooltipNoAbsolute: 'Kam zmizela absolutní pozice, {name}?! Teď to rozbilo celý normální tok dokumentu!',
-    devbotL5TooltipDefeated: 'Position relative na kontejneru A ZÁROVEŇ absolute na tooltipu?! Nemožné, {name}!',
+    devbotL5TooltipDefeated: 'Position relative na .button A ZÁROVEŇ absolute na .tooltip?! Nemožné, {name}!',
 
     // Victory Modal
     victoryTitleL1: 'PR #408 ZAMÍTNUTO A OPRAVENO! 🎉',
@@ -537,7 +537,7 @@ export const translations = {
     victoryTitleL3: 'PR #405 ZAMÍTNUTO A OPRAVENO! 🎉',
     victoryTitleL4: 'PR #409 ZAMÍTNUTO A OPRAVENO! 🎉',
     victoryTitleL5: 'PR #410 ZAMÍTNUTO A OPRAVENO! 🎉',
-    victorySubtitle: 'Přechytračil jsi AI juniora.',
+    victorySubtitle: 'Přechytračil jsi FailBota-404.',
     newRecordBadge: 'NOVÝ REKORD STÁNKU! 🏆',
     timeTakenLabel: 'ČAS',
     cssGolfLabel: 'CSS GOLF',
@@ -549,7 +549,7 @@ export const translations = {
     postMortemTextL2Flex: '„No dobře, {name}! Možná je Flexbox lepší než 14 natvrdo zapsaných záporných marginů.“',
     postMortemTextL3: '„No dobře! Tři řádky moderního CSS překonaly moji šířku 99999px. Užívej si to, {name}.“',
     postMortemTextL4: '„No dobře, {name}! Sloupec a gap je samozřejmě přehlednější než můj vodorovný vláček aktivit.“',
-    postMortemTextL5: '„No dobře! Position relative na kontejneru a absolute na tooltipu ho ukotvily přesně tam, kam patří. Zvládl jsi všech 5 výzev, {name}!“',
+    postMortemTextL5: '„No dobře! Position relative na .button a absolute na tooltipu ho ukotvily přesně tam, kam patří. Zvládl jsi všech 5 výzev, {name}!“',
     nextLevelBtn: 'Další úkol',
     finishCampaignBtn: 'Zobrazit žebříček',
 

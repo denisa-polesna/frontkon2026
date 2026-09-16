@@ -30,7 +30,8 @@ export const PreviewViewportTooltip: React.FC<PreviewViewportTooltipProps> = ({
     const checkTooltip = () => {
       if (!containerRef.current) return;
 
-      const containerEl = containerRef.current.querySelector('.tooltip-container') as HTMLElement | null;
+      const containerEl = (containerRef.current.querySelector('.button') ||
+        containerRef.current.querySelector('.tooltip-container')) as HTMLElement | null;
       const tooltipEl = containerRef.current.querySelector('.tooltip') as HTMLElement | null;
       if (!containerEl || !tooltipEl) return;
 
@@ -44,13 +45,17 @@ export const PreviewViewportTooltip: React.FC<PreviewViewportTooltipProps> = ({
       const containerRect = containerEl.getBoundingClientRect();
       const tooltipRect = tooltipEl.getBoundingClientRect();
 
-      // Tooltip center X should be close to container center X (within 70px)
+      // Tooltip center X or right edge aligned with button
       const containerCenterX = containerRect.left + containerRect.width / 2;
       const tooltipCenterX = tooltipRect.left + tooltipRect.width / 2;
-      const isHorizontallyAligned = Math.abs(containerCenterX - tooltipCenterX) <= 70;
+      const isHorizontallyAligned =
+        Math.abs(containerCenterX - tooltipCenterX) <= 90 ||
+        Math.abs(containerRect.right - tooltipRect.right) <= 30 ||
+        Math.abs(containerRect.left - tooltipRect.left) <= 30 ||
+        (tooltipRect.right >= containerRect.left && tooltipRect.left <= containerRect.right);
 
-      // Tooltip bottom should be near container top (above button, within 55px)
-      const isNearButton = tooltipRect.bottom <= containerRect.top + 14 && tooltipRect.bottom >= containerRect.top - 55;
+      // Tooltip bottom should be near container top (above button, within 65px)
+      const isNearButton = tooltipRect.bottom <= containerRect.top + 14 && tooltipRect.bottom >= containerRect.top - 65;
 
       const solved = isContainerRelative && isTooltipAbsolute && isNearButton && isHorizontallyAligned;
       const status: TooltipStatus = solved
@@ -94,21 +99,22 @@ export const PreviewViewportTooltip: React.FC<PreviewViewportTooltipProps> = ({
       <style>
         {isTarget
           ? `
+            #${stageId} .button,
             #${stageId} .tooltip-container {
               position: relative;
-              display: inline-block;
+              display: inline-flex;
             }
             #${stageId} .tooltip {
               position: absolute;
               bottom: calc(100% + 8px);
-              left: 50%;
-              transform: translateX(-50%);
+              right: 0;
               white-space: nowrap;
             }
           `
           : `
+            #${stageId} .button,
             #${stageId} .tooltip-container {
-              display: inline-block;
+              display: inline-flex;
             }
             #${stageId} .tooltip {
               white-space: nowrap;

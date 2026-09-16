@@ -172,7 +172,18 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
             {language === 'cz' ? 'Zpět' : 'Back'}
           </Button>
 
-          <OutreachLogo height={26} />
+          <Box
+            onClick={onBack}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'opacity 0.2s ease',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            <OutreachLogo height={26} />
+          </Box>
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

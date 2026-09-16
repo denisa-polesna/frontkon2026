@@ -10,7 +10,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { isPlayerNameTaken } from '../utils/leaderboardApi';
+import { isPlayerNameTaken, reservePlayerName } from '../utils/leaderboardApi';
 import type { translations } from '../utils/i18n';
 
 interface NameRegistrationModalProps {
@@ -76,11 +76,15 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
     // Final direct verification before submitting
     setIsChecking(true);
     const taken = await isPlayerNameTaken(trimmed);
-    setIsChecking(false);
     if (taken) {
+      setIsChecking(false);
       setIsTaken(true);
       return;
     }
+
+    // Immediately reserve the name in Supabase so nobody else can take it while playing
+    await reservePlayerName(trimmed);
+    setIsChecking(false);
 
     onSubmit(trimmed);
   };

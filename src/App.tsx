@@ -63,16 +63,13 @@ flex-direction: row;
 gap: 0px;`;
 
 // Level 5: Tooltip (relative a absolute na dvou třídách)
-const DEFAULT_L5_CSS = `.tooltip-container {
-  display: inline-block;
-  margin: 0 auto;
+const DEFAULT_L5_CSS = `.tooltip-container,
+.button {
+  /* Tlačítko */
 }
 
 .tooltip {
-  position: absolute;
-  top: 14px;
-  left: 20px;
-  z-index: 999999;
+  position: relative;
 }`;
 
 export function App() {
@@ -304,29 +301,22 @@ export function App() {
           {
             text:
               language === 'cz'
-                ? '/* Úkol: FailBot nastavil position: absolute na .tooltip,'
-                : '/* Task: FailBot set position: absolute on .tooltip,',
+                ? '/* Úkol: FailBot nastavil position: relative na .tooltip,'
+                : '/* Task: FailBot set position: relative on .tooltip,',
             isComment: true,
           },
           {
             text:
               language === 'cz'
-                ? '   ale zapomněl na rodičovský kontejner.'
-                : '   but forgot the parent container.',
+                ? '   ale zapomněl position: relative na .tooltip-container / .button.'
+                : '   but forgot position: relative on .tooltip-container / .button.',
             isComment: true,
           },
           {
             text:
               language === 'cz'
-                ? '   Uprav obě třídy tak, aby byl tooltip'
-                : '   Style both classes so the tooltip',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   ukotvený k tlačítku */'
-                : '   anchors to the button */',
+                ? '   Zarovnej tooltip nad tlačítko */'
+                : '   Align the tooltip above the button */',
             isComment: true,
           },
           { text: '' },
@@ -617,6 +607,19 @@ export function App() {
     setBoothRecords({});
   };
 
+  const handleLogoClick = () => {
+    sound.playBlip();
+    if (!isLevelStarted) {
+      // Before level starts: return directly to the main menu
+      setIsRunning(false);
+      setShowExitConfirm(false);
+      setCurrentScreen('menu');
+    } else {
+      // Mid-game: show the exit confirmation modal
+      handleRequestExit();
+    }
+  };
+
   const handleRequestExit = () => {
     sound.playBlip();
     setShowExitConfirm(true);
@@ -763,6 +766,9 @@ export function App() {
     if (failedVerify) {
       return { mood: 'confident', message: formatName(t.verifyFailedDevbot), badgeLabel: t.verifyFailedBadge };
     }
+    if (l5Solved) {
+      return { mood: 'panicked', message: formatName(t.devbotL5TooltipDefeated), badgeLabel: t.badgeSweating };
+    }
     if (!isLevelStarted || l5Css.trim() === DEFAULT_L5_CSS.trim()) {
       return { mood: 'confident', message: formatName(t.devbotL5TooltipInitial), badgeLabel: t.badge10x };
     }
@@ -846,7 +852,9 @@ export function App() {
           <Header
             elapsedMs={elapsedMs}
             isRunning={isRunning}
+            isLevelStarted={isLevelStarted}
             onReset={handleResetLevel}
+            onLogoClick={handleLogoClick}
             currentLevel={activeLevel}
             soundEnabled={soundEnabled}
             onToggleSound={handleToggleSound}

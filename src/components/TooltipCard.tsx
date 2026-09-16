@@ -149,12 +149,13 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
             Uložit
           </Button>
 
-          {/* THE TOOLTIP CONTAINER & TOOLTIP */}
+          {/* THE BUTTON & TOOLTIP */}
           <div
             ref={tooltipContainerRef as React.RefObject<HTMLDivElement>}
-            className="tooltip-container"
+            className="tooltip-container button"
+            style={{ display: 'inline-flex', verticalAlign: 'middle' }}
           >
-            <Box sx={{ position: 'relative', display: 'inline-block' }}>
+            <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
               <Button
                 variant="contained"
                 size="small"

@@ -125,6 +125,39 @@ export async function isPlayerNameTaken(name: string): Promise<boolean> {
   }
 }
 
+export async function reservePlayerName(name: string): Promise<boolean> {
+  const trimmed = name.trim();
+  if (!trimmed) return false;
+  if (!isSupabaseConfigured || !SUPABASE_URL || !SUPABASE_KEY) {
+    return false;
+  }
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/leaderboard`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        time_ms: 0,
+        char_count: 0,
+        player_name: trimmed,
+        player_tag: trimmed,
+        level_id: 'uncompleted',
+        timestamp: Date.now(),
+      }),
+    });
+
+    return res.ok;
+  } catch (err) {
+    console.warn('Network error reserving player name in Supabase:', err);
+    return false;
+  }
+}
+
 export interface BoothRecord {
   levelId: string;
   playerName: string;
