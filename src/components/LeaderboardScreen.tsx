@@ -254,7 +254,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
           <Typography
             variant="h3"
             sx={{
-              fontWeight: 900,
+              fontWeight: 700,
               fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' },
               color: '#FFFFFF',
               letterSpacing: '-0.02em',
@@ -307,11 +307,11 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                       borderBottom: '1px solid #2e2e2e !important',
                       borderColor: '#2e2e2e !important',
                       color: '#FFFFFF',
-                      fontWeight: 800,
-                      fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1.02rem', lg: '1.08rem' },
-                      py: { xs: 1.2, sm: 1.6, md: 2, lg: 2.2 },
+                      fontWeight: 600,
+                      fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.98rem' },
+                      py: { xs: 1.2, sm: 1.6, md: 1.8 },
                       px: { xs: 1.5, sm: 2.5, md: 3, lg: 4 },
-                      letterSpacing: '0.02em',
+                      letterSpacing: '0.01em',
                     },
                   }}
                 >
@@ -330,8 +330,8 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                         '& td': {
                           borderColor: '#e2e0ed',
                           color: '#1f1f1f',
-                          fontSize: { xs: '0.88rem', sm: '1rem', md: '1.08rem', lg: '1.15rem' },
-                          py: { xs: 1.4, sm: 1.8, md: 2 },
+                          fontSize: { xs: '0.88rem', sm: '0.96rem', md: '1.05rem' },
+                          py: { xs: 1.2, sm: 1.5, md: 1.6 },
                           px: { xs: 1.5, sm: 2.5, md: 3, lg: 4 },
                         },
                         backgroundColor: '#FFFFFF',
@@ -340,18 +340,18 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                         },
                       }}
                     >
-                      <TableCell sx={{ fontWeight: 700, color: '#1f1f1f' }}>
+                      <TableCell sx={{ fontWeight: 500, color: '#444444' }}>
                         {idx + 1}
                       </TableCell>
-                      <TableCell sx={{ fontWeight: 700, color: '#1f1f1f' }}>
+                      <TableCell sx={{ fontWeight: 500, color: '#1f1f1f' }}>
                         {player.playerName}
                       </TableCell>
-                      <TableCell sx={{ fontWeight: 500, color: '#1f1f1f' }}>
+                      <TableCell sx={{ fontWeight: 400, color: '#333333' }}>
                         <Typography
                           component="span"
                           sx={{
-                            color: '#1f1f1f',
-                            fontWeight: 500,
+                            color: '#333333',
+                            fontWeight: 400,
                             fontSize: 'inherit',
                           }}
                         >
@@ -362,8 +362,8 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                         sx={{
                           fontFamily: 'ui-monospace, monospace',
                           color: '#1f1f1f',
-                          fontWeight: 800,
-                          fontSize: { xs: '0.92rem', sm: '1.05rem', md: '1.22rem', lg: '1.32rem' },
+                          fontWeight: 500,
+                          fontSize: { xs: '0.92rem', sm: '1rem', md: '1.08rem' },
                         }}
                       >
                         {formatDuration(player.totalTimeMs, language)}

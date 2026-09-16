@@ -101,8 +101,9 @@ export async function isPlayerNameTaken(name: string): Promise<boolean> {
   try {
     const sanitized = trimmed.replace(/"/g, '');
     const encoded = encodeURIComponent(`"${sanitized}"`);
+    // Fetch rows for this player ordered by creation time descending
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/leaderboard?or=(player_name.ilike.${encoded},player_tag.ilike.${encoded})&select=id&limit=1`,
+      `${SUPABASE_URL}/rest/v1/leaderboard?or=(player_name.ilike.${encoded},player_tag.ilike.${encoded})&select=id,level_id,time_ms,timestamp,created_at&order=id.desc&limit=100`,
       {
         headers: {
           apikey: SUPABASE_KEY,
@@ -117,8 +118,34 @@ export async function isPlayerNameTaken(name: string): Promise<boolean> {
       return false;
     }
 
-    const rows = await res.json();
-    return Array.isArray(rows) && rows.length > 0;
+    const rows: { id: number; level_id: string; time_ms: number; timestamp?: number; created_at?: string }[] = await res.json();
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return false;
+    }
+
+    // 1. If player has any completed level (with time > 0 and valid level), the name is taken permanently
+    const hasCompletedRound = rows.some(
+      (r) => r.level_id && r.level_id !== 'uncompleted' && r.level_id !== 'cancelled' && r.time_ms > 0
+    );
+    if (hasCompletedRound) {
+      return true;
+    }
+
+    // 2. Check the most recent row: if it was cancelled, the reservation was released
+    const latestRow = rows[0];
+    if (latestRow.level_id === 'cancelled') {
+      return false;
+    }
+
+    // 3. If there is an active reservation ('uncompleted'), check if it's recent (< 15 mins)
+    const rowTime = latestRow.timestamp || (latestRow.created_at ? new Date(latestRow.created_at).getTime() : 0);
+    const fifteenMinutesAgo = Date.now() - 15 * 60 * 1000;
+    if (rowTime > fifteenMinutesAgo) {
+      return true;
+    }
+
+    // Expired reservation (> 15 mins without completion)
+    return false;
   } catch (err) {
     console.warn('Network error checking player name in Supabase:', err);
     return false;
@@ -154,6 +181,39 @@ export async function reservePlayerName(name: string): Promise<boolean> {
     return res.ok;
   } catch (err) {
     console.warn('Network error reserving player name in Supabase:', err);
+    return false;
+  }
+}
+
+export async function releasePlayerReservation(name: string): Promise<boolean> {
+  const trimmed = name.trim();
+  if (!trimmed) return false;
+  if (!isSupabaseConfigured || !SUPABASE_URL || !SUPABASE_KEY) {
+    return false;
+  }
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/leaderboard`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        time_ms: 0,
+        char_count: 0,
+        player_name: trimmed,
+        player_tag: trimmed,
+        level_id: 'cancelled',
+        timestamp: Date.now(),
+      }),
+    });
+
+    return res.ok;
+  } catch (err) {
+    console.warn('Network error releasing player reservation in Supabase:', err);
     return false;
   }
 }

@@ -36,6 +36,7 @@ import {
 import {
   submitRemoteRun,
   fetchBoothRecords,
+  releasePlayerReservation,
   type BoothRecord,
 } from './utils/leaderboardApi';
 import { sound } from './utils/audio';
@@ -495,6 +496,7 @@ export function App() {
 
   // Navigate to Level (shows blurred task until player hits start)
   const handleSelectLevel = (levelId: 'level1' | 'level2' | 'level3' | 'level4' | 'level5') => {
+    confetti.reset();
     sound.playBlip();
     setCurrentScreen(levelId);
     setElapsedMs(0);
@@ -610,7 +612,19 @@ export function App() {
   const handleLogoClick = () => {
     sound.playBlip();
     if (!isLevelStarted) {
-      // Before level starts: return directly to the main menu
+      // Before level starts: if 0 completed rounds, release reservation and return to main menu
+      const currentName = (playerName || '').trim();
+      const hasAnyCompleted = currentName
+        ? stats.history.some(
+            (r) => (r.playerTag || '').trim() === currentName && r.levelId !== 'uncompleted' && r.timeMs > 0
+          )
+        : false;
+
+      if (!hasAnyCompleted && currentName) {
+        releasePlayerReservation(currentName);
+        setPlayerName('');
+      }
+
       setIsRunning(false);
       setShowExitConfirm(false);
       setCurrentScreen('menu');
@@ -648,7 +662,11 @@ export function App() {
       // Completed at least 1 round: show them in leaderboard with their completed rounds
       setCurrentScreen('leaderboard');
     } else {
-      // 0 completed rounds: do not show on leaderboard, return to main menu
+      // 0 completed rounds: release their reserved name from Supabase so others can use it!
+      if (currentName) {
+        releasePlayerReservation(currentName);
+      }
+      setPlayerName('');
       setCurrentScreen('menu');
     }
   };
@@ -792,6 +810,7 @@ export function App() {
   const devBotState = getDevBotState();
 
   const handleNextLevelProgression = () => {
+    confetti.reset();
     setShowVictory(false);
     if (activeLevel === 'level1') {
       handleSelectLevel('level2');
@@ -824,7 +843,10 @@ export function App() {
       ) : currentScreen === 'leaderboard' ? (
         <LeaderboardScreen
           runs={stats.history}
-          onBack={() => setCurrentScreen('menu')}
+          onBack={() => {
+            setCurrentScreen('menu');
+            setPlayerName('');
+          }}
           onStartCampaign={handleStartCampaign}
           onClearLeaderboard={handleClearLeaderboard}
           language={language}
