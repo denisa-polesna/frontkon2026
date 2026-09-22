@@ -7,9 +7,12 @@ import {
 import CodeMirror, { oneDark } from '@uiw/react-codemirror';
 import { lineNumbers, EditorView } from '@codemirror/view';
 import { css } from '@codemirror/lang-css';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutlineOutlined';
+import { formatDuration } from '../utils/storage';
 import { cssEditorExtensions } from '../utils/cssAutocomplete';
-import type { translations } from '../utils/i18n';
+import type { Language, translations } from '../utils/i18n';
 
 export interface CodeEditorLine {
   text: string;
@@ -24,11 +27,16 @@ export interface CodeEditorProps {
   onChange: (val: string) => void;
   onSolveAttempt: () => void;
   onExit?: () => void;
+  onResetCode?: () => void;
+  onOpenHelp?: () => void;
   readOnlyLines: CodeEditorLine[];
   t: typeof translations['en'];
   placeholder?: string;
   isSolved?: boolean;
   hideClosingBrace?: boolean;
+  elapsedMs?: number;
+  isLevelStarted?: boolean;
+  language?: Language;
 }
 
 const FONT_FAMILY = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
@@ -78,11 +86,16 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   onChange,
   onSolveAttempt,
   onExit,
+  onResetCode,
+  onOpenHelp,
   readOnlyLines,
   t,
   placeholder,
   isSolved: _isSolved,
   hideClosingBrace = false,
+  elapsedMs,
+  isLevelStarted = false,
+  language = 'cz',
 }) => {
   const readOnlyCount = readOnlyLines.length;
   const lineCount = useMemo(() => value.split('\n').length, [value]);
@@ -141,6 +154,34 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
             {t.mobileTabEditor || 'Editor'}
           </Typography>
         </Box>
+
+        {isLevelStarted && typeof elapsedMs === 'number' && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.6,
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.14)',
+              borderRadius: '6px',
+              px: 1.1,
+              py: '2px',
+            }}
+          >
+            <TimerOutlinedIcon sx={{ fontSize: 14, color: '#B0B8C8' }} />
+            <Typography
+              sx={{
+                fontFamily: 'ui-monospace, monospace',
+                fontSize: '0.84rem',
+                fontWeight: 700,
+                color: '#FFFFFF',
+                letterSpacing: '0.03em',
+              }}
+            >
+              {formatDuration(elapsedMs, language)}
+            </Typography>
+          </Box>
+        )}
       </Box>
 
       {/* Code Editor Body */}
@@ -276,8 +317,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: onExit ? 'space-between' : 'flex-end',
-          px: { xs: 1.5, sm: 2 },
+          justifyContent: 'space-between',
+          px: { xs: 1.2, sm: 1.8 },
           py: 1.2,
           backgroundColor: '#161A2D',
           borderTop: '1px solid #232842',
@@ -285,59 +326,116 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           flexShrink: 0,
         }}
       >
-        {onExit && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+          {onExit && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={onExit}
+              sx={{
+                py: 0.7,
+                px: { xs: 1.2, sm: 1.6 },
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                borderRadius: '6px',
+                borderColor: 'rgba(255, 255, 255, 0.15)',
+                color: '#B0B8C8',
+                backgroundColor: 'transparent',
+                textTransform: 'none',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                },
+              }}
+            >
+              {t.exitBtn}
+            </Button>
+          )}
+
+          {onResetCode && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={onResetCode}
+              startIcon={<RestartAltIcon sx={{ fontSize: 16 }} />}
+              sx={{
+                py: 0.7,
+                px: { xs: 1.1, sm: 1.5 },
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                borderRadius: '6px',
+                borderColor: 'rgba(255, 255, 255, 0.15)',
+                color: '#B0B8C8',
+                backgroundColor: 'transparent',
+                textTransform: 'none',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                },
+              }}
+            >
+              {t.resetCodeBtn}
+            </Button>
+          )}
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+          {onOpenHelp && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={onOpenHelp}
+              startIcon={<HelpOutlineIcon sx={{ fontSize: 16 }} />}
+              sx={{
+                py: 0.7,
+                px: { xs: 1.1, sm: 1.5 },
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                borderRadius: '6px',
+                borderColor: 'rgba(255, 255, 255, 0.15)',
+                color: '#B0B8C8',
+                backgroundColor: 'transparent',
+                textTransform: 'none',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                },
+              }}
+            >
+              {t.helpBtn}
+            </Button>
+          )}
+
           <Button
-            variant="outlined"
+            variant="contained"
             size="small"
-            onClick={onExit}
-            startIcon={<ExitToAppIcon sx={{ fontSize: 16 }} />}
+            onClick={onSolveAttempt}
             sx={{
-              py: 0.7,
-              px: { xs: 1.4, sm: 1.8 },
+              py: 0.8,
+              px: { xs: 1.8, sm: 2.4 },
               fontSize: '0.8rem',
               fontWeight: 600,
               borderRadius: '6px',
-              borderColor: 'rgba(255, 255, 255, 0.15)',
-              color: '#B0B8C8',
-              backgroundColor: 'transparent',
+              backgroundColor: '#5951ff',
+              color: '#FFF',
+              flexShrink: 0,
+              boxShadow: 'none',
               textTransform: 'none',
               '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                color: '#FFFFFF',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                backgroundColor: '#3028a1',
+                boxShadow: 'none',
+              },
+              '&:active': {
+                backgroundColor: '#030268',
               },
             }}
           >
-            {t.exitBtn}
+            {t.verifyBtn}
           </Button>
-        )}
-
-        <Button
-          variant="contained"
-          size="small"
-          onClick={onSolveAttempt}
-          sx={{
-            py: 0.8,
-            px: { xs: 2, sm: 2.5 },
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            borderRadius: '6px',
-            backgroundColor: '#5951ff',
-            color: '#FFF',
-            flexShrink: 0,
-            boxShadow: 'none',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#3028a1',
-              boxShadow: 'none',
-            },
-            '&:active': {
-              backgroundColor: '#030268',
-            },
-          }}
-        >
-          {t.verifyBtn}
-        </Button>
+        </Box>
       </Box>
     </Box>
   );

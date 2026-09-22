@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   ThemeProvider,
   CssBaseline,
@@ -22,6 +22,7 @@ import { PreviewViewportList, type ListStatus } from './components/PreviewViewpo
 import { VictoryModal } from './components/VictoryModal';
 import { FailureModal } from './components/FailureModal';
 import { ExitConfirmModal } from './components/ExitConfirmModal';
+import { TaskHelpModal } from './components/TaskHelpModal';
 import { LeaderboardScreen } from './components/LeaderboardScreen';
 import { NameRegistrationModal } from './components/NameRegistrationModal';
 import {
@@ -63,7 +64,6 @@ gap: 0px;`;
 // Level 5: Tooltip (relative a absolute na dvou třídách)
 const DEFAULT_L5_CSS = `.tooltip-container,
 .button {
-  /* Tlačítko */
 }
 
 .tooltip {
@@ -88,6 +88,7 @@ export function App() {
   const [showVictory, setShowVictory] = useState<boolean>(false);
   const [showFailureModal, setShowFailureModal] = useState<boolean>(false);
   const [showExitConfirm, setShowExitConfirm] = useState<boolean>(false);
+  const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isBoothRecord, setIsBoothRecord] = useState<boolean>(false);
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
@@ -232,6 +233,24 @@ export function App() {
           .map((r) => r.levelId)
       ).size
     : 0;
+
+  const campaignTotalTimeMs = useMemo(() => {
+    const currentName = (playerName || '').trim();
+    if (!currentName) return elapsedMs;
+    const playerLevelBest: Record<string, number> = {};
+    for (const r of stats.history) {
+      if ((r.playerTag || '').trim() === currentName && r.levelId !== 'uncompleted' && r.timeMs > 0) {
+        if (!playerLevelBest[r.levelId] || r.timeMs < playerLevelBest[r.levelId]) {
+          playerLevelBest[r.levelId] = r.timeMs;
+        }
+      }
+    }
+    if (!playerLevelBest['level5'] && activeLevel === 'level5' && elapsedMs > 0) {
+      playerLevelBest['level5'] = elapsedMs;
+    }
+    const sum = Object.values(playerLevelBest).reduce((a, b) => a + b, 0);
+    return sum > 0 ? sum : elapsedMs;
+  }, [playerName, stats.history, activeLevel, elapsedMs]);
 
   // Load booth records on mount
   useEffect(() => {
@@ -570,6 +589,34 @@ export function App() {
       setPlayerName('');
       setCurrentScreen('menu');
     }
+  };
+
+  // Reset editor CSS to level initial state (timer keeps running)
+  const handleResetCode = () => {
+    sound.playBlip();
+    if (activeLevel === 'level1') {
+      setL1Css(DEFAULT_L1_CSS);
+    } else if (activeLevel === 'level2') {
+      setL2Css(DEFAULT_L2_CSS);
+    } else if (activeLevel === 'level3') {
+      setL3Css(DEFAULT_L3_CSS);
+    } else if (activeLevel === 'level4') {
+      setL4Css(DEFAULT_L4_CSS);
+    } else {
+      setL5Css(DEFAULT_L5_CSS);
+    }
+  };
+
+  // Open Task Help Modal (timer keeps running)
+  const handleOpenHelp = () => {
+    sound.playBlip();
+    setShowHelpModal(true);
+  };
+
+  // Close Task Help Modal
+  const handleCloseHelp = () => {
+    sound.playBlip();
+    setShowHelpModal(false);
   };
 
   const handleToggleSound = () => {
@@ -1074,9 +1121,14 @@ export function App() {
                   onChange={handleCssChange}
                   onSolveAttempt={handleSolveAttempt}
                   onExit={handleRequestExit}
+                  onResetCode={handleResetCode}
+                  onOpenHelp={handleOpenHelp}
                   readOnlyLines={activeReadOnlyLines}
                   isSolved={isCurrentLevelSolved}
                   hideClosingBrace={activeLevel === 'level5'}
+                  elapsedMs={elapsedMs}
+                  isLevelStarted={isLevelStarted}
+                  language={language}
                   t={t}
                 />
               </Box>
@@ -1197,6 +1249,7 @@ export function App() {
             levelId={activeLevel}
             playerName={playerName || 'Senior Dev'}
             timeMs={elapsedMs}
+            totalTimeMs={campaignTotalTimeMs}
             charCount={activeUserCss.trim().length}
             userCss={activeUserCss}
             isBoothRecord={isBoothRecord}
@@ -1220,6 +1273,14 @@ export function App() {
             onConfirmQuit={handleConfirmExit}
             playerName={playerName || 'Senior Dev'}
             completedRoundsCount={completedRoundsCount}
+            t={t}
+          />
+
+          {/* Task Instructions / Help Modal (pauses timer while open) */}
+          <TaskHelpModal
+            open={showHelpModal}
+            onClose={handleCloseHelp}
+            levelId={activeLevel}
             t={t}
           />
         </Box>

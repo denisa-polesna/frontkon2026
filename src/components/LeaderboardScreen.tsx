@@ -295,17 +295,17 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                 size="medium"
                 sx={{
                   '& .MuiTableCell-stickyHeader': {
-                    backgroundColor: '#1f1f1f',
-                    borderBottom: '1px solid #2e2e2e !important',
+                    backgroundColor: '#5951ff',
+                    borderBottom: '1px solid #4a42e8 !important',
                   },
                 }}
               >
                 <TableHead
                   sx={{
                     '& .MuiTableCell-head': {
-                      backgroundColor: '#1f1f1f',
-                      borderBottom: '1px solid #2e2e2e !important',
-                      borderColor: '#2e2e2e !important',
+                      backgroundColor: '#5951ff',
+                      borderBottom: '1px solid #4a42e8 !important',
+                      borderColor: '#4a42e8 !important',
                       color: '#FFFFFF',
                       fontWeight: 600,
                       fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.98rem' },
@@ -315,11 +315,11 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                     },
                   }}
                 >
-                  <TableRow sx={{ '& th': { borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' } }}>
-                    <TableCell width="14%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRank || 'Místo'}</TableCell>
-                    <TableCell width="40%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colPlayer}</TableCell>
-                    <TableCell width="26%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colRounds || t.colRating || 'Dokončená kola'}</TableCell>
-                    <TableCell width="20%" sx={{ borderBottom: '1px solid #2e2e2e !important', borderColor: '#2e2e2e !important' }}>{t.colTime}</TableCell>
+                  <TableRow sx={{ '& th': { borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' } }}>
+                    <TableCell width="14%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colRank || 'Místo'}</TableCell>
+                    <TableCell width="40%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colPlayer}</TableCell>
+                    <TableCell width="26%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colRounds || t.colRating || 'Dokončená kola'}</TableCell>
+                    <TableCell width="20%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colTime}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

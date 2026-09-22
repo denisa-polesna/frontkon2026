@@ -16,6 +16,7 @@ interface VictoryModalProps {
   levelId: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
   playerName: string;
   timeMs: number;
+  totalTimeMs?: number;
   charCount: number;
   userCss?: string;
   isBoothRecord?: boolean;
@@ -29,6 +30,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   levelId,
   playerName,
   timeMs,
+  totalTimeMs,
   charCount: _charCount,
   userCss = '',
   isBoothRecord = false,
@@ -36,7 +38,10 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   language,
   t,
 }) => {
+  const isFinalLevel = levelId === 'level5';
+
   const getPostMortem = () => {
+    if (isFinalLevel) return t.campaignVictoryFailBot.replace(/{name}/g, playerName);
     if (levelId === 'level1') return t.postMortemTextL1.replace(/{name}/g, playerName);
     if (levelId === 'level2') {
       const isFlex = userCss.toLowerCase().includes('flex');
@@ -57,9 +62,15 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   return (
     <Dialog
       open={open}
-      maxWidth="xs"
+      maxWidth={isFinalLevel ? 'sm' : 'xs'}
       fullWidth
       slotProps={{
+        backdrop: {
+          sx: {
+            backgroundColor: 'rgba(20, 20, 28, 0.98)',
+            backdropFilter: 'blur(16px)',
+          },
+        },
         paper: {
           sx: {
             backgroundColor: '#FFFFFF',
@@ -77,7 +88,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 2,
+          gap: 1.8,
           textAlign: 'center',
         }}
       >
@@ -87,28 +98,45 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           sx={{
             fontWeight: 800,
             color: '#120042',
-            fontSize: { xs: '1.25rem', sm: '1.45rem' },
+            fontSize: isFinalLevel ? { xs: '1.4rem', sm: '1.65rem' } : { xs: '1.25rem', sm: '1.45rem' },
             letterSpacing: '-0.02em',
             lineHeight: 1.25,
             m: 0,
           }}
         >
-          {t.victorySubtitle}
+          {isFinalLevel ? t.campaignVictoryTitle : t.victorySubtitle}
         </Typography>
 
-        {/* Record Chip */}
-        {isBoothRecord && (
-          <Chip
-            label={t.newRecordBadge}
-            size="small"
+        {/* Subtitle for final level */}
+        {isFinalLevel && (
+          <Typography
             sx={{
-              backgroundColor: '#FFB020',
-              color: '#1A1202',
-              fontWeight: 800,
-              fontSize: '0.72rem',
-              height: 24,
+              color: '#5951ff',
+              fontWeight: 700,
+              fontSize: { xs: '0.88rem', sm: '0.98rem' },
+              mt: -0.8,
+              lineHeight: 1.4,
             }}
-          />
+          >
+            {t.campaignVictorySubtitle.replace('{name}', playerName || 'Senior Dev')}
+          </Typography>
+        )}
+
+        {/* Badges / Chips */}
+        {isBoothRecord && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Chip
+              label={t.newRecordBadge}
+              size="small"
+              sx={{
+                backgroundColor: '#FFB020',
+                color: '#1A1202',
+                fontWeight: 800,
+                fontSize: '0.72rem',
+                height: 24,
+              }}
+            />
+          </Box>
         )}
 
         {/* FailBot Defeated Post-Mortem Card */}
@@ -117,46 +145,128 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           name="FailBot-404"
         />
 
-        {/* Single Stats Box: Time */}
-        <Box
-          sx={{
-            backgroundColor: '#fbfaff',
-            py: 1.4,
-            px: 3,
-            borderRadius: '10px',
-            border: '1px solid #e2e0ed',
-            textAlign: 'center',
-            width: '100%',
-            maxWidth: 220,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 0.3,
-          }}
-        >
-          <Typography
+        {/* Stats Display */}
+        {isFinalLevel ? (
+          <Box sx={{ display: 'flex', gap: 1.5, width: '100%', maxWidth: 360, justifyContent: 'center' }}>
+            <Box
+              sx={{
+                flex: 1,
+                backgroundColor: '#fbfaff',
+                py: 1.2,
+                px: 1.5,
+                borderRadius: '10px',
+                border: '1.5px solid #5951ff',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 0.3,
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '0.66rem',
+                  fontWeight: 800,
+                  color: '#5951ff',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                {t.campaignTotalTimeLabel}
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontFamily: 'ui-monospace, monospace',
+                  fontWeight: 800,
+                  color: '#120042',
+                  fontSize: { xs: '1.25rem', sm: '1.45rem' },
+                  m: 0,
+                }}
+              >
+                {formatDuration(totalTimeMs || timeMs, language)}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                flex: 1,
+                backgroundColor: '#fbfaff',
+                py: 1.2,
+                px: 1.5,
+                borderRadius: '10px',
+                border: '1px solid #e2e0ed',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 0.3,
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '0.66rem',
+                  fontWeight: 800,
+                  color: '#6A7292',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                {t.campaignLevelTimeLabel}
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontFamily: 'ui-monospace, monospace',
+                  fontWeight: 800,
+                  color: '#120042',
+                  fontSize: { xs: '1.25rem', sm: '1.45rem' },
+                  m: 0,
+                }}
+              >
+                {formatDuration(timeMs, language)}
+              </Typography>
+            </Box>
+          </Box>
+        ) : (
+          <Box
             sx={{
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              color: '#6A7292',
-              letterSpacing: '0.06em',
+              backgroundColor: '#fbfaff',
+              py: 1.4,
+              px: 3,
+              borderRadius: '10px',
+              border: '1px solid #e2e0ed',
+              textAlign: 'center',
+              width: '100%',
+              maxWidth: 220,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 0.3,
             }}
           >
-            {t.timeTakenLabel || 'ČAS'}
-          </Typography>
-          <Typography
-            variant="h4"
-            sx={{
-              fontFamily: 'ui-monospace, monospace',
-              fontWeight: 800,
-              color: '#120042',
-              fontSize: { xs: '1.45rem', sm: '1.7rem' },
-              m: 0,
-            }}
-          >
-            {formatDuration(timeMs, language)}
-          </Typography>
-        </Box>
+            <Typography
+              sx={{
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                color: '#6A7292',
+                letterSpacing: '0.06em',
+              }}
+            >
+              {t.timeTakenLabel || 'ČAS'}
+            </Typography>
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: 'ui-monospace, monospace',
+                fontWeight: 800,
+                color: '#120042',
+                fontSize: { xs: '1.45rem', sm: '1.7rem' },
+                m: 0,
+              }}
+            >
+              {formatDuration(timeMs, language)}
+            </Typography>
+          </Box>
+        )}
 
         {/* Progression Button */}
         <Button
@@ -180,7 +290,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             },
           }}
         >
-          {levelId === 'level5' ? t.finishCampaignBtn : t.nextLevelBtn}
+          {isFinalLevel ? t.viewFinalLeaderboardBtn : t.nextLevelBtn}
         </Button>
       </DialogContent>
     </Dialog>

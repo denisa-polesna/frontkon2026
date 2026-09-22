@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Typography,
   IconButton,
   Tooltip,
   Button,
@@ -9,17 +8,16 @@ import {
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { OutreachLogo } from './OutreachLogo';
-import { formatDuration } from '../utils/storage';
 import type { Language, translations } from '../utils/i18n';
 
 interface HeaderProps {
-  elapsedMs: number;
+  elapsedMs?: number;
   bestTimeMs?: number | null;
-  isRunning: boolean;
+  isRunning?: boolean;
   isLevelStarted?: boolean;
   onReset?: () => void;
   onLogoClick?: () => void;
-  currentLevel: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
+  currentLevel?: 'level1' | 'level2' | 'level3' | 'level4' | 'level5';
   soundEnabled?: boolean;
   onToggleSound?: () => void;
   language: Language;
@@ -28,8 +26,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  elapsedMs,
-  isLevelStarted = true,
   onLogoClick,
   soundEnabled = true,
   onToggleSound,
@@ -70,57 +66,8 @@ export const Header: React.FC<HeaderProps> = ({
         </Box>
       </Box>
 
-      {/* Desktop: Clean Live Timer centered in header (visible only after level starts) */}
-      {isLevelStarted && (
-        <Box
-          sx={{
-            display: { xs: 'none', md: 'flex' },
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            alignItems: 'center',
-            pointerEvents: 'none',
-          }}
-        >
-          <Typography
-            sx={{
-              fontFamily: 'ui-monospace, monospace',
-              fontSize: '1.15rem',
-              fontWeight: 800,
-              color: '#FFFFFF',
-              letterSpacing: '0.04em',
-            }}
-          >
-            {formatDuration(elapsedMs, language)}
-          </Typography>
-        </Box>
-      )}
-
       {/* Right Controls */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 1.2 } }}>
-        {/* On mobile: timer is placed here right before sound icon, aligned on same level */}
-        {isLevelStarted && (
-          <Box
-            sx={{
-              display: { xs: 'flex', md: 'none' },
-              alignItems: 'center',
-              pr: 0.5,
-            }}
-          >
-            <Typography
-              sx={{
-                fontFamily: 'ui-monospace, monospace',
-                fontSize: '0.96rem',
-                fontWeight: 800,
-                color: '#FFFFFF',
-                letterSpacing: '0.04em',
-              }}
-            >
-              {formatDuration(elapsedMs, language)}
-            </Typography>
-          </Box>
-        )}
-
         {onToggleSound && (
           <Tooltip title={soundEnabled ? t.muteTooltip : t.unmuteTooltip}>
             <IconButton
