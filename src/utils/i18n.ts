@@ -141,7 +141,7 @@ export const translations = {
     stickyOffRadar: 'Scrolled out of view! 💥',
 
     // Viewport L3 (Meeting Card)
-    meetingTitleHeader: 'Meeting Title (Exploding):',
+    meetingTitleHeader: 'Meeting Subject:',
     meetingNotesBtn: 'Brief',
     joinZoomBtn: 'Join Call',
     l3SolvedRadar: 'Cleanly Truncated! 🎯',
@@ -436,7 +436,7 @@ export const translations = {
     stickyOffRadar: 'Odscrollovalo pryč! 💥',
 
     // Viewport L3 (Meeting Card)
-    meetingTitleHeader: 'Název schůzky (Přetékající):',
+    meetingTitleHeader: 'Předmět schůzky:',
     meetingNotesBtn: 'Poznámky',
     joinZoomBtn: 'Připojit se',
     l3SolvedRadar: 'Čistě zkráceno! 🎯',

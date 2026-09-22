@@ -155,12 +155,6 @@ export const PreviewViewportLevel2: React.FC<PreviewViewportLevel2Props> = ({
           alignItems: 'center',
           justifyContent: 'center',
           p: { xs: 1.5, sm: 3 },
-          backgroundImage: `
-            radial-gradient(circle at 50% 50%, rgba(110, 63, 243, 0.08) 0%, transparent 70%),
-            linear-gradient(to right, #141829 1px, transparent 1px),
-            linear-gradient(to bottom, #141829 1px, transparent 1px)
-          `,
-          backgroundSize: '100% 100%, 24px 24px, 24px 24px',
           backgroundColor: '#0A0C16',
         }}
       >

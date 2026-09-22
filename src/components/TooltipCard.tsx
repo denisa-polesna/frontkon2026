@@ -35,9 +35,9 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
         maxWidth: '96%',
         minHeight: { xs: 295, sm: 315 },
         backgroundColor: '#FFFFFF',
-        borderRadius: '16px',
-        border: '1px solid rgba(89, 81, 255, 0.25)',
-        boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 16px rgba(0, 0, 0, 0.08)',
+        borderRadius: '14px',
+        border: '1px solid #E5E7EB',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
@@ -50,14 +50,14 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
         avatar={
           <Avatar
             sx={{
-              bgcolor: '#5951ff',
-              color: '#FFFFFF',
-              width: 32,
-              height: 32,
-              borderRadius: '6px',
+              bgcolor: '#EEEDFE',
+              color: '#5951FF',
+              width: 34,
+              height: 34,
+              borderRadius: '8px',
             }}
           >
-            <AutoAwesomeIcon sx={{ fontSize: 18 }} />
+            <AutoAwesomeIcon sx={{ fontSize: 19 }} />
           </Avatar>
         }
         action={
@@ -65,9 +65,9 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
             sx={{
               display: 'flex',
               alignItems: 'center',
-              p: 0.5,
-              color: '#666666',
-              backgroundColor: '#f5f4ff',
+              p: 0.6,
+              color: '#6B7280',
+              backgroundColor: '#F3F4F6',
               borderRadius: '6px',
             }}
           >
@@ -76,7 +76,7 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
         }
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#120042', fontSize: '0.94rem', lineHeight: 1.2 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#111827', fontSize: '0.94rem', lineHeight: 1.2 }}>
               AI Email Asistent
             </Typography>
             <Chip
@@ -85,26 +85,24 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
               sx={{
                 height: 20,
                 fontSize: '0.65rem',
-                fontWeight: 800,
-                backgroundColor: 'rgba(89, 81, 255, 0.12)',
-                color: '#5951ff',
+                fontWeight: 700,
+                backgroundColor: '#EEEDFE',
+                color: '#5951FF',
                 borderRadius: '4px',
               }}
             />
           </Box>
         }
         subheader={
-          <Typography variant="caption" sx={{ color: '#767484', fontSize: '0.72rem' }}>
+          <Typography variant="caption" sx={{ color: '#6B7280', fontSize: '0.74rem' }}>
             Acme Corp &bull; Šablona odpovědi kontraktu
           </Typography>
         }
         sx={{
-          p: { xs: 1.8, sm: 2.2 },
+          p: { xs: 1.6, sm: 2 },
           pb: 1.6,
           backgroundColor: '#FFFFFF',
-          borderBottom: '1px solid #e2e0ed',
-          borderTopLeftRadius: '15px',
-          borderTopRightRadius: '15px',
+          borderBottom: '1px solid #E5E7EB',
         }}
       />
 
@@ -119,16 +117,14 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
           justifyContent: 'space-between',
           flex: 1,
           gap: 2,
-          borderBottomLeftRadius: '15px',
-          borderBottomRightRadius: '15px',
         }}
       >
         {/* Email preview snippet */}
-        <Box sx={{ p: 1.4, borderRadius: '8px', backgroundColor: '#fbfaff', border: '1.5px solid #e2e0ed' }}>
-          <Typography sx={{ fontSize: '0.74rem', color: '#767484', mb: 0.4 }}>
-            Předmět: <strong>Finální návrh licenčních podmínek</strong>
+        <Box sx={{ p: 1.4, borderRadius: '8px', backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB' }}>
+          <Typography sx={{ fontSize: '0.74rem', color: '#6B7280', mb: 0.4 }}>
+            Předmět: <strong style={{ color: '#111827' }}>Finální návrh licenčních podmínek</strong>
           </Typography>
-          <Typography sx={{ fontSize: '0.8rem', color: '#120042', lineHeight: 1.4 }}>
+          <Typography sx={{ fontSize: '0.8rem', color: '#374151', lineHeight: 1.45 }}>
             Dobrý den, posíláme aktualizované znění smlouvy. Požadované úpravy platebního kalendáře byly zapracovány.
           </Typography>
         </Box>
@@ -139,11 +135,13 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
             variant="outlined"
             size="small"
             sx={{
-              color: '#555555',
-              borderColor: '#e2e0ed',
-              borderRadius: '6px',
+              color: '#4B5563',
+              borderColor: '#E5E7EB',
+              borderRadius: '8px',
               fontSize: '0.78rem',
+              fontWeight: 500,
               textTransform: 'none',
+              '&:hover': { backgroundColor: '#F3F4F6', borderColor: '#D1D5DB' },
             }}
           >
             Uložit
@@ -161,14 +159,14 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
                 size="small"
                 startIcon={<AutoAwesomeIcon sx={{ fontSize: 16 }} />}
                 sx={{
-                  backgroundColor: '#5951ff',
+                  backgroundColor: '#5951FF',
                   color: '#FFFFFF',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   fontSize: '0.78rem',
-                  borderRadius: '6px',
+                  borderRadius: '8px',
                   boxShadow: 'none',
                   textTransform: 'none',
-                  '&:hover': { backgroundColor: '#3028a1', boxShadow: 'none' },
+                  '&:hover': { backgroundColor: '#4338CA', boxShadow: 'none' },
                 }}
               >
                 Doporučení Kaia
@@ -212,12 +210,12 @@ export const TooltipCard: React.FC<TooltipCardProps> = ({
                   gap: 0.8,
                   px: 1.2,
                   py: 0.6,
-                  borderRadius: '6px',
-                  backgroundColor: '#120042',
+                  borderRadius: '8px',
+                  backgroundColor: '#1E1B4B',
                   color: '#FFFFFF',
-                  fontSize: '0.72rem',
+                  fontSize: '0.74rem',
                   fontWeight: 600,
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+                  boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.3)',
                   whiteSpace: 'nowrap',
                 }}
               >

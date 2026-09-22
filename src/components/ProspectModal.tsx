@@ -10,7 +10,6 @@ import {
   Box,
   Chip,
   Avatar,
-  Divider,
 } from '@mui/material';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import CloseIcon from '@mui/icons-material/Close';
@@ -33,9 +32,9 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
           margin: 0,
           boxSizing: 'border-box',
           backgroundColor: '#FFFFFF',
-          borderRadius: '16px',
-          border: '1px solid rgba(89, 81, 255, 0.25)',
-          boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 16px rgba(0, 0, 0, 0.08)',
+          borderRadius: '14px',
+          border: '1px solid #E5E7EB',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
           pointerEvents: 'none', // purely for display in the puzzle
           userSelect: 'none',
           overflow: 'hidden',
@@ -46,14 +45,14 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
           avatar={
             <Avatar
               sx={{
-                bgcolor: '#5951ff',
-                color: '#FFFFFF',
-                width: 32,
-                height: 32,
-                borderRadius: '6px',
+                bgcolor: '#EEEDFE',
+                color: '#5951FF',
+                width: 34,
+                height: 34,
+                borderRadius: '8px',
               }}
             >
-              <PersonAddAlt1Icon sx={{ fontSize: 18 }} />
+              <PersonAddAlt1Icon sx={{ fontSize: 19 }} />
             </Avatar>
           }
           action={
@@ -61,9 +60,9 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                p: 0.5,
-                color: '#666666',
-                backgroundColor: '#f5f4ff',
+                p: 0.6,
+                color: '#6B7280',
+                backgroundColor: '#F3F4F6',
                 borderRadius: '6px',
               }}
             >
@@ -71,17 +70,15 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
             </Box>
           }
           title={
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#120042', fontSize: '0.94rem' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#111827', fontSize: '0.94rem' }}>
               {t.modalTitle}
             </Typography>
           }
-          sx={{ p: '12px 16px' }}
+          sx={{ p: '14px 18px', borderBottom: '1px solid #E5E7EB' }}
         />
 
-        <Divider sx={{ borderColor: '#e8e6f5' }} />
-
         {/* Form Fields from Outreach CreateProspect */}
-        <CardContent sx={{ p: '14px 16px', display: 'flex', flexDirection: 'column', gap: 1.4 }}>
+        <CardContent sx={{ p: '16px 18px', display: 'flex', flexDirection: 'column', gap: 1.4 }}>
           <Box sx={{ display: 'flex', gap: 1 }}>
             <TextField
               label={t.firstName}
@@ -89,15 +86,15 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
               defaultValue="Ada"
               fullWidth
               slotProps={{
-                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
                 input: {
                   sx: {
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
+                    fontSize: '0.84rem',
+                    fontWeight: 500,
                     backgroundColor: '#FFFFFF',
-                    color: '#120042',
-                    borderRadius: '6px',
-                    '& fieldset': { borderColor: '#d4d2e3' },
+                    color: '#111827',
+                    borderRadius: '8px',
+                    '& fieldset': { borderColor: '#E5E7EB' },
                   },
                 },
               }}
@@ -108,15 +105,15 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
               defaultValue="Lovelace"
               fullWidth
               slotProps={{
-                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
                 input: {
                   sx: {
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
+                    fontSize: '0.84rem',
+                    fontWeight: 500,
                     backgroundColor: '#FFFFFF',
-                    color: '#120042',
-                    borderRadius: '6px',
-                    '& fieldset': { borderColor: '#d4d2e3' },
+                    color: '#111827',
+                    borderRadius: '8px',
+                    '& fieldset': { borderColor: '#E5E7EB' },
                   },
                 },
               }}
@@ -129,15 +126,15 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
             defaultValue="ada.lovelace@analytical.engine"
             fullWidth
             slotProps={{
-              inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+              inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
               input: {
                 sx: {
-                  fontSize: '0.82rem',
-                  fontWeight: 600,
+                  fontSize: '0.84rem',
+                  fontWeight: 500,
                   backgroundColor: '#FFFFFF',
-                  color: '#120042',
-                  borderRadius: '6px',
-                  '& fieldset': { borderColor: '#d4d2e3' },
+                  color: '#111827',
+                  borderRadius: '8px',
+                  '& fieldset': { borderColor: '#E5E7EB' },
                 },
               },
             }}
@@ -150,15 +147,15 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
               defaultValue="Babbage Industries"
               fullWidth
               slotProps={{
-                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
                 input: {
                   sx: {
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
+                    fontSize: '0.84rem',
+                    fontWeight: 500,
                     backgroundColor: '#FFFFFF',
-                    color: '#120042',
-                    borderRadius: '6px',
-                    '& fieldset': { borderColor: '#d4d2e3' },
+                    color: '#111827',
+                    borderRadius: '8px',
+                    '& fieldset': { borderColor: '#E5E7EB' },
                   },
                 },
               }}
@@ -169,15 +166,15 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
               defaultValue={t.stageValue}
               fullWidth
               slotProps={{
-                inputLabel: { shrink: true, sx: { color: '#555555', fontSize: '0.82rem' } },
+                inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
                 input: {
                   sx: {
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
+                    fontSize: '0.84rem',
+                    fontWeight: 500,
                     backgroundColor: '#FFFFFF',
-                    color: '#120042',
-                    borderRadius: '6px',
-                    '& fieldset': { borderColor: '#d4d2e3' },
+                    color: '#111827',
+                    borderRadius: '8px',
+                    '& fieldset': { borderColor: '#E5E7EB' },
                   },
                 },
               }}
@@ -190,42 +187,44 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
                 label={t.tierBadge}
                 size="small"
                 sx={{
-                  fontSize: '0.68rem',
-                  fontWeight: 700,
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
                   height: 22,
-                  backgroundColor: 'rgba(0, 210, 180, 0.15)',
-                  color: '#008775',
-                  border: '1px solid rgba(0, 210, 180, 0.35)',
+                  backgroundColor: '#ECFDF5',
+                  color: '#047857',
+                  border: '1px solid #A7F3D0',
+                  borderRadius: '6px',
                 }}
               />
               <Chip
                 label={t.ownerBadge}
                 size="small"
                 sx={{
-                  fontSize: '0.68rem',
-                  fontWeight: 700,
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
                   height: 22,
-                  backgroundColor: 'rgba(89, 81, 255, 0.12)',
-                  color: '#5951ff',
-                  border: '1px solid rgba(89, 81, 255, 0.3)',
+                  backgroundColor: '#EEEDFE',
+                  color: '#5951FF',
+                  border: '1px solid #C7D2FE',
+                  borderRadius: '6px',
                 }}
               />
             </Box>
           </Box>
         </CardContent>
 
-        <Divider sx={{ borderColor: '#e8e6f5' }} />
-
         {/* Modal Actions */}
-        <CardActions sx={{ p: '10px 16px', justifyContent: 'flex-end', gap: 1, backgroundColor: '#faf9ff' }}>
+        <CardActions sx={{ p: '12px 18px', justifyContent: 'flex-end', gap: 1, backgroundColor: '#F9FAFB', borderTop: '1px solid #E5E7EB' }}>
           <Button
             size="small"
             sx={{
-              color: '#666666',
-              fontSize: '0.78rem',
+              color: '#4B5563',
+              fontSize: '0.8rem',
               fontWeight: 600,
-              minWidth: 60,
+              minWidth: 64,
               textTransform: 'none',
+              borderRadius: '8px',
+              '&:hover': { backgroundColor: '#F3F4F6', color: '#111827' },
             }}
           >
             {t.cancelBtn}
@@ -234,15 +233,16 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
             variant="contained"
             size="small"
             sx={{
-              backgroundColor: '#5951ff',
+              backgroundColor: '#5951FF',
               color: '#FFFFFF',
-              fontSize: '0.78rem',
+              fontSize: '0.8rem',
               fontWeight: 600,
-              borderRadius: '6px',
+              borderRadius: '8px',
               textTransform: 'none',
               boxShadow: 'none',
+              px: 2,
               '&:hover': {
-                backgroundColor: '#3028a1',
+                backgroundColor: '#4338CA',
                 boxShadow: 'none',
               },
             }}

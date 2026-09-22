@@ -30,9 +30,9 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
         width: { xs: 330, sm: 380 },
         maxWidth: '96%',
         backgroundColor: '#FFFFFF',
-        borderRadius: '16px',
-        border: '1px solid rgba(89, 81, 255, 0.25)',
-        boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 16px rgba(0, 0, 0, 0.08)',
+        borderRadius: '14px',
+        border: '1px solid #E5E7EB',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
         position: 'relative',
         userSelect: 'none',
         pointerEvents: 'none',
@@ -44,14 +44,14 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
         avatar={
           <Avatar
             sx={{
-              bgcolor: '#5951ff',
-              color: '#FFFFFF',
-              width: 32,
-              height: 32,
-              borderRadius: '6px',
+              bgcolor: '#EEEDFE',
+              color: '#5951FF',
+              width: 34,
+              height: 34,
+              borderRadius: '8px',
             }}
           >
-            <FormatListBulletedIcon sx={{ fontSize: 18 }} />
+            <FormatListBulletedIcon sx={{ fontSize: 19 }} />
           </Avatar>
         }
         action={
@@ -59,9 +59,9 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
             sx={{
               display: 'flex',
               alignItems: 'center',
-              p: 0.5,
-              color: '#666666',
-              backgroundColor: '#f5f4ff',
+              p: 0.6,
+              color: '#6B7280',
+              backgroundColor: '#F3F4F6',
               borderRadius: '6px',
             }}
           >
@@ -69,25 +69,25 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
           </Box>
         }
         title={
-          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#120042', fontSize: '0.94rem', lineHeight: 1.2 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#111827', fontSize: '0.94rem', lineHeight: 1.2 }}>
             Seznam aktivit
           </Typography>
         }
         subheader={
-          <Typography variant="caption" sx={{ color: '#767484', fontSize: '0.72rem' }}>
+          <Typography variant="caption" sx={{ color: '#6B7280', fontSize: '0.74rem' }}>
             Acme Corp • 4 naplánované úkoly
           </Typography>
         }
         sx={{
-          p: { xs: 1.8, sm: 2.2 },
+          p: { xs: 1.6, sm: 2 },
           pb: 1.6,
-          borderBottom: '1px solid #e2e0ed',
+          borderBottom: '1px solid #E5E7EB',
         }}
       />
 
       {/* Content */}
       <CardContent sx={{ p: { xs: 1.8, sm: 2.2 }, pt: 2, pb: 1.5 }}>
-        <Typography component="label" sx={{ display: 'block', fontSize: '0.76rem', fontWeight: 600, color: '#120042', mb: 1 }}>
+        <Typography component="label" sx={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: '#374151', mb: 1 }}>
           Nadcházející aktivity:
         </Typography>
 
@@ -284,16 +284,18 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
       </CardContent>
 
       {/* Action Footer */}
-      <CardActions sx={{ px: { xs: 1.8, sm: 2.2 }, pb: { xs: 1.8, sm: 2.2 }, pt: 0.5, justifyContent: 'flex-end', gap: 1 }}>
+      <CardActions sx={{ px: { xs: 1.8, sm: 2.2 }, py: 1.4, backgroundColor: '#F9FAFB', borderTop: '1px solid #E5E7EB', justifyContent: 'flex-end', gap: 1 }}>
         <Button
           size="small"
           sx={{
             height: 36,
-            color: '#555555',
+            color: '#4B5563',
             fontSize: '0.82rem',
             fontWeight: 600,
             textTransform: 'none',
             px: 1.6,
+            borderRadius: '8px',
+            '&:hover': { backgroundColor: '#F3F4F6', color: '#111827' },
           }}
         >
           Zavřít
@@ -303,14 +305,18 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
           size="small"
           sx={{
             height: 36,
-            backgroundColor: '#5951ff',
+            backgroundColor: '#5951FF',
             color: '#FFFFFF',
             fontSize: '0.82rem',
             fontWeight: 600,
-            borderRadius: '6px',
+            borderRadius: '8px',
             textTransform: 'none',
             boxShadow: 'none',
             px: 2,
+            '&:hover': {
+              backgroundColor: '#4338CA',
+              boxShadow: 'none',
+            },
           }}
         >
           + Přidat aktivitu
