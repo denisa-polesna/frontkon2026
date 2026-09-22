@@ -6,8 +6,10 @@ import {
   Typography,
   Button,
   IconButton,
+  Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import { FailBotSpeechCard } from './FailBotSpeechCard';
 import type { translations } from '../utils/i18n';
 
@@ -31,6 +33,12 @@ export const FailureModal: React.FC<FailureModalProps> = ({
       maxWidth="xs"
       fullWidth
       slotProps={{
+        backdrop: {
+          sx: {
+            backgroundColor: 'rgba(20, 20, 28, 0.98)',
+            backdropFilter: 'blur(16px)',
+          },
+        },
         paper: {
           sx: {
             backgroundColor: '#FFFFFF',
@@ -65,7 +73,7 @@ export const FailureModal: React.FC<FailureModalProps> = ({
         <CloseIcon sx={{ fontSize: 18 }} />
       </IconButton>
 
-      <DialogContent sx={{ p: 0, pt: 1 }}>
+      <DialogContent sx={{ p: 0, pt: 0.5 }}>
         <Typography
           variant="h5"
           sx={{
@@ -74,6 +82,7 @@ export const FailureModal: React.FC<FailureModalProps> = ({
             fontSize: { xs: '1.25rem', sm: '1.45rem' },
             letterSpacing: '-0.02em',
             mb: 2,
+            px: { xs: 4, sm: 5 },
           }}
         >
           {t.failedModalTitle}
@@ -83,8 +92,34 @@ export const FailureModal: React.FC<FailureModalProps> = ({
         <FailBotSpeechCard
           message={t.verifyFailedDevbot.replace('{name}', playerName || 'Senior Dev')}
           name="FailBot-404"
-          sx={{ mb: 2.5 }}
+          sx={{ mb: 2 }}
         />
+
+        {/* Timer is still running notice */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 0.8,
+            backgroundColor: '#F3F4F6',
+            borderRadius: '8px',
+            py: 1.1,
+            px: 1.6,
+            mb: 2.5,
+          }}
+        >
+          <TimerOutlinedIcon sx={{ fontSize: 18, color: '#4B5563', flexShrink: 0 }} />
+          <Typography
+            sx={{
+              color: '#374151',
+              fontSize: '0.84rem',
+              fontWeight: 600,
+            }}
+          >
+            {t.failedModalTimerRunning}
+          </Typography>
+        </Box>
       </DialogContent>
 
       <DialogActions sx={{ p: 0 }}>

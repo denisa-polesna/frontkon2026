@@ -8,9 +8,6 @@ import {
   Typography,
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import CodeIcon from '@mui/icons-material/Code';
-import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import confetti from 'canvas-confetti';
 import { outreachTheme } from './theme';
 import { Header } from './components/Header';
@@ -108,6 +105,12 @@ export function App() {
   const [mobileTabIndex, setMobileTabIndex] = useState<number>(0);
 
   const handleArenaScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (!isLevelStarted) {
+      if (e.currentTarget.scrollLeft !== 0) {
+        e.currentTarget.scrollLeft = 0;
+      }
+      return;
+    }
     const el = e.currentTarget;
     if (el.clientWidth > 0) {
       const page = Math.round(el.scrollLeft / el.clientWidth);
@@ -118,6 +121,7 @@ export function App() {
   };
 
   const handleMobileTabClick = (index: number) => {
+    if (!isLevelStarted) return;
     setMobileTabIndex(index);
     if (arenaScrollRef.current) {
       arenaScrollRef.current.scrollTo({
@@ -188,28 +192,6 @@ export function App() {
     switch (activeLevel) {
       case 'level1':
         return [
-          {
-            text:
-              language === 'cz'
-                ? '/* Úkol: Header má nastavený z-index: 100.'
-                : '/* Task: The sticky header has z-index: 100.',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   Nastav rozbalovací menu tak,'
-                : '   Adjust the dropdown menu so that',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   aby se zobrazovalo nad headerem */'
-                : '   it displays cleanly above the header */',
-            isComment: true,
-          },
-          { text: '' },
           { text: '.header {' },
           { text: 'position: sticky;', indent: 1 },
           { text: 'top: 0;', indent: 1 },
@@ -220,108 +202,19 @@ export function App() {
         ];
       case 'level2':
         return [
-          {
-            text:
-              language === 'cz'
-                ? '/* Úkol: Vycentruj vyskakovací okno'
-                : '/* Task: Center the prospect modal dialog',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   na přesný střed obrazovky'
-                : '   horizontally and vertically',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   (horizontálně i vertikálně) */'
-                : '   on the screen */',
-            isComment: true,
-          },
-          { text: '' },
           { text: '.modal-viewport {', isSelector: true },
         ];
       case 'level3':
         return [
-          {
-            text:
-              language === 'cz'
-                ? '/* Úkol: Zkrať název schůzky na 1 řádek'
-                : '/* Task: Keep meeting title on 1 line',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   a zakonči ho trojtečkou (...),'
-                : '   and truncate it with an ellipsis (...)',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   aby neroztahoval kalendářní kartu */'
-                : '   so it doesn’t break the calendar card */',
-            isComment: true,
-          },
-          { text: '' },
           { text: '.meeting-title {', isSelector: true },
         ];
       case 'level4':
         return [
-          {
-            text:
-              language === 'cz'
-                ? '/* Úkol: Seřaď karty aktivit do sloupce'
-                : '/* Task: Stack the activity cards into a column',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   v obráceném pořadí'
-                : '   in reverse order',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   s 10px mezerami */'
-                : '   with 10px gaps */',
-            isComment: true,
-          },
-          { text: '' },
           { text: '.activity-list {', isSelector: true },
         ];
       case 'level5':
       default:
-        return [
-          {
-            text:
-              language === 'cz'
-                ? '/* Úkol: FailBot nastavil position: relative na .tooltip,'
-                : '/* Task: FailBot set position: relative on .tooltip,',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   ale zapomněl position: relative na .tooltip-container / .button.'
-                : '   but forgot position: relative on .tooltip-container / .button.',
-            isComment: true,
-          },
-          {
-            text:
-              language === 'cz'
-                ? '   Zarovnej tooltip nad tlačítko */'
-                : '   Align the tooltip above the button */',
-            isComment: true,
-          },
-          { text: '' },
-        ];
+        return [];
     }
   };
 
@@ -470,6 +363,10 @@ export function App() {
     setIsLevelStarted(false);
     setShowVictory(false);
     setFailedVerify(false);
+    setMobileTabIndex(0);
+    if (arenaScrollRef.current) {
+      arenaScrollRef.current.scrollLeft = 0;
+    }
 
     if (activeLevel === 'level1') {
       setL1Css(DEFAULT_L1_CSS);
@@ -506,6 +403,10 @@ export function App() {
     setIsLevelStarted(false);
     setShowVictory(false);
     setFailedVerify(false);
+    setMobileTabIndex(0);
+    if (arenaScrollRef.current) {
+      arenaScrollRef.current.scrollLeft = 0;
+    }
   };
 
   // Start timer and unblur the workspace
@@ -917,35 +818,40 @@ export function App() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: 1,
+                opacity: isLevelStarted ? 1 : 0.45,
+                pointerEvents: isLevelStarted ? 'auto' : 'none',
+                transition: 'opacity 0.25s ease',
               }}
             >
               <Box
                 sx={{
                   display: 'flex',
-                  backgroundColor: '#160844',
-                  border: '1px solid rgba(179, 176, 255, 0.2)',
+                  backgroundColor: '#232842',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '8px',
                   p: '3px',
                   gap: 0.5,
                   maxWidth: '100%',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
                 }}
               >
                 <Button
                   size="small"
                   onClick={() => handleMobileTabClick(0)}
-                  startIcon={<CodeIcon sx={{ fontSize: '14px !important' }} />}
                   sx={{
-                    py: '4px',
-                    px: { xs: 1.4, sm: 2 },
-                    fontSize: '0.74rem',
-                    fontWeight: mobileTabIndex === 0 ? 700 : 500,
-                    color: mobileTabIndex === 0 ? '#FFFFFF' : '#b3b0ff',
+                    py: '5px',
+                    px: { xs: 1.6, sm: 2.2 },
+                    fontSize: '0.78rem',
+                    fontWeight: mobileTabIndex === 0 ? 600 : 500,
+                    color: mobileTabIndex === 0 ? '#FFFFFF' : '#A2ADC7',
                     backgroundColor: mobileTabIndex === 0 ? '#5951ff' : 'transparent',
                     borderRadius: '6px',
                     textTransform: 'none',
                     minWidth: 0,
+                    boxShadow: mobileTabIndex === 0 ? '0 2px 8px rgba(89, 81, 255, 0.4)' : 'none',
                     '&:hover': {
-                      backgroundColor: mobileTabIndex === 0 ? '#5951ff' : 'rgba(89, 81, 255, 0.15)',
+                      backgroundColor: mobileTabIndex === 0 ? '#5951ff' : 'rgba(255, 255, 255, 0.08)',
+                      color: '#FFFFFF',
                     },
                   }}
                 >
@@ -954,19 +860,20 @@ export function App() {
                 <Button
                   size="small"
                   onClick={() => handleMobileTabClick(1)}
-                  startIcon={<VisibilityIcon sx={{ fontSize: '14px !important' }} />}
                   sx={{
-                    py: '4px',
-                    px: { xs: 1.4, sm: 2 },
-                    fontSize: '0.74rem',
-                    fontWeight: mobileTabIndex === 1 ? 700 : 500,
-                    color: mobileTabIndex === 1 ? '#FFFFFF' : '#b3b0ff',
+                    py: '5px',
+                    px: { xs: 1.6, sm: 2.2 },
+                    fontSize: '0.78rem',
+                    fontWeight: mobileTabIndex === 1 ? 600 : 500,
+                    color: mobileTabIndex === 1 ? '#FFFFFF' : '#A2ADC7',
                     backgroundColor: mobileTabIndex === 1 ? '#5951ff' : 'transparent',
                     borderRadius: '6px',
                     textTransform: 'none',
                     minWidth: 0,
+                    boxShadow: mobileTabIndex === 1 ? '0 2px 8px rgba(89, 81, 255, 0.4)' : 'none',
                     '&:hover': {
-                      backgroundColor: mobileTabIndex === 1 ? '#5951ff' : 'rgba(89, 81, 255, 0.15)',
+                      backgroundColor: mobileTabIndex === 1 ? '#5951ff' : 'rgba(255, 255, 255, 0.08)',
+                      color: '#FFFFFF',
                     },
                   }}
                 >
@@ -975,19 +882,20 @@ export function App() {
                 <Button
                   size="small"
                   onClick={() => handleMobileTabClick(2)}
-                  startIcon={<TrackChangesIcon sx={{ fontSize: '14px !important' }} />}
                   sx={{
-                    py: '4px',
-                    px: { xs: 1.4, sm: 2 },
-                    fontSize: '0.74rem',
-                    fontWeight: mobileTabIndex === 2 ? 700 : 500,
-                    color: mobileTabIndex === 2 ? '#FFFFFF' : '#b3b0ff',
+                    py: '5px',
+                    px: { xs: 1.6, sm: 2.2 },
+                    fontSize: '0.78rem',
+                    fontWeight: mobileTabIndex === 2 ? 600 : 500,
+                    color: mobileTabIndex === 2 ? '#FFFFFF' : '#A2ADC7',
                     backgroundColor: mobileTabIndex === 2 ? '#5951ff' : 'transparent',
                     borderRadius: '6px',
                     textTransform: 'none',
                     minWidth: 0,
+                    boxShadow: mobileTabIndex === 2 ? '0 2px 8px rgba(89, 81, 255, 0.4)' : 'none',
                     '&:hover': {
-                      backgroundColor: mobileTabIndex === 2 ? '#5951ff' : 'rgba(89, 81, 255, 0.15)',
+                      backgroundColor: mobileTabIndex === 2 ? '#5951ff' : 'rgba(255, 255, 255, 0.08)',
+                      color: '#FFFFFF',
                     },
                   }}
                 >
@@ -1005,7 +913,7 @@ export function App() {
                       width: mobileTabIndex === idx ? 18 : 6,
                       height: 6,
                       borderRadius: '3px',
-                      backgroundColor: mobileTabIndex === idx ? '#5951ff' : 'rgba(179, 176, 255, 0.3)',
+                      backgroundColor: mobileTabIndex === idx ? '#5951ff' : 'rgba(255, 255, 255, 0.25)',
                       transition: 'all 0.25s ease',
                       cursor: 'pointer',
                     }}
@@ -1022,11 +930,12 @@ export function App() {
                 position: 'relative',
                 display: { xs: 'flex', lg: 'grid' },
                 flexDirection: { xs: 'row', lg: 'unset' },
-                overflowX: { xs: 'auto', lg: 'hidden' },
+                overflowX: { xs: isLevelStarted ? 'auto' : 'hidden', lg: 'hidden' },
                 overflowY: 'hidden',
-                scrollSnapType: { xs: 'x mandatory', lg: 'none' },
+                scrollSnapType: { xs: isLevelStarted ? 'x mandatory' : 'none', lg: 'none' },
+                touchAction: isLevelStarted ? 'auto' : 'none',
                 scrollBehavior: 'smooth',
-                WebkitOverflowScrolling: 'touch',
+                WebkitOverflowScrolling: isLevelStarted ? 'touch' : 'auto',
                 scrollbarWidth: 'none',
                 '&::-webkit-scrollbar': { display: 'none' },
                 gridTemplateColumns: {
@@ -1038,6 +947,7 @@ export function App() {
                 alignItems: 'stretch',
                 width: '100%',
                 height: '100%',
+                borderRadius: 2.5,
               }}
             >
               {/* Frosted Glass Blur Overlay before player hits Start */}
@@ -1045,7 +955,7 @@ export function App() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    inset: -4,
+                    inset: 0,
                     backdropFilter: 'blur(16px)',
                     backgroundColor: 'rgba(20, 20, 28, 0.98)',
                     zIndex: 99999,
@@ -1150,8 +1060,8 @@ export function App() {
                   minWidth: { xs: '100%', lg: 0 },
                   height: '100%',
                   minHeight: 0,
-                  scrollSnapAlign: { xs: 'start', lg: 'none' },
-                  scrollSnapStop: { xs: 'always', lg: 'unset' },
+                  scrollSnapAlign: { xs: isLevelStarted ? 'start' : 'none', lg: 'none' },
+                  scrollSnapStop: { xs: isLevelStarted ? 'always' : 'unset', lg: 'unset' },
                   display: 'flex',
                   flexDirection: 'column',
                   order: 1,
@@ -1179,8 +1089,8 @@ export function App() {
                   minWidth: { xs: '100%', lg: 0 },
                   height: '100%',
                   minHeight: 0,
-                  scrollSnapAlign: { xs: 'start', lg: 'none' },
-                  scrollSnapStop: { xs: 'always', lg: 'unset' },
+                  scrollSnapAlign: { xs: isLevelStarted ? 'start' : 'none', lg: 'none' },
+                  scrollSnapStop: { xs: isLevelStarted ? 'always' : 'unset', lg: 'unset' },
                   display: 'flex',
                   flexDirection: 'column',
                   order: 2,
@@ -1238,8 +1148,8 @@ export function App() {
                   minWidth: { xs: '100%', lg: 0 },
                   height: '100%',
                   minHeight: 0,
-                  scrollSnapAlign: { xs: 'start', lg: 'none' },
-                  scrollSnapStop: { xs: 'always', lg: 'unset' },
+                  scrollSnapAlign: { xs: isLevelStarted ? 'start' : 'none', lg: 'none' },
+                  scrollSnapStop: { xs: isLevelStarted ? 'always' : 'unset', lg: 'unset' },
                   display: 'flex',
                   flexDirection: 'column',
                   order: 3,

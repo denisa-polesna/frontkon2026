@@ -77,7 +77,7 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
         <CloseIcon sx={{ fontSize: 18 }} />
       </IconButton>
 
-      <DialogContent sx={{ p: 0, pt: 1 }}>
+      <DialogContent sx={{ p: 0, pt: 0.5 }}>
         <Typography
           variant="h5"
           sx={{
@@ -86,6 +86,7 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
             fontSize: { xs: '1.25rem', sm: '1.45rem' },
             letterSpacing: '-0.02em',
             mb: 2,
+            px: { xs: 4, sm: 5 },
           }}
         >
           {t.exitConfirmTitle}
