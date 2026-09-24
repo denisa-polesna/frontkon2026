@@ -77,6 +77,8 @@ export const TaskHelpModal: React.FC<TaskHelpModalProps> = ({
             boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45)',
             p: { xs: 2.5, sm: 3.2 },
             position: 'relative',
+            m: { xs: '14px', sm: 2 },
+            width: { xs: 'calc(100% - 28px)', sm: '100%' },
           },
         },
       }}

@@ -289,7 +289,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
               </Typography>
             </Box>
           ) : (
-            <TableContainer sx={{ maxHeight: { xs: '65vh', sm: '70vh', md: 680, xl: 800 }, backgroundColor: '#FFFFFF' }}>
+            <TableContainer sx={{ maxHeight: { xs: 'none', sm: 'none', md: 680, xl: 800 }, backgroundColor: '#FFFFFF' }}>
               <Table
                 stickyHeader
                 size="medium"

@@ -52,6 +52,8 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
             p: { xs: 2.5, sm: 3.2 },
             textAlign: 'center',
             position: 'relative',
+            m: { xs: '14px', sm: 2 },
+            width: { xs: 'calc(100% - 28px)', sm: '100%' },
           },
         },
       }}

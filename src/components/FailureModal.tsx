@@ -48,6 +48,8 @@ export const FailureModal: React.FC<FailureModalProps> = ({
             p: { xs: 2.5, sm: 3.5 },
             textAlign: 'center',
             position: 'relative',
+            m: { xs: '14px', sm: 2 },
+            width: { xs: 'calc(100% - 28px)', sm: '100%' },
           },
         },
       }}

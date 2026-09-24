@@ -111,7 +111,7 @@ export const DropdownHeaderCard: React.FC<DropdownHeaderCardProps> = () => {
             </Typography>
 
             <Box sx={{ position: 'relative' }}>
-              {/* Trigger Input */}
+              {/* Trigger Input Button */}
               <Box
                 sx={{
                   height: 38,
@@ -243,7 +243,16 @@ export const DropdownHeaderCard: React.FC<DropdownHeaderCardProps> = () => {
         </CardContent>
 
         {/* Modal Action Buttons */}
-        <CardActions sx={{ px: { xs: 1.8, sm: 2.2 }, py: 1.4, backgroundColor: '#F9FAFB', borderTop: '1px solid #E5E7EB', justifyContent: 'flex-end', gap: 1 }}>
+        <CardActions
+          sx={{
+            px: { xs: 1.8, sm: 2.2 },
+            py: 1.4,
+            backgroundColor: '#F9FAFB',
+            borderTop: '1px solid #E5E7EB',
+            justifyContent: 'flex-end',
+            gap: 1,
+          }}
+        >
           <Button
             size="small"
             sx={{

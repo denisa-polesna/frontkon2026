@@ -105,7 +105,7 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
       open={open}
       onClose={onClose}
       transitionDuration={0}
-      maxWidth="xs"
+      maxWidth={false}
       fullWidth
       slotProps={{
         paper: {
@@ -115,37 +115,41 @@ export const NameRegistrationModal: React.FC<NameRegistrationModalProps> = ({
             borderRadius: '16px',
             boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 16px rgba(0, 0, 0, 0.08)',
             overflow: 'hidden',
-            p: { xs: 2.5, sm: 3.5 },
+            p: { xs: 2, sm: 3 },
+            pt: { xs: 1.8, sm: 2.4 },
             position: 'relative',
+            m: { xs: '14px', sm: 2 },
+            width: { xs: 'calc(100% - 28px)', sm: '100%' },
+            maxWidth: { xs: 'calc(100% - 28px)', sm: 460 },
           },
         },
       }}
     >
-      <IconButton
-        onClick={onClose}
-        size="small"
-        aria-label="close"
-        sx={{
-          position: 'absolute',
-          top: 14,
-          right: 14,
-          color: '#666666',
-          backgroundColor: '#f5f4ff',
-          width: 32,
-          height: 32,
-          '&:hover': {
-            backgroundColor: '#e6e4ff',
-            color: '#120042',
-          },
-        }}
-      >
-        <CloseIcon sx={{ fontSize: 18 }} />
-      </IconButton>
-
       <form onSubmit={handleSubmit} noValidate>
         <DialogContent sx={{ p: 0 }}>
-          {/* Header */}
-          <Box sx={{ mb: 2.2, pr: 3 }}>
+          {/* Top Row with Close Button (on its own line above) */}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 0.5 }}>
+            <IconButton
+              onClick={onClose}
+              size="small"
+              aria-label="close"
+              sx={{
+                color: '#666666',
+                backgroundColor: '#f5f4ff',
+                width: 32,
+                height: 32,
+                '&:hover': {
+                  backgroundColor: '#e6e4ff',
+                  color: '#120042',
+                },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Box>
+
+          {/* Header - on the line below the button, so they never overlap */}
+          <Box sx={{ mb: 2.2 }}>
             <Typography
               variant="h5"
               sx={{

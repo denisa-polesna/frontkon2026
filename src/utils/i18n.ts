@@ -154,7 +154,7 @@ export const translations = {
     modalSubheader: 'app.outreach.io • Sales Engagement',
     firstName: 'First Name',
     lastName: 'Last Name',
-    workEmail: 'Work Email',
+    workEmail: 'Email',
     targetAccount: 'Target Account',
     stage: 'Stage',
     stageValue: 'Discovery Call',
@@ -245,7 +245,7 @@ export const translations = {
     devbotL3Defeated: 'AN ELLIPSIS, {name}?! Now our sales reps will actually have to HOVER on the tooltip to read the full title?! Currrrse you!',
 
     // DevBot L4 (Activity List) Dialogue
-    devbotL4ListInitial: 'A horizontal activity train saves vertical space, {name}! Who needs gaps between cards anyway?!',
+    devbotL4ListInitial: 'I crammed all 4 activities into one infinite row, {name}! Who still scrolls vertically when you can scroll sideways into infinity?!',
 
     // DevBot L5 (Tooltip) Dialogue
     devbotL5TooltipInitial: 'My tooltip has position: relative! What else could it possibly need, {name}?!',
@@ -259,7 +259,7 @@ export const translations = {
     victoryTitleL3: 'PR #405 REJECTED & FIXED! 🎉',
     victoryTitleL4: 'PR #409 REJECTED & FIXED! 🎉',
     victoryTitleL5: 'PR #410 REJECTED & FIXED! 🎉',
-    victorySubtitle: 'You outsmarted FailBot-404.',
+    victorySubtitle: 'Task Completed',
     newRecordBadge: 'NEW BOOTH RECORD! 🏆',
     timeTakenLabel: 'TIME TAKEN',
     cssGolfLabel: 'CSS GOLF',
@@ -270,11 +270,11 @@ export const translations = {
     postMortemTextL2Grid: '“Fine, {name}! Maybe CSS Grid IS better than 14 hardcoded negative margins.”',
     postMortemTextL2Flex: '“Fine, {name}! Maybe Flexbox IS better than 14 hardcoded negative margins.”',
     postMortemTextL3: '“Fine! Three little CSS properties beat my 99999px width. Enjoy your job security for now, {name}.”',
-    postMortemTextL4: '“Fine, {name}! A vertical column with gaps is obviously cleaner than my horizontal activity train.”',
+    postMortemTextL4: '“Oh sure, {name}... reverse-column and gap! My revolutionary horizontal activity noodle is ruined. People kept whining about UX... it looked fantastic on my 49-inch ultrawide monitor!”',
     postMortemTextL5: '“Fine! Position relative on .button and absolute on the tooltip anchored it right where it belongs. You conquered all 5 challenges, {name}!”',
     nextLevelBtn: 'Next Task',
     finishCampaignBtn: 'View Leaderboard',
-    campaignVictoryTitle: 'CHALLENGE COMPLETED! 🏆',
+    campaignVictoryTitle: 'CHALLENGE COMPLETED!',
     campaignVictorySubtitle: 'Congratulations, {name}! AI won’t replace you anytime soon!',
     campaignVictoryFailBot: '“Damn it, {name}... You conquered all 5 of my devious CSS bugs! My neural network is having an existential meltdown. I concede defeat — human developers aren’t going anywhere anytime soon!”',
     campaignAiProofBadge: 'AI-Proof Senior Engineer 🛡️',
@@ -449,7 +449,7 @@ export const translations = {
     modalSubheader: 'app.outreach.io • Sales Engagement',
     firstName: 'Jméno',
     lastName: 'Příjmení',
-    workEmail: 'Pracovní e-mail',
+    workEmail: 'Email',
     targetAccount: 'Cílová firma',
     stage: 'Fáze',
     stageValue: 'Úvodní hovor',
@@ -540,7 +540,7 @@ export const translations = {
     devbotL3Defeated: 'TŘI TEČKY, {name}?! Takže obchodníci teď budou muset najet myší na tooltip, aby si to přečetli?! Proklínám tě!',
 
     // DevBot L4 (Activity List) Dialogue
-    devbotL4ListInitial: 'Vodorovný vláček aktivit šetří vertikální místo, {name}! Kdo vůbec potřebuje mezery mezi kartami?!',
+    devbotL4ListInitial: 'Nacpal jsem všechny 4 aktivity do jednoho nekonečného řádku, {name}! Kdo v roce 2026 ještě scrolluje dolů, když může scrollovat doprava do nekonečna?!',
 
     // DevBot L5 (Tooltip) Dialogue
     devbotL5TooltipInitial: 'Můj tooltip má přece position: relative! Co víc by ještě mohl potřebovat, {name}?!',
@@ -554,7 +554,7 @@ export const translations = {
     victoryTitleL3: 'PR #405 ZAMÍTNUTO A OPRAVENO! 🎉',
     victoryTitleL4: 'PR #409 ZAMÍTNUTO A OPRAVENO! 🎉',
     victoryTitleL5: 'PR #410 ZAMÍTNUTO A OPRAVENO! 🎉',
-    victorySubtitle: 'Přechytračil jsi FailBota-404.',
+    victorySubtitle: 'Úkol splněn',
     newRecordBadge: 'NOVÝ REKORD STÁNKU! 🏆',
     timeTakenLabel: 'ČAS',
     cssGolfLabel: 'CSS GOLF',
@@ -565,11 +565,11 @@ export const translations = {
     postMortemTextL2Grid: '„No dobře, {name}! Možná je CSS Grid lepší než 14 natvrdo zapsaných záporných marginů.“',
     postMortemTextL2Flex: '„No dobře, {name}! Možná je Flexbox lepší než 14 natvrdo zapsaných záporných marginů.“',
     postMortemTextL3: '„No dobře! Tři řádky moderního CSS překonaly moji šířku 99999px. Užívej si to, {name}.“',
-    postMortemTextL4: '„No dobře, {name}! Sloupec a gap je samozřejmě přehlednější než můj vodorovný vláček aktivit.“',
+    postMortemTextL4: '„No jasně, {name}... reverse-column a gap! Moje revoluční vodorovná nudle aktivit je v trapu. Prý špatné UX... přitom na mém 49palcovém ultrawide monitoru to vypadalo naprosto skvěle!“',
     postMortemTextL5: '„No dobře! Position relative na .button a absolute na tooltipu ho ukotvily přesně tam, kam patří. Zvládl jsi všech 5 výzev, {name}!“',
     nextLevelBtn: 'Další úkol',
     finishCampaignBtn: 'Zobrazit žebříček',
-    campaignVictoryTitle: 'VÝZVA DOKONČENA! 🏆',
+    campaignVictoryTitle: 'VÝZVA DOKONČENA!',
     campaignVictorySubtitle: 'Blahopřejeme, {name}! AI tě jen tak nenahradí!',
     campaignVictoryFailBot: '„Sakra, {name}... Všech 5 mých záludných CSS bugů jsi s přehledem vyřešil/a! Moje neuronová síť právě zažívá existenční zhroucení. Uznávám porážku — vývojáři z masa a kostí jsou zatím v bezpečí, AI tě jen tak nenahradí!“',
     campaignAiProofBadge: 'AI-Proof Senior Inženýr 🛡️',

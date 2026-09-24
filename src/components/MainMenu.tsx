@@ -57,7 +57,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          px: '30px',
+          px: { xs: '14px', sm: '30px' },
           py: { xs: 1.4, sm: 1.8 },
           backgroundColor: '#1f1f1f',
           borderBottom: '1px solid #2e2e2e',
@@ -131,7 +131,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           justifyContent: 'center',
           gap: { xs: '32px', sm: '36px', md: '32px', lg: '36px' },
           py: { xs: 2, sm: 2.5, md: 3 },
-          px: '30px',
+          px: { xs: '14px', sm: '30px' },
           textAlign: 'center',
           minHeight: 0,
         }}
@@ -304,7 +304,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         component="footer"
         sx={{
           py: { xs: 1.5, md: 1.8 },
-          px: '30px',
+          px: { xs: '14px', sm: '30px' },
           backgroundColor: '#1f1f1f',
           borderTop: '1px solid #2e2e2e',
           display: 'flex',

@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   Avatar,
-  Chip,
 } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import CloseIcon from '@mui/icons-material/Close';
@@ -103,11 +102,10 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
             sx={{
               p: 1.2,
               borderRadius: '8px',
-              backgroundColor: '#fbfaff',
-              border: '1.5px solid #e2e0ed',
+              backgroundColor: '#F9FAFB',
+              border: '1px solid #E5E7EB',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
               boxSizing: 'border-box',
             }}
           >
@@ -117,8 +115,8 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                   width: 28,
                   height: 28,
                   borderRadius: '6px',
-                  backgroundColor: 'rgba(89, 81, 255, 0.12)',
-                  color: '#5951ff',
+                  backgroundColor: '#EEEDFE',
+                  color: '#5951FF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -128,19 +126,14 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                 <PhoneInTalkIcon sx={{ fontSize: 16 }} />
               </Box>
               <Box>
-                <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: '#120042', lineHeight: 1.2 }}>
+                <Typography sx={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
                   Telefonát s klientem
                 </Typography>
-                <Typography sx={{ fontSize: '0.7rem', color: '#767484' }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#6B7280' }}>
                   Dnes v 15:30 (15 min)
                 </Typography>
               </Box>
             </Box>
-            <Chip
-              label="Hovor"
-              size="small"
-              sx={{ height: 20, fontSize: '0.66rem', fontWeight: 700, bgcolor: 'rgba(89, 81, 255, 0.1)', color: '#5951ff' }}
-            />
           </Box>
 
           {/* Item 2 */}
@@ -149,11 +142,10 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
             sx={{
               p: 1.2,
               borderRadius: '8px',
-              backgroundColor: '#fbfaff',
-              border: '1.5px solid #e2e0ed',
+              backgroundColor: '#F9FAFB',
+              border: '1px solid #E5E7EB',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
               boxSizing: 'border-box',
             }}
           >
@@ -163,8 +155,8 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                   width: 28,
                   height: 28,
                   borderRadius: '6px',
-                  backgroundColor: 'rgba(0, 210, 180, 0.12)',
-                  color: '#007A68',
+                  backgroundColor: '#ECFDF5',
+                  color: '#047857',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -174,19 +166,14 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                 <EmailIcon sx={{ fontSize: 16 }} />
               </Box>
               <Box>
-                <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: '#120042', lineHeight: 1.2 }}>
+                <Typography sx={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
                   Odeslat nabídku na Q4
                 </Typography>
-                <Typography sx={{ fontSize: '0.7rem', color: '#767484' }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#6B7280' }}>
                   Předloha připravena
                 </Typography>
               </Box>
             </Box>
-            <Chip
-              label="Email"
-              size="small"
-              sx={{ height: 20, fontSize: '0.66rem', fontWeight: 700, bgcolor: 'rgba(0, 210, 180, 0.12)', color: '#007A68' }}
-            />
           </Box>
 
           {/* Item 3 */}
@@ -195,11 +182,10 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
             sx={{
               p: 1.2,
               borderRadius: '8px',
-              backgroundColor: '#fbfaff',
-              border: '1.5px solid #e2e0ed',
+              backgroundColor: '#F9FAFB',
+              border: '1px solid #E5E7EB',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
               boxSizing: 'border-box',
             }}
           >
@@ -209,8 +195,8 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                   width: 28,
                   height: 28,
                   borderRadius: '6px',
-                  backgroundColor: 'rgba(255, 176, 32, 0.12)',
-                  color: '#945800',
+                  backgroundColor: '#FFFBEB',
+                  color: '#B45309',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -220,19 +206,14 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                 <EventAvailableIcon sx={{ fontSize: 16 }} />
               </Box>
               <Box>
-                <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: '#120042', lineHeight: 1.2 }}>
+                <Typography sx={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
                   Prezentace pro vedení
                 </Typography>
-                <Typography sx={{ fontSize: '0.7rem', color: '#767484' }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#6B7280' }}>
                   Zítra v 10:00
                 </Typography>
               </Box>
             </Box>
-            <Chip
-              label="Schůzka"
-              size="small"
-              sx={{ height: 20, fontSize: '0.66rem', fontWeight: 700, bgcolor: 'rgba(255, 176, 32, 0.12)', color: '#945800' }}
-            />
           </Box>
 
           {/* Item 4 */}
@@ -241,11 +222,10 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
             sx={{
               p: 1.2,
               borderRadius: '8px',
-              backgroundColor: '#fbfaff',
-              border: '1.5px solid #e2e0ed',
+              backgroundColor: '#F9FAFB',
+              border: '1px solid #E5E7EB',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
               boxSizing: 'border-box',
             }}
           >
@@ -255,8 +235,8 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                   width: 28,
                   height: 28,
                   borderRadius: '6px',
-                  backgroundColor: 'rgba(89, 81, 255, 0.12)',
-                  color: '#5951ff',
+                  backgroundColor: '#EEEDFE',
+                  color: '#5951FF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -266,19 +246,14 @@ export const ActivityListModal: React.FC<ActivityListModalProps> = ({ id = 'acti
                 <DescriptionIcon sx={{ fontSize: 16 }} />
               </Box>
               <Box>
-                <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: '#120042', lineHeight: 1.2 }}>
+                <Typography sx={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
                   Zápis z jednání
                 </Typography>
-                <Typography sx={{ fontSize: '0.7rem', color: '#767484' }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#6B7280' }}>
                   Podepsáno $450k ARR
                 </Typography>
               </Box>
             </Box>
-            <Chip
-              label="Zápis"
-              size="small"
-              sx={{ height: 20, fontSize: '0.66rem', fontWeight: 700, bgcolor: 'rgba(89, 81, 255, 0.1)', color: '#5951ff' }}
-            />
           </Box>
         </div>
       </CardContent>

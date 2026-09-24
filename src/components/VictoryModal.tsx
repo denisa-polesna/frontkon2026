@@ -78,6 +78,8 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             borderRadius: '16px',
             boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45)',
             overflow: 'hidden',
+            m: { xs: '14px', sm: 2 },
+            width: { xs: 'calc(100% - 28px)', sm: '100%' },
           },
         },
       }}

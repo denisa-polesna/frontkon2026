@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   Box,
-  Chip,
   Avatar,
 } from '@mui/material';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
@@ -140,77 +139,25 @@ export const ProspectModal = React.forwardRef<HTMLDivElement, ProspectModalProps
             }}
           />
 
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <TextField
-              label={t.targetAccount}
-              size="small"
-              defaultValue="Babbage Industries"
-              fullWidth
-              slotProps={{
-                inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
-                input: {
-                  sx: {
-                    fontSize: '0.84rem',
-                    fontWeight: 500,
-                    backgroundColor: '#FFFFFF',
-                    color: '#111827',
-                    borderRadius: '8px',
-                    '& fieldset': { borderColor: '#E5E7EB' },
-                  },
+          <TextField
+            label={t.targetAccount}
+            size="small"
+            defaultValue="Babbage Industries"
+            fullWidth
+            slotProps={{
+              inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
+              input: {
+                sx: {
+                  fontSize: '0.84rem',
+                  fontWeight: 500,
+                  backgroundColor: '#FFFFFF',
+                  color: '#111827',
+                  borderRadius: '8px',
+                  '& fieldset': { borderColor: '#E5E7EB' },
                 },
-              }}
-            />
-            <TextField
-              label={t.stage}
-              size="small"
-              defaultValue={t.stageValue}
-              fullWidth
-              slotProps={{
-                inputLabel: { shrink: true, sx: { color: '#4B5563', fontSize: '0.82rem', fontWeight: 500 } },
-                input: {
-                  sx: {
-                    fontSize: '0.84rem',
-                    fontWeight: 500,
-                    backgroundColor: '#FFFFFF',
-                    color: '#111827',
-                    borderRadius: '8px',
-                    '& fieldset': { borderColor: '#E5E7EB' },
-                  },
-                },
-              }}
-            />
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 0.5 }}>
-            <Box sx={{ display: 'flex', gap: 0.75 }}>
-              <Chip
-                label={t.tierBadge}
-                size="small"
-                sx={{
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  height: 22,
-                  backgroundColor: '#ECFDF5',
-                  color: '#047857',
-                  border: '1px solid #A7F3D0',
-                  borderRadius: '6px',
-                }}
-              />
-              <Chip
-                label={t.ownerBadge}
-                size="small"
-                sx={{
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  height: 22,
-                  backgroundColor: '#EEEDFE',
-                  color: '#5951FF',
-                  border: '1px solid #C7D2FE',
-                  borderRadius: '6px',
-                }}
-              />
-            </Box>
-          </Box>
+              },
+            }}
+          />
         </CardContent>
 
         {/* Modal Actions */}

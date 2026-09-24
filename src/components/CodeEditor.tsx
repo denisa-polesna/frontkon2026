@@ -3,6 +3,8 @@ import {
   Box,
   Typography,
   Button,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import CodeMirror, { oneDark } from '@uiw/react-codemirror';
 import { lineNumbers, EditorView } from '@codemirror/view';
@@ -354,59 +356,55 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           )}
 
           {onResetCode && (
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={onResetCode}
-              startIcon={<RestartAltIcon sx={{ fontSize: 16 }} />}
-              sx={{
-                py: 0.7,
-                px: { xs: 1.1, sm: 1.5 },
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                borderRadius: '6px',
-                borderColor: 'rgba(255, 255, 255, 0.15)',
-                color: '#B0B8C8',
-                backgroundColor: 'transparent',
-                textTransform: 'none',
-                '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                },
-              }}
-            >
-              {t.resetCodeBtn}
-            </Button>
+            <Tooltip title={t.resetCodeBtn} arrow>
+              <IconButton
+                size="small"
+                onClick={onResetCode}
+                aria-label={t.resetCodeBtn}
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '6px',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#B0B8C8',
+                  backgroundColor: 'transparent',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    color: '#FFFFFF',
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  },
+                }}
+              >
+                <RestartAltIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Tooltip>
           )}
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
           {onOpenHelp && (
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={onOpenHelp}
-              startIcon={<HelpOutlineIcon sx={{ fontSize: 16 }} />}
-              sx={{
-                py: 0.7,
-                px: { xs: 1.1, sm: 1.5 },
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                borderRadius: '6px',
-                borderColor: 'rgba(255, 255, 255, 0.15)',
-                color: '#B0B8C8',
-                backgroundColor: 'transparent',
-                textTransform: 'none',
-                '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                },
-              }}
-            >
-              {t.helpBtn}
-            </Button>
+            <Tooltip title={t.helpBtn} arrow>
+              <IconButton
+                size="small"
+                onClick={onOpenHelp}
+                aria-label={t.helpBtn}
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '6px',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#B0B8C8',
+                  backgroundColor: 'transparent',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    color: '#FFFFFF',
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  },
+                }}
+              >
+                <HelpOutlineIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Tooltip>
           )}
 
           <Button
