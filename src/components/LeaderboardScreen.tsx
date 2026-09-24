@@ -275,16 +275,16 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
             width: '100%',
             maxWidth: { xs: '100%', sm: '100%', md: 1050, lg: 1320, xl: 1600 },
             backgroundColor: '#FFFFFF',
-            borderRadius: '12px',
-            border: '1px solid #2e2e2e',
-            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.35)',
+            borderRadius: '14px',
+            border: '1px solid rgba(89, 81, 255, 0.25)',
+            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.45), 0 2px 16px rgba(0, 0, 0, 0.08)',
             overflow: 'hidden',
             mb: 3,
           }}
         >
           {aggregatedPlayers.length === 0 ? (
             <Box sx={{ py: 8, textAlign: 'center' }}>
-              <Typography variant="body1" sx={{ color: '#000000', fontStyle: 'italic', fontWeight: 600 }}>
+              <Typography variant="body1" sx={{ color: '#6B7280', fontStyle: 'italic', fontWeight: 600 }}>
                 {t.noRunsYet}
               </Typography>
             </Box>
@@ -295,31 +295,31 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                 size="medium"
                 sx={{
                   '& .MuiTableCell-stickyHeader': {
-                    backgroundColor: '#5951ff',
-                    borderBottom: '1px solid #4a42e8 !important',
+                    backgroundColor: '#5951FF',
+                    borderBottom: 'none !important',
                   },
                 }}
               >
                 <TableHead
                   sx={{
                     '& .MuiTableCell-head': {
-                      backgroundColor: '#5951ff',
-                      borderBottom: '1px solid #4a42e8 !important',
-                      borderColor: '#4a42e8 !important',
+                      backgroundColor: '#5951FF',
+                      borderBottom: 'none !important',
+                      borderColor: 'transparent !important',
                       color: '#FFFFFF',
-                      fontWeight: 600,
-                      fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.98rem' },
-                      py: { xs: 1.2, sm: 1.6, md: 1.8 },
+                      fontWeight: 700,
+                      fontSize: { xs: '0.8rem', sm: '0.88rem', md: '0.94rem' },
+                      py: { xs: 1.4, sm: 1.6, md: 1.8 },
                       px: { xs: 1.5, sm: 2.5, md: 3, lg: 4 },
-                      letterSpacing: '0.01em',
+                      letterSpacing: '0.02em',
                     },
                   }}
                 >
-                  <TableRow sx={{ '& th': { borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' } }}>
-                    <TableCell width="14%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colRank || 'Místo'}</TableCell>
-                    <TableCell width="40%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colPlayer}</TableCell>
-                    <TableCell width="26%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colRounds || t.colRating || 'Dokončená kola'}</TableCell>
-                    <TableCell width="20%" sx={{ borderBottom: '1px solid #4a42e8 !important', borderColor: '#4a42e8 !important' }}>{t.colTime}</TableCell>
+                  <TableRow>
+                    <TableCell width="12%">{t.colRank || 'Místo'}</TableCell>
+                    <TableCell width="46%">{t.colPlayer}</TableCell>
+                    <TableCell width="18%">{t.colRounds || t.colRating || 'Kola'}</TableCell>
+                    <TableCell width="24%">{t.colTime}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -328,42 +328,63 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                       key={player.playerName}
                       sx={{
                         '& td': {
-                          borderColor: '#e2e0ed',
-                          color: '#1f1f1f',
-                          fontSize: { xs: '0.88rem', sm: '0.96rem', md: '1.05rem' },
-                          py: { xs: 1.2, sm: 1.5, md: 1.6 },
+                          borderBottom: '1px solid #F3F4F6',
+                          color: '#111827',
+                          fontSize: { xs: '0.86rem', sm: '0.94rem', md: '1rem' },
+                          py: { xs: 1.3, sm: 1.5, md: 1.6 },
                           px: { xs: 1.5, sm: 2.5, md: 3, lg: 4 },
                         },
-                        backgroundColor: '#FFFFFF',
+                        backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFAFC',
                         '&:hover': {
-                          backgroundColor: '#fbfaff',
+                          backgroundColor: '#F5F4FF',
                         },
                       }}
                     >
-                      <TableCell sx={{ fontWeight: 500, color: '#444444' }}>
-                        {idx + 1}
+                      <TableCell sx={{ fontWeight: 700 }}>
+                        {idx === 0 ? (
+                          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, color: '#D97706', fontWeight: 800 }}>
+                            🥇 1
+                          </Box>
+                        ) : idx === 1 ? (
+                          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, color: '#4B5563', fontWeight: 800 }}>
+                            🥈 2
+                          </Box>
+                        ) : idx === 2 ? (
+                          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, color: '#B45309', fontWeight: 800 }}>
+                            🥉 3
+                          </Box>
+                        ) : (
+                          <Typography sx={{ color: '#6B7280', fontWeight: 600, fontSize: 'inherit' }}>
+                            {idx + 1}
+                          </Typography>
+                        )}
                       </TableCell>
-                      <TableCell sx={{ fontWeight: 500, color: '#1f1f1f' }}>
+                      <TableCell sx={{ fontWeight: 600, color: '#111827' }}>
                         {player.playerName}
                       </TableCell>
-                      <TableCell sx={{ fontWeight: 400, color: '#333333' }}>
-                        <Typography
-                          component="span"
+                      <TableCell>
+                        <Box
                           sx={{
-                            color: '#333333',
-                            fontWeight: 400,
-                            fontSize: 'inherit',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            px: 1,
+                            py: 0.3,
+                            borderRadius: '6px',
+                            backgroundColor: player.completedCount === 5 ? '#ECFDF5' : '#F3F4F6',
+                            color: player.completedCount === 5 ? '#047857' : '#374151',
+                            fontWeight: 600,
+                            fontSize: { xs: '0.76rem', sm: '0.82rem' },
                           }}
                         >
                           {player.completedCount} / 5
-                        </Typography>
+                        </Box>
                       </TableCell>
                       <TableCell
                         sx={{
                           fontFamily: 'ui-monospace, monospace',
-                          color: '#1f1f1f',
-                          fontWeight: 500,
-                          fontSize: { xs: '0.92rem', sm: '1rem', md: '1.08rem' },
+                          color: '#111827',
+                          fontWeight: 700,
+                          fontSize: { xs: '0.9rem', sm: '0.98rem', md: '1.05rem' },
                         }}
                       >
                         {formatDuration(player.totalTimeMs, language)}
